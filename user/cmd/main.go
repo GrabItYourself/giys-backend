@@ -8,7 +8,7 @@ import (
 
 func main() {
 	conf := config.InitConfig()
-	
+
 	app := fiber.New()
 
 	app.Get("/", func(c *fiber.Ctx) error {
