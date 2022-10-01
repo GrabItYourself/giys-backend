@@ -1,14 +1,14 @@
 package models
 
-type role string
+type RoleEnum string
 
 const (
-	AdminRole role = "admin"
-	UserRole  role = "user"
+	AdminRole RoleEnum = "admin"
+	UserRole  RoleEnum = "user"
 )
 
 type User struct {
-	ID    string `gorm:"column:id;primaryKey"`
-	Role  role   `gorm:"column:role;type:role;not null"`
-	Email string `gorm:"column:email;not null"`
+	ID    string   `json:"id" gorm:"column:id;primaryKey"`
+	Role  RoleEnum `json:"role" gorm:"column:role;type:role;not null"`
+	Email string   `json:"email" gorm:"column:email;not null"`
 }
