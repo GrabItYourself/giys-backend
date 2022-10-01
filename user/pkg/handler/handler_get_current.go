@@ -7,18 +7,17 @@ import (
 	"gorm.io/gorm"
 )
 
-// TODO: centralize error handling
 func (h *handler) GetCurrentUser(ctx *fiber.Ctx) error {
 	userId, _, err := authutils.ExtractUserFromContext(ctx)
 	if err != nil {
-		return ctx.Status(401).JSON(fiber.Map{"error": err.Error()})
+		return fiber.NewError(401, errors.Wrap(err, "can't extract user from context").Error())
 	}
 	user, err := h.repo.GetUserById(userId)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return ctx.Status(404).JSON(fiber.Map{"error": "user not found"})
+			return fiber.NewError(404, errors.Wrap(err, "can't get user").Error())
 		}
-		return ctx.Status(500).JSON(fiber.Map{"error": errors.Wrap(err, "can't get user by id").Error()})
+		return fiber.NewError(500, errors.Wrap(err, "can't get user").Error())
 	}
 	return ctx.JSON(user)
 }
