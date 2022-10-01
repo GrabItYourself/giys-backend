@@ -25,3 +25,19 @@ Each microservice has the following structure:
 ## Creating a new service
 1. Create a new directory in the root folder
 2. Follow the structure and code conventions of the other services (mostly config stuffs)
+
+## Migration
+Create a new migration:
+```bash
+migrate create -ext sql -dir ./migrations -seq <migration_name>
+```
+
+Up migrations:
+```bash
+migrate -source file://./migrations -database postgres://username:password@localhost:5432/<database_name> up
+```
+
+down migrations:
+```bash
+migrate -source file://./migrations -database postgres://username:password@localhost:5432/<database_name> down
+```
