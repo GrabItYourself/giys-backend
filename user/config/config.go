@@ -1,6 +1,7 @@
 package config
 
 import (
+	"github.com/GrabItYourself/giys-backend/lib/logger"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 	"log"
@@ -12,7 +13,8 @@ var configOnce sync.Once
 var config *Config
 
 type Config struct {
-	Server ServerConfig `mapstructure:"server"`
+	Server ServerConfig  `mapstructure:"server"`
+	Log    logger.Config `mapstructure:"log"`
 }
 
 type ServerConfig struct {
