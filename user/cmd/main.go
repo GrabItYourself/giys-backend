@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/GrabItYourself/giys-backend/lib/logger"
 	"github.com/GrabItYourself/giys-backend/user/config"
 	"github.com/gofiber/fiber/v2"
 	"github.com/pkg/errors"
@@ -8,6 +9,7 @@ import (
 
 func main() {
 	conf := config.InitConfig()
+	logger.InitLogger(&conf.Log)
 
 	app := fiber.New()
 
@@ -17,6 +19,6 @@ func main() {
 
 	err := app.Listen(":" + conf.Server.Port)
 	if err != nil {
-		panic(errors.Wrap(err, "error during app listen"))
+		logger.Fatal(errors.Wrap(err, "error during app listen").Error())
 	}
 }

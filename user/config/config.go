@@ -1,9 +1,9 @@
 package config
 
 import (
+	"github.com/GrabItYourself/giys-backend/lib/logger"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
-	"log"
 	"strings"
 	"sync"
 )
@@ -12,7 +12,8 @@ var configOnce sync.Once
 var config *Config
 
 type Config struct {
-	Server ServerConfig `mapstructure:"server"`
+	Server ServerConfig  `mapstructure:"server"`
+	Log    logger.Config `mapstructure:"log"`
 }
 
 type ServerConfig struct {
@@ -36,7 +37,7 @@ func InitConfig() *Config {
 		if err := viper.Unmarshal(&config); err != nil {
 			panic(errors.Wrap(err, "can't unmarshal config"))
 		}
-		log.Println("Config initialized!")
+		logger.Info("Config initialized!")
 	})
 	return config
 }
