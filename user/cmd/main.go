@@ -9,10 +9,7 @@ import (
 
 func main() {
 	conf := config.InitConfig()
-	err := logger.InitLogger(&conf.Log)
-	if err != nil {
-		logger.Fatal(errors.Wrap(err, "can't initialize logger").Error())
-	}
+	logger.InitLogger(&conf.Log)
 
 	app := fiber.New()
 
@@ -20,7 +17,7 @@ func main() {
 		return c.SendString("Hello, World 👋!")
 	})
 
-	err = app.Listen(":" + conf.Server.Port)
+	err := app.Listen(":" + conf.Server.Port)
 	if err != nil {
 		logger.Fatal(errors.Wrap(err, "error during app listen").Error())
 	}

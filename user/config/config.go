@@ -4,7 +4,6 @@ import (
 	"github.com/GrabItYourself/giys-backend/lib/logger"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
-	"log"
 	"strings"
 	"sync"
 )
@@ -38,7 +37,7 @@ func InitConfig() *Config {
 		if err := viper.Unmarshal(&config); err != nil {
 			panic(errors.Wrap(err, "can't unmarshal config"))
 		}
-		log.Println("Config initialized!")
+		logger.Info("Config initialized!")
 	})
 	return config
 }

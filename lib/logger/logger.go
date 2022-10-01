@@ -4,6 +4,7 @@ import (
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
+	"sync"
 )
 
 type Logger struct {
@@ -15,41 +16,40 @@ type Config struct {
 	Service string `mapstructure:"service"`
 }
 
-var logger = zap.NewExample()
+var initOnce sync.Once
+var logger, _ = zap.NewDevelopment()
 
-func InitLogger(cf *Config) error {
-	if cf.Service == "" {
-		return errors.New("Service is required")
-	}
+func InitLogger(cf *Config) {
+	initOnce.Do(func() {
+		if cf.Service == "" {
+			logger.Fatal("Service name is not set")
+		}
 
-	ec := zap.NewProductionEncoderConfig()
-	ec.EncodeTime = zapcore.ISO8601TimeEncoder
+		cfg := zap.NewDevelopmentConfig()
+		switch cf.Level {
+		case "debug":
+			cfg.Level = zap.NewAtomicLevelAt(zap.DebugLevel)
+		case "info":
+			cfg.Level = zap.NewAtomicLevelAt(zap.InfoLevel)
+		case "warn":
+			cfg.Level = zap.NewAtomicLevelAt(zap.WarnLevel)
+		case "error":
+			cfg.Level = zap.NewAtomicLevelAt(zap.ErrorLevel)
+		case "fatal":
+			cfg.Level = zap.NewAtomicLevelAt(zap.FatalLevel)
+		default:
+			cfg.Level = zap.NewAtomicLevelAt(zap.InfoLevel)
+		}
+		cfg.OutputPaths = []string{"stdout"}
 
-	cfg := zap.NewDevelopmentConfig()
-	switch cf.Level {
-	case "debug":
-		cfg.Level = zap.NewAtomicLevelAt(zap.DebugLevel)
-	case "info":
-		cfg.Level = zap.NewAtomicLevelAt(zap.InfoLevel)
-	case "warn":
-		cfg.Level = zap.NewAtomicLevelAt(zap.WarnLevel)
-	case "error":
-		cfg.Level = zap.NewAtomicLevelAt(zap.ErrorLevel)
-	case "fatal":
-		cfg.Level = zap.NewAtomicLevelAt(zap.FatalLevel)
-	default:
-		cfg.Level = zap.NewAtomicLevelAt(zap.InfoLevel)
-	}
-	cfg.OutputPaths = []string{"stdout"}
-	cfg.EncoderConfig = ec
+		l, err := cfg.Build()
+		if err != nil {
+			logger.Fatal(errors.WithStack(err).Error())
+		}
 
-	l, err := cfg.Build()
-	if err != nil {
-		return errors.WithStack(err)
-	}
-
-	logger = l.With(zap.String("service", cf.Service))
-	return nil
+		logger = l.With(zap.String("service", cf.Service))
+		logger.Info("Logger initialized")
+	})
 }
 
 func Info(msg string, fields ...zapcore.Field) {
