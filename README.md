@@ -42,13 +42,13 @@ migrate create -ext sql -dir ./migrations -seq <migration_name>
 Up migrations:
 
 ```bash
-migrate -source file://./migrations -database postgres://username:password@localhost:5432/<database_name> up
+migrate -path ./migrations -database "postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable" up
 ```
 
 down migrations:
 
 ```bash
-migrate -source file://./migrations -database postgres://username:password@localhost:5432/<database_name> down
+migrate -path ./migrations -database "postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable" down
 ```
 
 ## Protobuf
