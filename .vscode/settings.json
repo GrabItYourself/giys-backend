@@ -2,4 +2,6 @@
   "[go]": {
     "editor.defaultFormatter": "golang.go"
   },
+  "editor.formatOnPaste": true,
+  "go.formatTool": "goimports",
 }
