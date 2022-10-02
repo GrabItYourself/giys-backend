@@ -3,7 +3,7 @@ package server
 import (
 	"context"
 
-	pb "github.com/GrabItYourself/giys-backend/lib/proto/payment"
+	"github.com/GrabItYourself/giys-backend/lib/proto/libproto"
 	"github.com/GrabItYourself/giys-backend/payment/internal/config"
 	"github.com/omise/omise-go"
 	"google.golang.org/grpc/codes"
@@ -11,7 +11,7 @@ import (
 )
 
 type server struct {
-	pb.UnimplementedPaymentServer
+	libproto.UnimplementedPaymentServer
 	omiseClient *omise.Client
 }
 
@@ -24,18 +24,18 @@ func NewServer(omiseConfig *config.OmiseConfig) (*server, error) {
 	return &server{omiseClient: client}, nil
 }
 
-func (s *server) Pay(context.Context, *pb.PayRequest) (*pb.PayResponse, error) {
+func (s *server) Pay(context.Context, *libproto.PayRequest) (*libproto.PayResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Pay not implemented")
 }
 
-func (s *server) AuthorizeCard(context.Context, *pb.AuthorizeCardRequest) (*pb.AuthorizeCardResponse, error) {
+func (s *server) AuthorizeCard(context.Context, *libproto.AuthorizeCardRequest) (*libproto.AuthorizeCardResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AuthorizeCard not implemented")
 }
 
-func (s *server) RegisterRecipient(context.Context, *pb.RegisterRecipientRequest) (*pb.RegisterRecipientResponse, error) {
+func (s *server) RegisterRecipient(context.Context, *libproto.RegisterRecipientRequest) (*libproto.RegisterRecipientResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RegisterRecipient not implemented")
 }
 
-func (s *server) GetTransactionHistory(context.Context, *pb.GetTransactionHistoryRequest) (*pb.GetTransactionHistoryResponse, error) {
+func (s *server) GetTransactionHistory(context.Context, *libproto.GetTransactionHistoryRequest) (*libproto.GetTransactionHistoryResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTransactionHistory not implemented")
 }

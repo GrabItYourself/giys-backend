@@ -41,3 +41,15 @@ down migrations:
 ```bash
 migrate -source file://./migrations -database postgres://username:password@localhost:5432/<database_name> down
 ```
+
+## Protobuf
+1. Install protoc compiler binary. See [here](https://grpc.io/docs/protoc-installation/) for more details.
+2. Install Go plugin for protoc. See [here](https://grpc.io/docs/languages/go/quickstart/) for more details.
+```bash
+go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2
+```
+3. Run the compiler
+```bash
+protoc --go_out=lib/proto --go-grpc_out=lib/proto lib/proto/*.proto
+```
