@@ -15,10 +15,16 @@ var config *Config
 type Config struct {
 	Server ServerConfig  `mapstructure:"server"`
 	Log    logger.Config `mapstructure:"log"`
+	Omise  OmiseConfig   `mapstructure:"omise"`
 }
 
 type ServerConfig struct {
 	Port string `mapstructure:"port"`
+}
+
+type OmiseConfig struct {
+	PublicKey string `mapstructure:"public_key"`
+	SecretKey string `mapstructure:"secret_key"`
 }
 
 func InitConfig() *Config {
