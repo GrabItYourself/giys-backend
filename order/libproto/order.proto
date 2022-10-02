@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+option go_package = "../libproto";
+
+package order;
+
+service Order {
+  rpc GetOrder (GetOrderRequest) returns (OrderResponse);
+  rpc CreateOrder (CreateOrderRequest) returns (OrderResponse);
+  rpc UpdateOrder (UpdateOrderRequest) returns (OrderResponse);
+  rpc ReadyOrder (ReadyOrderRequest) returns (OrderResponse);
+  rpc CompleteOrder (CompleteOrderRequest) returns (OrderResponse);
+  rpc CancelOrder (CancelOrderRequest) returns (OrderResponse);
+}
+message GetOrderRequest {
+  string id = 1;
+}
+
+message CreateOrderRequest {
+  string customer_id = 1;
+  repeated OrderItem items = 2;
+}
+
+message UpdateOrderRequest {
+  string id = 1;
+  string customer_id = 2;
+  repeated OrderItem items = 3;
+}
+
+message ReadyOrderRequest {
+  string id = 1;
+}
+
+message CompleteOrderRequest {
+  string id = 1;
+}
+
+message CancelOrderRequest {
+  string id = 1;
+}
+
+message OrderItem {
+  string shop_id = 1;
+  string shop_item_id = 2;
+  int32 quantity = 3;
+  optional string note = 4;
+}
+
+message OrderId {
+  string id = 1;
+}
+
+message OrderResponse {
+  string id = 1;
+  string customer_id = 2;
+  repeated OrderItem items = 3;
+}
