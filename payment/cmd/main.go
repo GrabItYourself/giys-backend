@@ -20,7 +20,12 @@ func main() {
 		logger.Fatal("Failed to listen: " + err.Error())
     }
 
-	pb.RegisterPaymentServer(s, server.NewServer())
+	paymentServer, err := server.NewServer(&conf.Omise)
+	if err != nil {
+		logger.Fatal("Failed to initialize payment server: " + err.Error())
+	}
+
+	pb.RegisterPaymentServer(s, paymentServer)
 
 	err = s.Serve(lis)
     if err != nil {

@@ -4,16 +4,24 @@ import (
 	"context"
 
 	pb "github.com/GrabItYourself/giys-backend/lib/proto/payment"
+	"github.com/GrabItYourself/giys-backend/payment/config"
+	"github.com/omise/omise-go"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 type server struct {
 	pb.UnimplementedPaymentServer
+	omiseClient *omise.Client
 }
 
-func NewServer() *server {
-	return &server{}
+func NewServer(omiseConfig *config.OmiseConfig) (*server, error) {
+	client, err := omise.NewClient(omiseConfig.PublicKey, omiseConfig.SecretKey)
+	if err != nil {
+		return nil, err
+	}
+
+	return &server{omiseClient: client}, nil
 }
 
 func (s *server) Pay(context.Context, *pb.PayRequest) (*pb.PayResponse, error) {
