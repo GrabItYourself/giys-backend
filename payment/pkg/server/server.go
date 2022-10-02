@@ -4,7 +4,7 @@ import (
 	"context"
 
 	pb "github.com/GrabItYourself/giys-backend/lib/proto/payment"
-	"github.com/GrabItYourself/giys-backend/payment/config"
+	"github.com/GrabItYourself/giys-backend/payment/internal/config"
 	"github.com/omise/omise-go"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

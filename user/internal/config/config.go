@@ -5,6 +5,7 @@ import (
 	"sync"
 
 	"github.com/GrabItYourself/giys-backend/lib/logger"
+	"github.com/GrabItYourself/giys-backend/lib/postgres"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 )
@@ -13,26 +14,21 @@ var configOnce sync.Once
 var config *Config
 
 type Config struct {
-	Server ServerConfig  `mapstructure:"server"`
-	Log    logger.Config `mapstructure:"log"`
-	Omise  OmiseConfig   `mapstructure:"omise"`
+	Server   ServerConfig    `mapstructure:"server"`
+	Log      logger.Config   `mapstructure:"log"`
+	Postgres postgres.Config `mapstructure:"postgres"`
 }
 
 type ServerConfig struct {
 	Port string `mapstructure:"port"`
 }
 
-type OmiseConfig struct {
-	PublicKey string `mapstructure:"public_key"`
-	SecretKey string `mapstructure:"secret_key"`
-}
-
 func InitConfig() *Config {
 	configOnce.Do(func() {
 
-		viper.SetConfigName("config")        // name of config file without extension
-		viper.AddConfigPath("./payment/config") // path to look for config file, relative to working directory
-		viper.AddConfigPath("/config")       // production config mount path
+		viper.SetConfigName("config")                 // name of config file without extension
+		viper.AddConfigPath("./user/internal/config") // path to look for config file, relative to working directory
+		viper.AddConfigPath("/config")                // production config mount path
 
 		viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 		if err := viper.ReadInConfig(); err != nil {

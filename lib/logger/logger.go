@@ -1,10 +1,11 @@
 package logger
 
 import (
+	"sync"
+
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
-	"sync"
 )
 
 type Logger struct {

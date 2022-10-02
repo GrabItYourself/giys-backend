@@ -1,8 +1,0 @@
-server:
-    port: 3001
-log:
-    level: info
-    service: payment
-omise:
-    public_key: omisepublickey
-    secret_key: omisesecretkey

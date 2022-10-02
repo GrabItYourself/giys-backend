@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/GrabItYourself/giys-backend/lib/logger"
 	"github.com/GrabItYourself/giys-backend/lib/postgres"
-	"github.com/GrabItYourself/giys-backend/user/config"
+	"github.com/GrabItYourself/giys-backend/user/internal/config"
 	"github.com/GrabItYourself/giys-backend/user/pkg/handler"
 	"github.com/GrabItYourself/giys-backend/user/pkg/repository"
 	"github.com/gofiber/fiber/v2"
