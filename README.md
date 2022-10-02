@@ -64,11 +64,11 @@ migrate -path ./migrations -database "postgres://postgres:postgres@localhost:543
 3. Generate Protobuf file in each service
 
    ```bash
-   sh create_libproto.sh <service-name>
+   sh script/create_libproto.sh <service-name>
    ```
 
 4. Once you finish editing the proto file, run the following command to generate the Go code
 
    ```bash
-   sh generate_proto.sh <service-name>
+   sh script/generate_proto.sh <service-name>
    ```
