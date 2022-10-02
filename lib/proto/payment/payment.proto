@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+option go_package = "github.com/GrabItYourself/giys-backend/lib/protos/payment/payment";
+
+package payment;
+
+service Payment {
+  rpc Pay(PayRequest) returns (PayResponse) {}
+  rpc AuthorizeCard(AuthorizeCardRequest) returns (AuthorizeCardResponse) {}
+  rpc RegisterRecipient(RegisterRecipientRequest) returns (RegisterRecipientResponse) {}
+  rpc GetTransactionHistory(GetTransactionHistoryRequest) returns (GetTransactionHistoryResponse) {}
+}
+
+message PayRequest {
+}
+
+message PayResponse {
+}
+
+message AuthorizeCardRequest {
+}
+
+message AuthorizeCardResponse {
+}
+
+message RegisterRecipientRequest {
+}
+
+message RegisterRecipientResponse {
+}
+
+message GetTransactionHistoryRequest {
+}
+
+message GetTransactionHistoryResponse {
+}
