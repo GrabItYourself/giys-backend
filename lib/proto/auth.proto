@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+option go_package = "./libproto";
+
+package auth;
+
+service Auth {
+  rpc ExchangeAuthCode(ExchangeAuthCodeRequest) returns (ExchangeAuthCodeResponse) {}
+  rpc VerifyAccessToken(VerifyAccessTokenRequest) returns (VerifyAccessTokenResponse) {}
+}
+
+message ExchangeAuthCodeRequest {
+  string auth_code = 1;
+}
+
+message ExchangeAuthCodeResponse {
+  string access_token = 1;
+}
+
+message VerifyAccessTokenRequest {
+  string access_token = 1;
+}
+
+message VerifyAccessTokenResponse {
+  string user_id = 1;
+  UserRole role = 2;
+}
+
+enum UserRole {
+  USER = 0;
+  ADMIN = 1;
+}
