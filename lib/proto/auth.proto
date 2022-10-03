@@ -27,6 +27,7 @@ message VerifyAccessTokenResponse {
 }
 
 enum UserRole {
-  USER = 0;
-  ADMIN = 1;
+  NULL = 0;
+  USER = 1;
+  ADMIN = 2;
 }

@@ -1,0 +1,6 @@
+BEGIN;
+
+DROP TABLE IF EXISTS "shop_item";
+DROP TABLE IF EXISTS "shop";
+
+COMMIT;

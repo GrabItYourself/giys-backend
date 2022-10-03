@@ -1,9 +1,9 @@
 BEGIN;
 
-CREATE TYPE role AS ENUM ('admin', 'user');
-CREATE TABLE IF NOT EXISTS "users" (
+CREATE TYPE role AS ENUM ('USER', 'ADMIN');
+CREATE TABLE IF NOT EXISTS "user" (
     id TEXT PRIMARY KEY,
-    role role NOT NULL DEFAULT 'user',
+    role role NOT NULL DEFAULT 'ADMIN',
     email TEXT NOT NULL
 );
 
