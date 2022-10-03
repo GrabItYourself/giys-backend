@@ -1,10 +1,10 @@
 syntax = "proto3";
 
-option go_package = "./libproto";
+option go_package = "../libproto";
 
 package payment;
 
-service Payment {
+service PaymentService {
   rpc Pay(PayRequest) returns (PayResponse) {}
   rpc AuthorizeCard(AuthorizeCardRequest) returns (AuthorizeCardResponse) {}
   rpc RegisterRecipient(RegisterRecipientRequest) returns (RegisterRecipientResponse) {}

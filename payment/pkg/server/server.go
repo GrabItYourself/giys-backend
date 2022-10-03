@@ -3,15 +3,15 @@ package server
 import (
 	"context"
 
-	"github.com/GrabItYourself/giys-backend/lib/proto/libproto"
 	"github.com/GrabItYourself/giys-backend/payment/internal/config"
+	"github.com/GrabItYourself/giys-backend/payment/internal/libproto"
 	"github.com/omise/omise-go"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 type server struct {
-	libproto.UnimplementedPaymentServer
+	libproto.UnimplementedPaymentServiceServer
 	omiseClient *omise.Client
 }
 

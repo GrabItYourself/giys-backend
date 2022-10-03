@@ -4,8 +4,8 @@ import (
 	"net"
 
 	"github.com/GrabItYourself/giys-backend/lib/logger"
-	"github.com/GrabItYourself/giys-backend/lib/proto/libproto"
 	"github.com/GrabItYourself/giys-backend/payment/internal/config"
+	"github.com/GrabItYourself/giys-backend/payment/internal/libproto"
 	"github.com/GrabItYourself/giys-backend/payment/pkg/server"
 	"google.golang.org/grpc"
 )
@@ -25,7 +25,7 @@ func main() {
 		logger.Fatal("Failed to initialize payment server: " + err.Error())
 	}
 
-	libproto.RegisterPaymentServer(s, paymentServer)
+	libproto.RegisterPaymentServiceServer(s, paymentServer)
 
 	err = s.Serve(lis)
 	if err != nil {
