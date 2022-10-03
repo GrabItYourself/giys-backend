@@ -10,32 +10,32 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-type server struct {
+type Server struct {
 	libproto.UnimplementedPaymentServiceServer
 	omiseClient *omise.Client
 }
 
-func NewServer(omiseConfig *config.OmiseConfig) (*server, error) {
+func NewServer(omiseConfig *config.OmiseConfig) (*Server, error) {
 	client, err := omise.NewClient(omiseConfig.PublicKey, omiseConfig.SecretKey)
 	if err != nil {
 		return nil, err
 	}
 
-	return &server{omiseClient: client}, nil
+	return &Server{omiseClient: client}, nil
 }
 
-func (s *server) Pay(context.Context, *libproto.PayRequest) (*libproto.PayResponse, error) {
+func (s *Server) Pay(context.Context, *libproto.PayRequest) (*libproto.PayResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Pay not implemented")
 }
 
-func (s *server) AuthorizeCard(context.Context, *libproto.AuthorizeCardRequest) (*libproto.AuthorizeCardResponse, error) {
+func (s *Server) AuthorizeCard(context.Context, *libproto.AuthorizeCardRequest) (*libproto.AuthorizeCardResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AuthorizeCard not implemented")
 }
 
-func (s *server) RegisterRecipient(context.Context, *libproto.RegisterRecipientRequest) (*libproto.RegisterRecipientResponse, error) {
+func (s *Server) RegisterRecipient(context.Context, *libproto.RegisterRecipientRequest) (*libproto.RegisterRecipientResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RegisterRecipient not implemented")
 }
 
-func (s *server) GetTransactionHistory(context.Context, *libproto.GetTransactionHistoryRequest) (*libproto.GetTransactionHistoryResponse, error) {
+func (s *Server) GetTransactionHistory(context.Context, *libproto.GetTransactionHistoryRequest) (*libproto.GetTransactionHistoryResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTransactionHistory not implemented")
 }
