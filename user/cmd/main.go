@@ -1,13 +1,17 @@
 package main
 
 import (
+	"net"
+
 	"github.com/GrabItYourself/giys-backend/lib/logger"
 	"github.com/GrabItYourself/giys-backend/lib/postgres"
 	"github.com/GrabItYourself/giys-backend/user/internal/config"
-	"github.com/GrabItYourself/giys-backend/user/pkg/handler"
-	"github.com/GrabItYourself/giys-backend/user/pkg/repository"
-	"github.com/gofiber/fiber/v2"
+	"github.com/GrabItYourself/giys-backend/user/internal/libproto"
+	"github.com/GrabItYourself/giys-backend/user/internal/repository"
+	"github.com/GrabItYourself/giys-backend/user/internal/server"
 	"github.com/pkg/errors"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 func main() {
@@ -24,20 +28,22 @@ func main() {
 	}
 	repo := repository.New(pg)
 
-	// Handlers
-	handlers := handler.NewHandler(repo)
+	// Initialize gRPC server
+	grpcServer := grpc.NewServer()
+	reflection.Register(grpcServer)
 
-	// Routes
-	app := fiber.New()
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, World 👋!")
-	})
+	// Register UserService server
+	libproto.RegisterUserServiceServer(grpcServer, server.NewServer(repo))
 
-	userGroup := app.Group("/api/user")
-	userGroup.Get("/me", handlers.GetCurrentUser)
-
-	err = app.Listen(":" + conf.Server.Port)
+	// Serve
+	lis, err := net.Listen("tcp", ":"+conf.Server.Port)
 	if err != nil {
-		logger.Fatal(errors.Wrap(err, "error during app listen").Error())
+		logger.Fatal(errors.Wrap(err, "Failed to listen").Error())
 	}
+	logger.Info("Starting gRPC server on port " + conf.Server.Port)
+	err = grpcServer.Serve(lis)
+	if err != nil {
+		logger.Fatal(errors.Wrap(err, "Failed to serve").Error())
+	}
+
 }
