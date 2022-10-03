@@ -2,7 +2,7 @@ package client
 
 import (
 	"github.com/GrabItYourself/giys-backend/lib/logger"
-	"github.com/GrabItYourself/giys-backend/order/libproto"
+	"github.com/GrabItYourself/giys-backend/order/internal/libproto"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 )

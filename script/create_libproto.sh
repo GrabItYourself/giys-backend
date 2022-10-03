@@ -2,7 +2,7 @@
 
 SERVICE_NAME=$1
 SERVICE_NAME_UPPER="$(tr '[:lower:]' '[:upper:]' <<< ${SERVICE_NAME:0:1})${SERVICE_NAME:1}"
-PROTO_PATH="$SERVICE_NAME/libproto"
+PROTO_PATH="$SERVICE_NAME/internal/libproto"
 
 echo "Creating $PROTO_PATH"
 

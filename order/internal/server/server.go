@@ -1,7 +1,7 @@
 package server
 
 import (
-	"github.com/GrabItYourself/giys-backend/order/libproto"
+	"github.com/GrabItYourself/giys-backend/order/internal/libproto"
 	"gorm.io/gorm"
 )
 
