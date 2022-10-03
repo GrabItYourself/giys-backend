@@ -6,7 +6,7 @@ import (
 	"github.com/GrabItYourself/giys-backend/lib/logger"
 	"github.com/GrabItYourself/giys-backend/payment/internal/config"
 	"github.com/GrabItYourself/giys-backend/payment/internal/libproto"
-	"github.com/GrabItYourself/giys-backend/payment/pkg/server"
+	"github.com/GrabItYourself/giys-backend/payment/internal/server"
 	"google.golang.org/grpc"
 )
 
