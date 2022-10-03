@@ -8,7 +8,7 @@ import (
 )
 
 func (h *handler) GetCurrentUser(ctx *fiber.Ctx) error {
-	userId, _, err := authutils.ExtractUserFromContext(ctx)
+	userId, _, err := authutils.ExtractUserFromFiberContext(ctx)
 	if err != nil {
 		return fiber.NewError(401, errors.Wrap(err, "can't extract user from context").Error())
 	}

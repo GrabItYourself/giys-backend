@@ -11,8 +11,8 @@ import (
 const userHeader = "Auth-User-Id"
 const roleHeader = "Auth-User-Role"
 
-// ExtractUserFromContext extracts userId and role from context
-func ExtractUserFromContext(ctx *fiber.Ctx) (string, libproto.UserRole, error) {
+// ExtractUserFromFiberContext extracts userId and role from context
+func ExtractUserFromFiberContext(ctx *fiber.Ctx) (string, libproto.UserRole, error) {
 	userId := ctx.Get(userHeader)
 	if userId == "" {
 		return "", libproto.UserRole_NULL, errors.Errorf("header %s is empty", userHeader)
@@ -24,6 +24,7 @@ func ExtractUserFromContext(ctx *fiber.Ctx) (string, libproto.UserRole, error) {
 	return userId, libproto.UserRole(libproto.UserRole_value[role]), nil
 }
 
+// ExtractUserFromGrpcContext extracts userId and role from metadata in gRPC context
 func ExtractUserFromGrpcContext(ctx context.Context) (string, libproto.UserRole, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
