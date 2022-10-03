@@ -23,11 +23,5 @@ message VerifyAccessTokenRequest {
 
 message VerifyAccessTokenResponse {
   string user_id = 1;
-  UserRole role = 2;
-}
-
-enum UserRole {
-  NULL = 0;
-  USER = 1;
-  ADMIN = 2;
+  string role = 2;
 }
