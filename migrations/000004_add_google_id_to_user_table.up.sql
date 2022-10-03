@@ -1,5 +1,5 @@
 BEGIN;
 
-ALTER TABLE "user" ADD COLUMN "google_id" TEXT;
+ALTER TABLE "user" ADD COLUMN "google_id" TEXT UNIQUE;
 
 COMMIT;

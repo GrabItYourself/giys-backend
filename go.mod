@@ -5,6 +5,7 @@ go 1.19
 require (
 	github.com/go-redis/redis/v9 v9.0.0-beta.2
 	github.com/gofiber/fiber/v2 v2.38.1
+	github.com/lib/pq v1.10.2
 	github.com/omise/omise-go v1.0.8
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/viper v1.13.0

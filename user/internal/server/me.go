@@ -4,11 +4,11 @@ import (
 	"context"
 
 	"github.com/GrabItYourself/giys-backend/lib/authutils"
+	"github.com/GrabItYourself/giys-backend/lib/postgres"
 	"github.com/GrabItYourself/giys-backend/user/internal/libproto"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"gorm.io/gorm"
 )
 
 func (s *Server) Me(ctx context.Context, in *libproto.MeReq) (*libproto.MeResp, error) {
@@ -18,13 +18,15 @@ func (s *Server) Me(ctx context.Context, in *libproto.MeReq) (*libproto.MeResp, 
 	}
 	user, err := s.repo.GetUserById(userId)
 	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, status.Error(codes.NotFound, errors.Wrap(err, "can't get user").Error())
-		}
-		return nil, status.Error(codes.Internal, errors.Wrap(err, "can't get user").Error())
+		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't get user").Error())
 	}
 	resp := &libproto.MeResp{
-		User: libproto.ConvertUserToProto(user),
+		User: &libproto.User{
+			Id:       *user.Id,
+			Role:     string(*user.Role),
+			Email:    user.Email,
+			GoogleId: user.GoogleId,
+		},
 	}
 	return resp, nil
 }

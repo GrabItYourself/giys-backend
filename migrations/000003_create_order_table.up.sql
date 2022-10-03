@@ -4,7 +4,7 @@ BEGIN;
 CREATE TABLE IF NOT EXISTS "order" (
     id INT NOT NULL,
     shop_id INT NOT NULL,
-    user_id TEXT NOT NULL,
+    user_id UUID NOT NULL,
     PRIMARY KEY (shop_id, id),
     FOREIGN KEY (shop_id) REFERENCES "shop" (id),
     FOREIGN KEY (user_id) REFERENCES "user" (id)

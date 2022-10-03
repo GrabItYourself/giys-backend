@@ -1,10 +1,11 @@
 BEGIN;
 
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TYPE role AS ENUM ('USER', 'ADMIN');
 CREATE TABLE IF NOT EXISTS "user" (
-    id TEXT PRIMARY KEY,
-    role role NOT NULL DEFAULT 'ADMIN',
-    email TEXT NOT NULL
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    role role NOT NULL DEFAULT 'USER',
+    email TEXT NOT NULL UNIQUE
 );
 
 COMMIT;

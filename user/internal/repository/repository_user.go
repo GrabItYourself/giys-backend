@@ -1,6 +1,8 @@
 package repository
 
-import "github.com/GrabItYourself/giys-backend/lib/postgres/models"
+import (
+	"github.com/GrabItYourself/giys-backend/lib/postgres/models"
+)
 
 func (r *Repository) GetUserById(id string) (*models.User, error) {
 	var user models.User
@@ -9,4 +11,12 @@ func (r *Repository) GetUserById(id string) (*models.User, error) {
 		return nil, err
 	}
 	return &user, nil
+}
+
+func (r *Repository) CreateUser(user *models.User) error {
+	err := r.pg.Create(user).Error
+	if err != nil {
+		return err
+	}
+	return nil
 }
