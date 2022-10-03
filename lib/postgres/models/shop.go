@@ -8,3 +8,7 @@ type Shop struct {
 	Location    string `json:"location" gorm:"column:location"`
 	Contact     string `json:"contact" gorm:"column:contact"`
 }
+
+func (Shop) TableName() string {
+	return "shop"
+}

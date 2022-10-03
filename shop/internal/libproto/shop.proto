@@ -20,11 +20,11 @@ service ShopService {
 }
 
 message Shop {
-    string name = 2;
-    optional string image = 3;
-    optional string description = 4;
-    optional string location = 5;
-    optional string contact = 6;
+    string name = 1;
+    optional string image = 2;
+    optional string description = 3;
+    optional string location = 4;
+    optional string contact = 5;
 }
 
 message ShopItem {
@@ -56,7 +56,7 @@ message ShopResponse {
 }
 
 message CreateShopItemRequest {
-    ShopItem item = 2;
+    ShopItem item = 1;
 }
 
 message GetAllShopItemsRequest {

@@ -7,3 +7,7 @@ type ShopItem struct {
 	Image  string `json:"image" gorm:"column:image"`
 	Price  string `json:"price" gorm:"column:price;not null"`
 }
+
+func (ShopItem) TableName() string {
+	return "shop_item"
+}
