@@ -10,7 +10,7 @@ import (
 func NewClient(addr string, opts ...grpc.DialOption) (*libproto.PaymentServiceClient, error) {
 	conn, err := grpc.Dial(addr, opts...)
 	if err != nil {
-		logger.Error("Failed to connect to order service", zap.Error(err))
+		logger.Error("Failed to connect to payment service", zap.Error(err))
 		return nil, err
 	}
 	defer conn.Close()
