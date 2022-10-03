@@ -14,20 +14,20 @@ import (
 
 func main() {
 	// Load config
-	config := config.InitConfig()
+	cf := config.InitConfig()
 
 	// Initialize logger
-	logger.InitLogger(&config.Log)
+	logger.InitLogger(&cf.Log)
 
 	// Initialize context
-	context, cancel := signal.NotifyContext(context.Background(), syscall.SIGTERM, syscall.SIGINT)
+	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGTERM, syscall.SIGINT)
 	defer cancel()
 
 	// Establish connection to PostgreSQL database
-	postgres, err := postgres.New(&config.Postgres)
+	pg, err := postgres.New(&cf.Postgres)
 	if err != nil {
 		logger.Fatal("Failed to initialize PostgreSQL connection", zap.Error(err))
 	}
 
-	fmt.Println(postgres, context)
+	fmt.Println(pg, ctx)
 }
