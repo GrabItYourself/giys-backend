@@ -1,12 +1,20 @@
 BEGIN;
 
 CREATE TABLE IF NOT EXISTS "shop" (
-    id SERIAL PRIMARY KEY
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    image TEXT,
+    description TEXT,
+    location TEXT,
+    contact TEXT 
 );
 
 CREATE TABLE IF NOT EXISTS "shop_item" (
     id INT NOT NULL,
     shop_id INT NOT NULL,
+    name TEXT NOT NULL,
+    image TEXT,
+    price INT NOT NULL,
 
     FOREIGN KEY (shop_id) REFERENCES "shop" (id),
     PRIMARY KEY (shop_id, id)

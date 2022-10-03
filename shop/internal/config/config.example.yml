@@ -1,0 +1,12 @@
+server:
+    port: 3002
+log:
+    level: info
+    service: shop
+postgres:
+    host: localhost
+    port: 5432
+    dbname: <dbname>
+    user: <user>
+    password: <password>
+    sslmode: disable

@@ -1,0 +1,91 @@
+syntax = "proto3";
+
+option go_package = "../libproto";
+
+package shop;
+
+service ShopService {
+    rpc CreateShop(CreateShopRequest) returns (ShopResponse);
+    rpc GetShop(GetShopRequest) returns (ShopResponse);
+    rpc EditShop(EditShopRequest) returns (ShopResponse);
+    rpc DeleteShop(DeleteShopRequest) returns (ShopResponse);
+
+    rpc CreateShopItem(CreateShopItemRequest) returns (ShopItemResponse);
+    rpc GetAllShopItems(GetAllShopItemsRequest) returns (AllShopItemsResponse);
+    rpc GetShopItem(GetShopItemRequest) returns (ShopItemResponse);
+    rpc EditShopItem(EditShopItemRequest) returns (ShopItemResponse);
+    rpc DeleteShopItem(DeleteShopItemRequest) returns (ShopItemResponse);
+
+    rpc AddBankAccount(AddBankAccountRequest) returns (AddBankAccountResponse);
+}
+
+message Shop {
+    string name = 1;
+    optional string image = 2;
+    optional string description = 3;
+    optional string location = 4;
+    optional string contact = 5;
+}
+
+message ShopItem {
+    string shop_id = 1;
+    string name = 2;
+    optional string image = 3;
+    int32 price = 4;
+}
+
+message CreateShopRequest {
+    Shop shop = 1;
+}
+
+message GetShopRequest {
+    string id = 1;
+}
+
+message EditShopRequest {
+    string id = 1;
+    Shop edited_shop = 2;
+}
+
+message DeleteShopRequest {
+    string id = 1;
+}
+
+message ShopResponse {
+    Shop shop = 1;
+}
+
+message CreateShopItemRequest {
+    ShopItem item = 1;
+}
+
+message GetAllShopItemsRequest {
+    string shop_id = 1;
+}
+
+message GetShopItemRequest {
+    string id = 1;
+}
+
+message EditShopItemRequest {
+    string id = 1;
+    ShopItem edited_item = 2;
+}
+
+message DeleteShopItemRequest {
+    string id = 1;
+}
+
+message ShopItemResponse {
+    ShopItem item = 1;
+}
+
+message AllShopItemsResponse {
+    repeated ShopItem items = 1;
+}
+
+message AddBankAccountRequest {
+}
+
+message AddBankAccountResponse {
+}
