@@ -27,6 +27,6 @@ func New(ctx context.Context, config *Config) (*redis.Client, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "Cannot connect to redis")
 	}
-	logger.Info("Postgres connected to " + config.Address)
+	logger.Info("Redis connected to " + config.Address)
 	return redisClient, nil
 }
