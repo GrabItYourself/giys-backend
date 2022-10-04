@@ -28,10 +28,6 @@ func (s *Server) Pay(context.Context, *libproto.PayRequest) (*libproto.PayRespon
 	return nil, status.Errorf(codes.Unimplemented, "method Pay not implemented")
 }
 
-func (s *Server) AuthorizeCard(context.Context, *libproto.AuthorizeCardRequest) (*libproto.AuthorizeCardResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AuthorizeCard not implemented")
-}
-
 func (s *Server) RegisterRecipient(context.Context, *libproto.RegisterRecipientRequest) (*libproto.RegisterRecipientResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RegisterRecipient not implemented")
 }
