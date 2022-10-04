@@ -11,7 +11,7 @@ import (
 	"github.com/GrabItYourself/giys-backend/user/internal/config"
 	"github.com/GrabItYourself/giys-backend/user/internal/repository"
 	"github.com/GrabItYourself/giys-backend/user/internal/server"
-	"github.com/GrabItYourself/giys-backend/user/pkg/libproto"
+	"github.com/GrabItYourself/giys-backend/user/pkg/userproto"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -40,7 +40,7 @@ func main() {
 	reflection.Register(grpcServer)
 
 	// Register UserService server
-	libproto.RegisterUserServiceServer(grpcServer, server.NewServer(repo))
+	userproto.RegisterUserServiceServer(grpcServer, server.NewServer(repo))
 
 	// Serve
 	lis, err := net.Listen("tcp", ":"+conf.Server.Port)
