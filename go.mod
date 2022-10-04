@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/go-redis/redis/v9 v9.0.0-beta.2
 	github.com/gofiber/fiber/v2 v2.38.1
-	github.com/lib/pq v1.10.2
+	github.com/jackc/pgconn v1.13.0
 	github.com/omise/omise-go v1.0.8
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/viper v1.13.0
@@ -25,7 +25,6 @@ require (
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
-	github.com/jackc/pgconn v1.13.0 // indirect
 	github.com/jackc/pgio v1.0.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgproto3/v2 v2.3.1 // indirect
