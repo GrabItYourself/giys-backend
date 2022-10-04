@@ -2,7 +2,6 @@ package server
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/GrabItYourself/giys-backend/lib/authutils"
@@ -17,6 +16,7 @@ func (s *Server) AuthorizeCard(ctx context.Context, in *libproto.AuthorizeCardRe
 	if err != nil {
 		return nil, err
 	}
+
 	user, err := s.repo.GetUserById(userId)
 	if err != nil {
 		return nil, err
@@ -28,32 +28,33 @@ func (s *Server) AuthorizeCard(ctx context.Context, in *libproto.AuthorizeCardRe
 		ExpirationMonth: time.Month(in.ExpirationMonth),
 		ExpirationYear:  int(in.ExpirationYear),
 	}
-
-	if err := s.omiseClient.Do(token, createToken); err != nil {
-		fmt.Printf(in.GetName() + in.CardNumber)
+	err = s.omiseClient.Do(token, createToken)
+	if err != nil {
 		return nil, err
 	}
 
-	// check if user has omise customer id
 	if user.OmiseCustomerId == nil {
 		customer, createCustomer := &omise.Customer{}, &operations.CreateCustomer{
 			Email: user.Email,
 			Card:  token.ID,
 		}
-
-		if err := s.omiseClient.Do(customer, createCustomer); err != nil {
+		err = s.omiseClient.Do(customer, createCustomer)
+		if err != nil {
 			return nil, err
 		}
 
-		s.repo.UpdateOmiseCustomerId(userId, customer.ID)
+		err = s.repo.UpdateOmiseCustomerId(userId, customer.ID)
+		if err != nil {
+			return nil, err
+		}
 
 	} else {
 		customer, updateCustomer := &omise.Customer{}, &operations.UpdateCustomer{
 			CustomerID: *user.OmiseCustomerId,
 			Card:       token.ID,
 		}
-
-		if err := s.omiseClient.Do(customer, updateCustomer); err != nil {
+		err = s.omiseClient.Do(customer, updateCustomer)
+		if err != nil {
 			return nil, err
 		}
 	}
