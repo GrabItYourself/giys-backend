@@ -24,6 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type AuthClient interface {
 	ExchangeAuthCode(ctx context.Context, in *ExchangeAuthCodeReq, opts ...grpc.CallOption) (*ExchangeAuthCodeResp, error)
 	VerifyAccessToken(ctx context.Context, in *VerifyAccessTokenReq, opts ...grpc.CallOption) (*VerifyAccessTokenResp, error)
+	RefreshAccessToken(ctx context.Context, in *RefreshAccessTokenReq, opts ...grpc.CallOption) (*RefreshAccessTokenResp, error)
 }
 
 type authClient struct {
@@ -52,12 +53,22 @@ func (c *authClient) VerifyAccessToken(ctx context.Context, in *VerifyAccessToke
 	return out, nil
 }
 
+func (c *authClient) RefreshAccessToken(ctx context.Context, in *RefreshAccessTokenReq, opts ...grpc.CallOption) (*RefreshAccessTokenResp, error) {
+	out := new(RefreshAccessTokenResp)
+	err := c.cc.Invoke(ctx, "/auth.Auth/RefreshAccessToken", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthServer is the server API for Auth service.
 // All implementations must embed UnimplementedAuthServer
 // for forward compatibility
 type AuthServer interface {
 	ExchangeAuthCode(context.Context, *ExchangeAuthCodeReq) (*ExchangeAuthCodeResp, error)
 	VerifyAccessToken(context.Context, *VerifyAccessTokenReq) (*VerifyAccessTokenResp, error)
+	RefreshAccessToken(context.Context, *RefreshAccessTokenReq) (*RefreshAccessTokenResp, error)
 	mustEmbedUnimplementedAuthServer()
 }
 
@@ -70,6 +81,9 @@ func (UnimplementedAuthServer) ExchangeAuthCode(context.Context, *ExchangeAuthCo
 }
 func (UnimplementedAuthServer) VerifyAccessToken(context.Context, *VerifyAccessTokenReq) (*VerifyAccessTokenResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method VerifyAccessToken not implemented")
+}
+func (UnimplementedAuthServer) RefreshAccessToken(context.Context, *RefreshAccessTokenReq) (*RefreshAccessTokenResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RefreshAccessToken not implemented")
 }
 func (UnimplementedAuthServer) mustEmbedUnimplementedAuthServer() {}
 
@@ -120,6 +134,24 @@ func _Auth_VerifyAccessToken_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Auth_RefreshAccessToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RefreshAccessTokenReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServer).RefreshAccessToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/auth.Auth/RefreshAccessToken",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServer).RefreshAccessToken(ctx, req.(*RefreshAccessTokenReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Auth_ServiceDesc is the grpc.ServiceDesc for Auth service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -134,6 +166,10 @@ var Auth_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "VerifyAccessToken",
 			Handler:    _Auth_VerifyAccessToken_Handler,
+		},
+		{
+			MethodName: "RefreshAccessToken",
+			Handler:    _Auth_RefreshAccessToken_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

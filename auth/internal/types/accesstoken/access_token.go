@@ -12,8 +12,8 @@ type AccessToken struct {
 	Role   models.RoleEnum
 }
 
-func FromMap(m map[string]string) (*AccessToken, error) {
-	var accessToken AccessToken
+func FromMap(token string, m map[string]string) (*AccessToken, error) {
+	accessToken := &AccessToken{Token: token}
 	if userId, ok := m["user_id"]; !ok {
 		return nil, errors.New("user_id not found in hash")
 	} else {
@@ -24,7 +24,7 @@ func FromMap(m map[string]string) (*AccessToken, error) {
 	} else {
 		accessToken.Role = models.RoleEnum(role)
 	}
-	return &accessToken, nil
+	return accessToken, nil
 }
 
 func New(userId string, role models.RoleEnum) *AccessToken {

@@ -33,6 +33,7 @@ func (s *Server) ExchangeAuthCode(ctx context.Context, in *libproto.ExchangeAuth
 	}
 
 	log.Print(userInfo)
+	// TODO: wait for discussion about shared repository vs separate repositories
 
 	return nil, nil
 }
