@@ -18,6 +18,10 @@ message PayResponse {
 }
 
 message AuthorizeCardRequest {
+  string name = 1;
+  string card_number = 2;
+  int32 expiration_month = 3;
+  int32 expiration_year = 4;
 }
 
 message AuthorizeCardResponse {
