@@ -3,6 +3,7 @@ package postgres
 import (
 	"fmt"
 
+	"github.com/GrabItYourself/giys-backend/lib/logger"
 	"github.com/pkg/errors"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -50,5 +51,6 @@ func New(config *Config) (db *gorm.DB, err error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "Can't initialize db session")
 	}
+	logger.Info(fmt.Sprintf("Postgres connected to %s:%s", config.Host, config.Port))
 	return db, nil
 }

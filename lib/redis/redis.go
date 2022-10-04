@@ -3,6 +3,7 @@ package redis
 import (
 	"context"
 
+	"github.com/GrabItYourself/giys-backend/lib/logger"
 	"github.com/go-redis/redis/v9"
 	"github.com/pkg/errors"
 )
@@ -26,5 +27,6 @@ func New(ctx context.Context, config *Config) (*redis.Client, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "Cannot connect to redis")
 	}
+	logger.Info("Postgres connected to " + config.Address)
 	return redisClient, nil
 }
