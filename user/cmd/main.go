@@ -1,7 +1,10 @@
 package main
 
 import (
+	"context"
 	"net"
+	"os/signal"
+	"syscall"
 
 	"github.com/GrabItYourself/giys-backend/lib/logger"
 	"github.com/GrabItYourself/giys-backend/lib/postgres"
@@ -15,6 +18,9 @@ import (
 )
 
 func main() {
+	context, cancel := signal.NotifyContext(context.Background(), syscall.SIGTERM, syscall.SIGINT)
+	defer cancel()
+
 	// Config
 	conf := config.InitConfig()
 
@@ -41,6 +47,12 @@ func main() {
 		logger.Fatal(errors.Wrap(err, "Failed to listen").Error())
 	}
 	logger.Info("Starting gRPC server on port " + conf.Server.Port)
+	go func() {
+		<-context.Done()
+		cancel()
+		logger.Info("Received shut down signal. Attempting graceful shutdown...")
+		grpcServer.GracefulStop()
+	}()
 	err = grpcServer.Serve(lis)
 	if err != nil {
 		logger.Fatal(errors.Wrap(err, "Failed to serve").Error())
