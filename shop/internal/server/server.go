@@ -1,12 +1,12 @@
 package server
 
 import (
-	"github.com/GrabItYourself/giys-backend/shop/internal/libproto"
+	"github.com/GrabItYourself/giys-backend/shop/pkg/shopproto"
 	"gorm.io/gorm"
 )
 
 type Server struct {
-	libproto.UnimplementedShopServiceServer
+	shopproto.UnimplementedShopServiceServer
 	pg *gorm.DB
 }
 
