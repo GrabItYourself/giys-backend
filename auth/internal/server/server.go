@@ -5,6 +5,7 @@ import (
 	"github.com/GrabItYourself/giys-backend/auth/internal/libproto"
 	"github.com/GrabItYourself/giys-backend/auth/internal/repository"
 	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/google"
 )
 
 type Server struct {
@@ -19,6 +20,8 @@ func NewServer(repo *repository.Repository, oauthConf *config.OAuthConfig) *Serv
 		oauthConfig: &oauth2.Config{
 			ClientID:     oauthConf.ClientId,
 			ClientSecret: oauthConf.ClientSecret,
+			RedirectURL:  oauthConf.RedirectURL,
+			Endpoint:     google.Endpoint,
 		},
 	}
 }

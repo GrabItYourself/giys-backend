@@ -29,6 +29,7 @@ type ServerConfig struct {
 type OAuthConfig struct {
 	ClientId     string `mapstructure:"client_id"`
 	ClientSecret string `mapstructure:"client_secret"`
+	RedirectURL  string `mapstructure:"redirect_url"`
 }
 
 func InitConfig() *Config {

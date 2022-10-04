@@ -6,6 +6,7 @@ log:
 oauth:
     client_id:
     client_secret:
+    redirect_url: https://example.com
 postgres:
     host: localhost
     port: 5432
