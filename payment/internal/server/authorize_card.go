@@ -34,7 +34,7 @@ func (s *Server) AuthorizeCard(ctx context.Context, in *libproto.AuthorizeCardRe
 	}
 	err = s.omiseClient.Do(token, createToken)
 	if err != nil {
-		return nil, status.Error(InferCodeFromError(err), errors.Wrap(err, "can't create token").Error())
+		return nil, status.Error(InferCodeFromOmiseError(err), errors.Wrap(err, "can't create token").Error())
 	}
 
 	if user.OmiseCustomerId == nil {
@@ -44,7 +44,7 @@ func (s *Server) AuthorizeCard(ctx context.Context, in *libproto.AuthorizeCardRe
 		}
 		err = s.omiseClient.Do(customer, createCustomer)
 		if err != nil {
-			return nil, status.Error(InferCodeFromError(err), errors.Wrap(err, "can't create omise customer").Error())
+			return nil, status.Error(InferCodeFromOmiseError(err), errors.Wrap(err, "can't create omise customer").Error())
 		}
 
 		err = s.repo.UpdateOmiseCustomerId(userId, customer.ID)
@@ -59,7 +59,7 @@ func (s *Server) AuthorizeCard(ctx context.Context, in *libproto.AuthorizeCardRe
 		}
 		err = s.omiseClient.Do(customer, updateCustomer)
 		if err != nil {
-			return nil, status.Error(InferCodeFromError(err), errors.Wrap(err, "can't add card").Error())
+			return nil, status.Error(InferCodeFromOmiseError(err), errors.Wrap(err, "can't add card").Error())
 		}
 	}
 

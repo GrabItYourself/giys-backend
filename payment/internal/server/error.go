@@ -6,7 +6,7 @@ import (
 	"google.golang.org/grpc/codes"
 )
 
-func InferCodeFromError(err error) codes.Code {
+func InferCodeFromOmiseError(err error) codes.Code {
 	omiseError := &omise.Error{}
 	switch errors.As(err, &omiseError); omiseError.StatusCode {
 	case 400:
