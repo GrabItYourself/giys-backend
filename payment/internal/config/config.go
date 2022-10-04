@@ -5,6 +5,7 @@ import (
 	"sync"
 
 	"github.com/GrabItYourself/giys-backend/lib/logger"
+	"github.com/GrabItYourself/giys-backend/lib/postgres"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 )
@@ -13,9 +14,10 @@ var configOnce sync.Once
 var config *Config
 
 type Config struct {
-	Server ServerConfig  `mapstructure:"server"`
-	Log    logger.Config `mapstructure:"log"`
-	Omise  OmiseConfig   `mapstructure:"omise"`
+	Server   ServerConfig    `mapstructure:"server"`
+	Log      logger.Config   `mapstructure:"log"`
+	Omise    OmiseConfig     `mapstructure:"omise"`
+	Postgres postgres.Config `mapstructure:"postgres"`
 }
 
 type ServerConfig struct {
