@@ -1,0 +1,8 @@
+server:
+  port: 3002
+log:
+  level: info
+  service: shop
+grpc:
+  user:
+    addr: localhost:3001

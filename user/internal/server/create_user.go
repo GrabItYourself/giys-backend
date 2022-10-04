@@ -5,7 +5,7 @@ import (
 
 	"github.com/GrabItYourself/giys-backend/lib/postgres"
 	"github.com/GrabItYourself/giys-backend/lib/postgres/models"
-	"github.com/GrabItYourself/giys-backend/user/internal/libproto"
+	"github.com/GrabItYourself/giys-backend/user/libproto"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc/status"
 )
