@@ -5,23 +5,23 @@ option go_package = "../libproto";
 package auth;
 
 service Auth {
-  rpc ExchangeAuthCode(ExchangeAuthCodeRequest) returns (ExchangeAuthCodeResponse) {}
-  rpc VerifyAccessToken(VerifyAccessTokenRequest) returns (VerifyAccessTokenResponse) {}
+  rpc ExchangeAuthCode(ExchangeAuthCodeReq) returns (ExchangeAuthCodeResp) {}
+  rpc VerifyAccessToken(VerifyAccessTokenReq) returns (VerifyAccessTokenResp) {}
 }
 
-message ExchangeAuthCodeRequest {
+message ExchangeAuthCodeReq {
   string auth_code = 1;
 }
 
-message ExchangeAuthCodeResponse {
+message ExchangeAuthCodeResp {
   string access_token = 1;
 }
 
-message VerifyAccessTokenRequest {
+message VerifyAccessTokenReq {
   string access_token = 1;
 }
 
-message VerifyAccessTokenResponse {
+message VerifyAccessTokenResp {
   string user_id = 1;
   string role = 2;
 }

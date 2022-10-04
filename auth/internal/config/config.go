@@ -17,12 +17,18 @@ var config *Config
 type Config struct {
 	Server   ServerConfig    `mapstructure:"server"`
 	Log      logger.Config   `mapstructure:"log"`
+	OAuth    OAuthConfig     `mapstructure:"oauth"`
 	Postgres postgres.Config `mapstructure:"postgres"`
 	Redis    redis.Config    `mapstructure:"redis"`
 }
 
 type ServerConfig struct {
 	Port string `mapstructure:"port"`
+}
+
+type OAuthConfig struct {
+	ClientId     string `mapstructure:"client_id"`
+	ClientSecret string `mapstructure:"client_secret"`
 }
 
 func InitConfig() *Config {

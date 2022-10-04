@@ -22,8 +22,8 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthClient interface {
-	ExchangeAuthCode(ctx context.Context, in *ExchangeAuthCodeRequest, opts ...grpc.CallOption) (*ExchangeAuthCodeResponse, error)
-	VerifyAccessToken(ctx context.Context, in *VerifyAccessTokenRequest, opts ...grpc.CallOption) (*VerifyAccessTokenResponse, error)
+	ExchangeAuthCode(ctx context.Context, in *ExchangeAuthCodeReq, opts ...grpc.CallOption) (*ExchangeAuthCodeResp, error)
+	VerifyAccessToken(ctx context.Context, in *VerifyAccessTokenReq, opts ...grpc.CallOption) (*VerifyAccessTokenResp, error)
 }
 
 type authClient struct {
@@ -34,8 +34,8 @@ func NewAuthClient(cc grpc.ClientConnInterface) AuthClient {
 	return &authClient{cc}
 }
 
-func (c *authClient) ExchangeAuthCode(ctx context.Context, in *ExchangeAuthCodeRequest, opts ...grpc.CallOption) (*ExchangeAuthCodeResponse, error) {
-	out := new(ExchangeAuthCodeResponse)
+func (c *authClient) ExchangeAuthCode(ctx context.Context, in *ExchangeAuthCodeReq, opts ...grpc.CallOption) (*ExchangeAuthCodeResp, error) {
+	out := new(ExchangeAuthCodeResp)
 	err := c.cc.Invoke(ctx, "/auth.Auth/ExchangeAuthCode", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -43,8 +43,8 @@ func (c *authClient) ExchangeAuthCode(ctx context.Context, in *ExchangeAuthCodeR
 	return out, nil
 }
 
-func (c *authClient) VerifyAccessToken(ctx context.Context, in *VerifyAccessTokenRequest, opts ...grpc.CallOption) (*VerifyAccessTokenResponse, error) {
-	out := new(VerifyAccessTokenResponse)
+func (c *authClient) VerifyAccessToken(ctx context.Context, in *VerifyAccessTokenReq, opts ...grpc.CallOption) (*VerifyAccessTokenResp, error) {
+	out := new(VerifyAccessTokenResp)
 	err := c.cc.Invoke(ctx, "/auth.Auth/VerifyAccessToken", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -56,8 +56,8 @@ func (c *authClient) VerifyAccessToken(ctx context.Context, in *VerifyAccessToke
 // All implementations must embed UnimplementedAuthServer
 // for forward compatibility
 type AuthServer interface {
-	ExchangeAuthCode(context.Context, *ExchangeAuthCodeRequest) (*ExchangeAuthCodeResponse, error)
-	VerifyAccessToken(context.Context, *VerifyAccessTokenRequest) (*VerifyAccessTokenResponse, error)
+	ExchangeAuthCode(context.Context, *ExchangeAuthCodeReq) (*ExchangeAuthCodeResp, error)
+	VerifyAccessToken(context.Context, *VerifyAccessTokenReq) (*VerifyAccessTokenResp, error)
 	mustEmbedUnimplementedAuthServer()
 }
 
@@ -65,10 +65,10 @@ type AuthServer interface {
 type UnimplementedAuthServer struct {
 }
 
-func (UnimplementedAuthServer) ExchangeAuthCode(context.Context, *ExchangeAuthCodeRequest) (*ExchangeAuthCodeResponse, error) {
+func (UnimplementedAuthServer) ExchangeAuthCode(context.Context, *ExchangeAuthCodeReq) (*ExchangeAuthCodeResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ExchangeAuthCode not implemented")
 }
-func (UnimplementedAuthServer) VerifyAccessToken(context.Context, *VerifyAccessTokenRequest) (*VerifyAccessTokenResponse, error) {
+func (UnimplementedAuthServer) VerifyAccessToken(context.Context, *VerifyAccessTokenReq) (*VerifyAccessTokenResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method VerifyAccessToken not implemented")
 }
 func (UnimplementedAuthServer) mustEmbedUnimplementedAuthServer() {}
@@ -85,7 +85,7 @@ func RegisterAuthServer(s grpc.ServiceRegistrar, srv AuthServer) {
 }
 
 func _Auth_ExchangeAuthCode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ExchangeAuthCodeRequest)
+	in := new(ExchangeAuthCodeReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -97,13 +97,13 @@ func _Auth_ExchangeAuthCode_Handler(srv interface{}, ctx context.Context, dec fu
 		FullMethod: "/auth.Auth/ExchangeAuthCode",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServer).ExchangeAuthCode(ctx, req.(*ExchangeAuthCodeRequest))
+		return srv.(AuthServer).ExchangeAuthCode(ctx, req.(*ExchangeAuthCodeReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Auth_VerifyAccessToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(VerifyAccessTokenRequest)
+	in := new(VerifyAccessTokenReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -115,7 +115,7 @@ func _Auth_VerifyAccessToken_Handler(srv interface{}, ctx context.Context, dec f
 		FullMethod: "/auth.Auth/VerifyAccessToken",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServer).VerifyAccessToken(ctx, req.(*VerifyAccessTokenRequest))
+		return srv.(AuthServer).VerifyAccessToken(ctx, req.(*VerifyAccessTokenReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
