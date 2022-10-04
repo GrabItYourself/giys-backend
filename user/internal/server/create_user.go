@@ -21,8 +21,8 @@ func (s *Server) CreateUser(ctx context.Context, in *libproto.CreateUserReq) (*l
 	}
 	return &libproto.CreateUserResp{
 		User: &libproto.User{
-			Id:       *user.Id,
-			Role:     string(*user.Role),
+			Id:       user.Id,
+			Role:     string(user.Role),
 			Email:    user.Email,
 			GoogleId: user.GoogleId,
 		},

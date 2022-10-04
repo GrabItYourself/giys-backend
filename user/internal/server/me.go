@@ -22,8 +22,8 @@ func (s *Server) Me(ctx context.Context, in *libproto.MeReq) (*libproto.MeResp, 
 	}
 	resp := &libproto.MeResp{
 		User: &libproto.User{
-			Id:       *user.Id,
-			Role:     string(*user.Role),
+			Id:       user.Id,
+			Role:     string(user.Role),
 			Email:    user.Email,
 			GoogleId: user.GoogleId,
 		},
