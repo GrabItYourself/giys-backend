@@ -1,8 +1,8 @@
 package server
 
 import (
-	"github.com/GrabItYourself/giys-backend/user/internal/libproto"
 	"github.com/GrabItYourself/giys-backend/user/internal/repository"
+	"github.com/GrabItYourself/giys-backend/user/pkg/libproto"
 )
 
 type Server struct {

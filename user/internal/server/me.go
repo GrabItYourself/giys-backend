@@ -5,7 +5,7 @@ import (
 
 	"github.com/GrabItYourself/giys-backend/lib/authutils"
 	"github.com/GrabItYourself/giys-backend/lib/postgres"
-	"github.com/GrabItYourself/giys-backend/user/internal/libproto"
+	"github.com/GrabItYourself/giys-backend/user/pkg/libproto"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
