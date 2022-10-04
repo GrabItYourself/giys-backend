@@ -72,3 +72,14 @@ migrate -path ./migrations -database "postgres://postgres:postgres@localhost:543
    ```bash
    sh script/generate_proto.sh <service-name>
    ```
+
+# Port
+
+| Service | Port |
+| ------- | ---- |
+| API     | 8080 |
+| User    | 3000 |
+| Shop    | 3001 |
+| Order   | 3002 |
+| Auth    | 3003 |
+| Payment | 3004 |

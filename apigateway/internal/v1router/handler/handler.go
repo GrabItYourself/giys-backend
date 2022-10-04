@@ -1,8 +1,6 @@
 package v1handler
 
-import (
-	"github.com/GrabItYourself/giys-backend/user/libproto"
-)
+import "github.com/GrabItYourself/giys-backend/user/pkg/libproto"
 
 type Handler struct {
 	UserClient libproto.UserServiceClient

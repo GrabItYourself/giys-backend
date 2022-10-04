@@ -38,13 +38,13 @@ func InitConfig() *Config {
 
 		viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 		if err := viper.ReadInConfig(); err != nil {
-			panic(errors.Wrap(err, "Config file not found"))
+			logger.Panic(errors.Wrap(err, "Config file not found").Error())
 		}
 		viper.AutomaticEnv()
 
 		viper.WatchConfig() // Watch for changes to the configuration file and recompile
 		if err := viper.Unmarshal(&config); err != nil {
-			panic(errors.Wrap(err, "can't unmarshal config"))
+			logger.Panic(errors.Wrap(err, "can't unmarshal config").Error())
 		}
 		logger.Info("Config initialized!")
 	})

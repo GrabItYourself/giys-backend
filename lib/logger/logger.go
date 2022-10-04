@@ -69,6 +69,10 @@ func Error(msg string, fields ...zapcore.Field) {
 	logger.WithOptions(zap.AddCallerSkip(1)).Error(msg, fields...)
 }
 
+func Panic(msg string, fields ...zapcore.Field) {
+	logger.WithOptions(zap.AddCallerSkip(1)).Panic(msg, fields...)
+}
+
 func With(fields ...zapcore.Field) *zap.Logger {
 	return logger.With(fields...)
 }

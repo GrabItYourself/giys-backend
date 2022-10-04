@@ -12,6 +12,8 @@ import (
 	"github.com/GrabItYourself/giys-backend/user/pkg/client"
 	"github.com/gofiber/fiber/v2"
 	"github.com/pkg/errors"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 func main() {
@@ -26,9 +28,9 @@ func main() {
 	logger.InitLogger(&conf.Log)
 
 	// Initialize GRPC client
-	userGrpcClient, err := client.NewClient(conf.Grpc.User.Addr)
+	userGrpcClient, err := client.NewClient(ctx, conf.Grpc.User.Addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
-		logger.Fatal(errors.Wrap(err, "Can't initialize user gRPC client").Error())
+		logger.Panic(err.Error())
 	}
 
 	// Initialize fiber app
@@ -46,12 +48,16 @@ func main() {
 	v1Router := v1router.NewRouter(ctx, v1, v1Handler)
 	v1Router.InitUserRoute(ctx, "/user")
 
-	// Start the server
-	if err := app.Listen(":" + conf.Server.Port); err != nil {
-		logger.Fatal(errors.Wrap(err, "Failed to start server").Error())
-	}
-	defer func() {
+	// Graceful shutdown for fiber app
+	go func() {
+		<-ctx.Done()
 		logger.Info("Gracefully shutting down...")
 		app.Shutdown()
 	}()
+
+	// Start the server
+	if err := app.Listen(":" + conf.Server.Port); err != nil {
+		logger.Panic(errors.Wrap(err, "Failed to start server").Error())
+	}
+
 }

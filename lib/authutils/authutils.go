@@ -8,18 +8,20 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-const userHeader = "Auth-User-Id"
-const roleHeader = "Auth-User-Role"
+const (
+	UserHeader = "Auth-User-Id"
+	RoleHeader = "Auth-User-Role"
+)
 
 // ExtractUserFromFiberContext extracts userId and role from context
 func ExtractUserFromFiberContext(ctx *fiber.Ctx) (string, models.RoleEnum, error) {
-	userId := ctx.Get(userHeader)
+	userId := ctx.Get(UserHeader)
 	if userId == "" {
-		return "", "", errors.Errorf("header %s is empty", userHeader)
+		return "", "", errors.Errorf("header %s is empty", UserHeader)
 	}
-	role := ctx.Get(roleHeader)
+	role := ctx.Get(RoleHeader)
 	if role == "" {
-		return "", "", errors.Errorf("header %s is empty", roleHeader)
+		return "", "", errors.Errorf("header %s is empty", RoleHeader)
 	}
 	return userId, models.RoleEnum(role), nil
 }
@@ -30,17 +32,17 @@ func ExtractUserFromGrpcContext(ctx context.Context) (string, models.RoleEnum, e
 	if !ok {
 		return "", "", errors.New("can't get metadata from context")
 	}
-	userId := md.Get(userHeader)
+	userId := md.Get(UserHeader)
 	if len(userId) == 0 {
-		return "", "", errors.Errorf("header %s is empty", userHeader)
+		return "", "", errors.Errorf("header %s is empty", UserHeader)
 	} else if len(userId) > 1 {
-		return "", "", errors.Errorf("header %s has more than one value", userHeader)
+		return "", "", errors.Errorf("header %s has more than one value", UserHeader)
 	}
-	role := md.Get(roleHeader)
+	role := md.Get(RoleHeader)
 	if len(role) == 0 {
-		return "", "", errors.Errorf("header %s is empty", roleHeader)
+		return "", "", errors.Errorf("header %s is empty", RoleHeader)
 	} else if len(role) > 1 {
-		return "", "", errors.Errorf("header %s has more than one value", roleHeader)
+		return "", "", errors.Errorf("header %s has more than one value", RoleHeader)
 	}
 	return userId[0], models.RoleEnum(role[0]), nil
 }
