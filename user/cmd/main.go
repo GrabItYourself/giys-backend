@@ -18,7 +18,8 @@ import (
 )
 
 func main() {
-	context, cancel := signal.NotifyContext(context.Background(), syscall.SIGTERM, syscall.SIGINT)
+	// Context
+	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGTERM, syscall.SIGINT)
 	defer cancel()
 
 	// Config
@@ -48,7 +49,7 @@ func main() {
 	}
 	logger.Info("Starting gRPC server on port " + conf.Server.Port)
 	go func() {
-		<-context.Done()
+		<-ctx.Done()
 		cancel()
 		logger.Info("Received shut down signal. Attempting graceful shutdown...")
 		grpcServer.GracefulStop()
