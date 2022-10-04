@@ -1,12 +1,12 @@
 package server
 
 import (
-	"github.com/GrabItYourself/giys-backend/user/internal/libproto"
 	"github.com/GrabItYourself/giys-backend/user/internal/repository"
+	"github.com/GrabItYourself/giys-backend/user/pkg/userproto"
 )
 
 type Server struct {
-	libproto.UnimplementedUserServiceServer
+	userproto.UnimplementedUserServiceServer
 	repo *repository.Repository
 }
 
