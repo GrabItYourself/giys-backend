@@ -39,7 +39,7 @@ func main() {
 	reflection.Register(grpcServer)
 
 	// Register UserService server
-	libproto.RegisterAuthServer(grpcServer, server.NewServer(repo))
+	libproto.RegisterAuthServer(grpcServer, server.NewServer(repo, &conf.OAuth))
 
 	// Serve
 	lis, err := net.Listen("tcp", ":"+conf.Server.Port)

@@ -13,7 +13,7 @@ type Server struct {
 	oauthConfig *oauth2.Config
 }
 
-func NewServer(repo *repository.Repository, oauthConf config.OAuthConfig) *Server {
+func NewServer(repo *repository.Repository, oauthConf *config.OAuthConfig) *Server {
 	return &Server{
 		repo: repo,
 		oauthConfig: &oauth2.Config{
