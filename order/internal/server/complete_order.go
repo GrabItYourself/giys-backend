@@ -7,5 +7,11 @@ import (
 )
 
 func (*Server) CompleteOrder(ctx context.Context, in *libproto.CompleteOrderRequest) (*libproto.OrderResponse, error) {
+	// _, _, err := authutils.ExtractUserFromGrpcContext(ctx)
+	// if err != nil {
+	// 	return nil, err
+	// }
+
+	// return nil, nil
 	return nil, nil
 }
