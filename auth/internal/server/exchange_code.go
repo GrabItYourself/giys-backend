@@ -7,7 +7,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/GrabItYourself/giys-backend/auth/internal/libproto"
+	"github.com/GrabItYourself/giys-backend/auth/pkg/authproto"
 	"github.com/pkg/errors"
 	"golang.org/x/oauth2"
 	"google.golang.org/grpc/codes"
@@ -21,7 +21,7 @@ type UserInfo struct {
 	Email string `json:"email"`
 }
 
-func (s *Server) ExchangeAuthCode(ctx context.Context, in *libproto.ExchangeAuthCodeReq) (*libproto.ExchangeAuthCodeResp, error) {
+func (s *Server) ExchangeAuthCode(ctx context.Context, in *authproto.ExchangeAuthCodeReq) (*authproto.ExchangeAuthCodeResp, error) {
 	token, err := s.oauthConfig.Exchange(ctx, in.AuthCode)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, errors.Wrap(err, "error during code exchange").Error())

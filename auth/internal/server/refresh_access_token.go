@@ -3,18 +3,18 @@ package server
 import (
 	"context"
 
-	"github.com/GrabItYourself/giys-backend/auth/internal/libproto"
 	"github.com/GrabItYourself/giys-backend/auth/internal/repository"
 	"github.com/GrabItYourself/giys-backend/auth/internal/types/accesstoken"
 	"github.com/GrabItYourself/giys-backend/auth/internal/types/refreshtoken"
 	"github.com/GrabItYourself/giys-backend/auth/internal/types/tokenmapping"
+	"github.com/GrabItYourself/giys-backend/auth/pkg/authproto"
 	"github.com/GrabItYourself/giys-backend/lib/postgres/models"
 	"github.com/GrabItYourself/giys-backend/lib/redis"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc/status"
 )
 
-func (s *Server) RefreshAccessToken(ctx context.Context, in *libproto.RefreshAccessTokenReq) (*libproto.RefreshAccessTokenResp, error) {
+func (s *Server) RefreshAccessToken(ctx context.Context, in *authproto.RefreshAccessTokenReq) (*authproto.RefreshAccessTokenResp, error) {
 	refreshTokenKey := &repository.RefreshTokenKey{Token: in.RefreshToken}
 	refreshToken, err := s.repo.GetRefreshToken(ctx, refreshTokenKey)
 	if err != nil {
@@ -25,7 +25,7 @@ func (s *Server) RefreshAccessToken(ctx context.Context, in *libproto.RefreshAcc
 		// all errors are from redis, so we can infer code
 		return nil, status.Errorf(redis.InferCodeFromError(err), err.Error())
 	}
-	return &libproto.RefreshAccessTokenResp{
+	return &authproto.RefreshAccessTokenResp{
 		AccessToken:  accessToken.Token,
 		RefreshToken: newRefreshToken.Token,
 	}, nil

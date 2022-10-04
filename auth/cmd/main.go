@@ -7,9 +7,9 @@ import (
 	"syscall"
 
 	"github.com/GrabItYourself/giys-backend/auth/internal/config"
-	"github.com/GrabItYourself/giys-backend/auth/internal/libproto"
 	"github.com/GrabItYourself/giys-backend/auth/internal/repository"
 	"github.com/GrabItYourself/giys-backend/auth/internal/server"
+	"github.com/GrabItYourself/giys-backend/auth/pkg/authproto"
 	"github.com/GrabItYourself/giys-backend/lib/logger"
 	"github.com/GrabItYourself/giys-backend/lib/postgres"
 	"github.com/GrabItYourself/giys-backend/lib/redis"
@@ -42,7 +42,7 @@ func main() {
 	reflection.Register(grpcServer)
 
 	// Register UserService server
-	libproto.RegisterAuthServer(grpcServer, server.NewServer(repo, &conf.OAuth))
+	authproto.RegisterAuthServer(grpcServer, server.NewServer(repo, &conf.OAuth))
 
 	// Serve
 	lis, err := net.Listen("tcp", ":"+conf.Server.Port)
