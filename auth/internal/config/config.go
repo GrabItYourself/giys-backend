@@ -6,6 +6,7 @@ import (
 
 	"github.com/GrabItYourself/giys-backend/lib/logger"
 	"github.com/GrabItYourself/giys-backend/lib/postgres"
+	"github.com/GrabItYourself/giys-backend/lib/redis"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 )
@@ -17,6 +18,7 @@ type Config struct {
 	Server   ServerConfig    `mapstructure:"server"`
 	Log      logger.Config   `mapstructure:"log"`
 	Postgres postgres.Config `mapstructure:"postgres"`
+	Redis    redis.Config    `mapstructure:"redis"`
 }
 
 type ServerConfig struct {

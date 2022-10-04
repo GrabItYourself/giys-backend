@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"net"
 
 	"github.com/GrabItYourself/giys-backend/auth/internal/config"
@@ -9,12 +10,16 @@ import (
 	"github.com/GrabItYourself/giys-backend/auth/internal/server"
 	"github.com/GrabItYourself/giys-backend/lib/logger"
 	"github.com/GrabItYourself/giys-backend/lib/postgres"
+	"github.com/GrabItYourself/giys-backend/lib/redis"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
 
 func main() {
+	// Context
+	ctx := context.Background()
+
 	// Config
 	conf := config.InitConfig()
 
@@ -26,7 +31,8 @@ func main() {
 	if err != nil {
 		logger.Fatal(errors.Wrap(err, "Can't initialize postgres").Error())
 	}
-	repo := repository.New(pg)
+	rdb, err := redis.New(ctx, &conf.Redis)
+	repo := repository.New(pg, rdb)
 
 	// Initialize gRPC server
 	grpcServer := grpc.NewServer()

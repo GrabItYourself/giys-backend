@@ -1,15 +1,18 @@
 package repository
 
 import (
+	"github.com/go-redis/redis/v9"
 	"gorm.io/gorm"
 )
 
 type Repository struct {
-	pg *gorm.DB
+	pg  *gorm.DB
+	rdb *redis.Client
 }
 
-func New(pg *gorm.DB) *Repository {
+func New(pg *gorm.DB, rdb *redis.Client) *Repository {
 	return &Repository{
-		pg: pg,
+		pg:  pg,
+		rdb: rdb,
 	}
 }

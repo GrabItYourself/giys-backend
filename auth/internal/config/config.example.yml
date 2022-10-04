@@ -10,3 +10,7 @@ postgres:
     user: <user>
     password: <password>
     sslmode: disable
+redis:
+    address: localhost:6379
+    password:
+    database: 0
