@@ -28,6 +28,15 @@ message AuthorizeCardResponse {
 }
 
 message RegisterRecipientRequest {
+  string name = 1;
+  string type = 2;
+  BankAccount bank_account = 3;
+}
+
+message BankAccount {
+  string name = 1;
+  string number = 2;
+  string brand = 3;
 }
 
 message RegisterRecipientResponse {
