@@ -28,9 +28,10 @@ message AuthorizeCardResponse {
 }
 
 message RegisterRecipientRequest {
-  string name = 1;
-  string type = 2;
-  BankAccount bank_account = 3;
+  string shop_id = 1;
+  string name = 2;
+  string type = 3;
+  BankAccount bank_account = 4;
 }
 
 message BankAccount {
