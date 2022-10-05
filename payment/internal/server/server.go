@@ -23,10 +23,6 @@ func NewServer(omiseClient *omise.Client, repo *repository.Repository) (*Server,
 	}, nil
 }
 
-func (s *Server) Pay(context.Context, *paymentproto.PayRequest) (*paymentproto.PayResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Pay not implemented")
-}
-
 func (s *Server) GetTransactionHistory(context.Context, *paymentproto.GetTransactionHistoryRequest) (*paymentproto.GetTransactionHistoryResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTransactionHistory not implemented")
 }
