@@ -27,10 +27,6 @@ func (s *Server) Pay(context.Context, *paymentproto.PayRequest) (*paymentproto.P
 	return nil, status.Errorf(codes.Unimplemented, "method Pay not implemented")
 }
 
-func (s *Server) RegisterRecipient(context.Context, *paymentproto.RegisterRecipientRequest) (*paymentproto.RegisterRecipientResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RegisterRecipient not implemented")
-}
-
 func (s *Server) GetTransactionHistory(context.Context, *paymentproto.GetTransactionHistoryRequest) (*paymentproto.GetTransactionHistoryResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTransactionHistory not implemented")
 }
