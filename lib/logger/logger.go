@@ -57,6 +57,10 @@ func Info(msg string, fields ...zapcore.Field) {
 	logger.WithOptions(zap.AddCallerSkip(1)).Info(msg, fields...)
 }
 
+func Warn(msg string, fields ...zapcore.Field) {
+	logger.WithOptions(zap.AddCallerSkip(1)).Warn(msg, fields...)
+}
+
 func Debug(msg string, fields ...zapcore.Field) {
 	logger.WithOptions(zap.AddCallerSkip(1)).Debug(msg, fields...)
 }
