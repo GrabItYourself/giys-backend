@@ -34,13 +34,33 @@ func main() {
 	// Repository
 	pg, err := postgres.New(&conf.Postgres)
 	if err != nil {
-		logger.Fatal(errors.Wrap(err, "Can't initialize postgres").Error())
+		logger.Panic(errors.Wrap(err, "Can't initialize postgres").Error())
 	}
+	defer func() {
+		logger.Info("Closing database connection...")
+		if db, err := pg.DB(); err != nil {
+			logger.Panic(errors.Wrap(err, "Can't access postgres connection").Error())
+		} else if err := db.Close(); err != nil {
+			logger.Panic(errors.Wrap(err, "Can't close postgres connection").Error())
+		}
+	}()
 	rdb, err := redis.New(ctx, &conf.Redis)
+	if err != nil {
+		logger.Panic(errors.Wrap(err, "Can't initialize redis").Error())
+	}
+	defer func() {
+		logger.Info("Closing redis connection...")
+		if err = rdb.Close(); err != nil {
+			logger.Panic(errors.Wrap(err, "error during redis close").Error())
+		}
+	}()
 	repo := repository.New(pg, rdb)
 
 	// gRPC Clients
 	userClient, err := client.NewClient(conf.Grpc.User.Addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		logger.Panic(errors.Wrap(err, "Can't initialize user client").Error())
+	}
 
 	// Initialize gRPC server
 	grpcServer := grpc.NewServer()
@@ -52,7 +72,7 @@ func main() {
 	// Serve
 	lis, err := net.Listen("tcp", ":"+conf.Server.Port)
 	if err != nil {
-		logger.Fatal(errors.Wrap(err, "Failed to listen").Error())
+		logger.Panic(errors.Wrap(err, "Failed to listen").Error())
 	}
 	logger.Info("Starting gRPC server on port " + conf.Server.Port)
 	go func() {
@@ -63,7 +83,7 @@ func main() {
 	}()
 	err = grpcServer.Serve(lis)
 	if err != nil {
-		logger.Fatal(errors.Wrap(err, "Failed to serve").Error())
+		logger.Panic(errors.Wrap(err, "Failed to serve").Error())
 	}
 
 }

@@ -14,7 +14,6 @@ func NewClient(addr string, opts ...grpc.DialOption) (userproto.UserServiceClien
 	if err != nil {
 		return nil, errors.Wrap(err, "Failed to connect to user service")
 	}
-	defer conn.Close()
 
 	client := userproto.NewUserServiceClient(conn)
 	logger.Info(fmt.Sprintf("gRPC client connected to user service at %s", addr))
