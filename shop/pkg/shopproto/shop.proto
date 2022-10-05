@@ -57,7 +57,7 @@ message DeleteShopRequest {
 }
 
 message ShopResponse {
-    Shop shop = 2;
+    Shop shop = 1;
 }
 
 message CreateShopItemRequest {
