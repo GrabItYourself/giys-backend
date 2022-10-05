@@ -12,6 +12,7 @@ import (
 	"github.com/GrabItYourself/giys-backend/payment/internal/repository"
 	"github.com/GrabItYourself/giys-backend/payment/internal/server"
 	"github.com/GrabItYourself/giys-backend/payment/pkg/paymentproto"
+	"github.com/omise/omise-go"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
 )

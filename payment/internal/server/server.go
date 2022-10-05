@@ -3,7 +3,6 @@ package server
 import (
 	"context"
 
-	"github.com/GrabItYourself/giys-backend/payment/internal/config"
 	"github.com/GrabItYourself/giys-backend/payment/internal/repository"
 	"github.com/GrabItYourself/giys-backend/payment/pkg/paymentproto"
 	"github.com/omise/omise-go"
@@ -17,14 +16,9 @@ type Server struct {
 	repo        *repository.Repository
 }
 
-func NewServer(omiseConfig *config.OmiseConfig, repo *repository.Repository) (*Server, error) {
-	client, err := omise.NewClient(omiseConfig.PublicKey, omiseConfig.SecretKey)
-	if err != nil {
-		return nil, err
-	}
-
+func NewServer(omiseClient *omise.Client, repo *repository.Repository) (*Server, error) {
 	return &Server{
-		omiseClient: client,
+		omiseClient: omiseClient,
 		repo:        repo,
 	}, nil
 }
