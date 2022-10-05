@@ -4,10 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"io"
-	"log"
 	"net/http"
 
 	"github.com/GrabItYourself/giys-backend/auth/pkg/authproto"
+	"github.com/GrabItYourself/giys-backend/lib/postgres/models"
+	"github.com/GrabItYourself/giys-backend/user/pkg/userproto"
 	"github.com/pkg/errors"
 	"golang.org/x/oauth2"
 	"google.golang.org/grpc/codes"
@@ -32,10 +33,23 @@ func (s *Server) ExchangeAuthCode(ctx context.Context, in *authproto.ExchangeAut
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	log.Print(userInfo)
-	// TODO: wait for discussion about shared repository vs separate repositories
+	resp, err := s.userClient.CreateUser(ctx, &userproto.CreateUserReq{
+		Email:    userInfo.Email,
+		GoogleId: userInfo.Id,
+	})
+	if err != nil {
+		return nil, status.Error(codes.Internal, errors.Wrap(err, "error during creating user").Error())
+	}
 
-	return nil, nil
+	accessToken, refreshToken, err := s.issueNewTokenPair(ctx, resp.User.Id, models.RoleEnum(resp.User.Role))
+	if err != nil {
+		return nil, status.Error(codes.Internal, errors.Wrap(err, "failed to issue new token pair").Error())
+	}
+
+	return &authproto.ExchangeAuthCodeResp{
+		AccessToken:  accessToken.Token,
+		RefreshToken: refreshToken.Token,
+	}, nil
 }
 
 func getUserInfoFromGoogle(token *oauth2.Token) (*UserInfo, error) {

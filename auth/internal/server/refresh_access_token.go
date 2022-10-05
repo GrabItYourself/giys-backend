@@ -8,6 +8,7 @@ import (
 	"github.com/GrabItYourself/giys-backend/auth/internal/types/refreshtoken"
 	"github.com/GrabItYourself/giys-backend/auth/internal/types/tokenmapping"
 	"github.com/GrabItYourself/giys-backend/auth/pkg/authproto"
+	"github.com/GrabItYourself/giys-backend/lib/logger"
 	"github.com/GrabItYourself/giys-backend/lib/postgres/models"
 	"github.com/GrabItYourself/giys-backend/lib/redis"
 	"github.com/pkg/errors"
@@ -34,18 +35,16 @@ func (s *Server) RefreshAccessToken(ctx context.Context, in *authproto.RefreshAc
 func (s *Server) issueNewTokenPair(ctx context.Context, userId string, role models.RoleEnum) (*accesstoken.AccessToken, *refreshtoken.RefreshToken, error) {
 	// Retrieve user's token mapping
 	tokenMapping, err := s.repo.GetTokenMapping(ctx, &repository.TokenMappingKey{UserId: userId})
-	if err != nil {
-		return nil, nil, errors.Wrap(err, "error during getting token mapping")
-	}
-
-	// Revoke old tokens
-	err = s.repo.DeleteAccessToken(ctx, &repository.AccessTokenKey{Token: tokenMapping.AccessToken})
-	if err != nil {
-		return nil, nil, errors.Wrap(err, "error during deleting access token")
-	}
-	err = s.repo.DeleteRefreshToken(ctx, &repository.RefreshTokenKey{Token: tokenMapping.RefreshToken})
-	if err != nil {
-		return nil, nil, errors.Wrap(err, "error during deleting refresh token")
+	if err == nil {
+		// Revoke old tokens
+		err = s.repo.DeleteAccessToken(ctx, &repository.AccessTokenKey{Token: tokenMapping.AccessToken})
+		if err != nil {
+			logger.Warn(errors.Wrap(err, "failed to delete old access token").Error())
+		}
+		err = s.repo.DeleteRefreshToken(ctx, &repository.RefreshTokenKey{Token: tokenMapping.RefreshToken})
+		if err != nil {
+			logger.Warn(errors.Wrap(err, "failed to delete old refresh token").Error())
+		}
 	}
 
 	// Issue new tokens with random UUIDs

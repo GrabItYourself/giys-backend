@@ -13,8 +13,10 @@ import (
 	"github.com/GrabItYourself/giys-backend/lib/logger"
 	"github.com/GrabItYourself/giys-backend/lib/postgres"
 	"github.com/GrabItYourself/giys-backend/lib/redis"
+	"github.com/GrabItYourself/giys-backend/user/pkg/client"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/reflection"
 )
 
@@ -37,12 +39,15 @@ func main() {
 	rdb, err := redis.New(ctx, &conf.Redis)
 	repo := repository.New(pg, rdb)
 
+	// gRPC Clients
+	userClient, err := client.NewClient(conf.Grpc.User.Addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+
 	// Initialize gRPC server
 	grpcServer := grpc.NewServer()
 	reflection.Register(grpcServer)
 
 	// Register UserService server
-	authproto.RegisterAuthServer(grpcServer, server.NewServer(repo, &conf.OAuth))
+	authproto.RegisterAuthServer(grpcServer, server.NewServer(repo, &conf.OAuth, userClient))
 
 	// Serve
 	lis, err := net.Listen("tcp", ":"+conf.Server.Port)

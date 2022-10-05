@@ -1,6 +1,9 @@
 package client
 
 import (
+	"fmt"
+
+	"github.com/GrabItYourself/giys-backend/lib/logger"
 	"github.com/GrabItYourself/giys-backend/user/pkg/userproto"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
@@ -14,5 +17,6 @@ func NewClient(addr string, opts ...grpc.DialOption) (userproto.UserServiceClien
 	defer conn.Close()
 
 	client := userproto.NewUserServiceClient(conn)
+	logger.Info(fmt.Sprintf("gRPC client connected to user service at %s", addr))
 	return client, nil
 }

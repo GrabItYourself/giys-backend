@@ -20,6 +20,7 @@ type Config struct {
 	OAuth    OAuthConfig     `mapstructure:"oauth"`
 	Postgres postgres.Config `mapstructure:"postgres"`
 	Redis    redis.Config    `mapstructure:"redis"`
+	Grpc     GrpcConfig      `mapstructure:"grpc"`
 }
 
 type ServerConfig struct {
@@ -30,6 +31,14 @@ type OAuthConfig struct {
 	ClientId     string `mapstructure:"client_id"`
 	ClientSecret string `mapstructure:"client_secret"`
 	RedirectURL  string `mapstructure:"redirect_url"`
+}
+
+type GrpcConfig struct {
+	User GrpcConnection `mapstructure:"user"`
+}
+
+type GrpcConnection struct {
+	Addr string `mapstructure:"addr"`
 }
 
 func InitConfig() *Config {
