@@ -14,7 +14,7 @@ service PaymentService {
 message PayRequest {
   string card_id = 1;
   string shop_id = 2;
-  int32 amount = 3;
+  int64 amount = 3;
 }
 
 message PayResponse {
