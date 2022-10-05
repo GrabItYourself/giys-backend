@@ -4,7 +4,8 @@ import "time"
 
 type PaymentTransaction struct {
 	Id        uint      `json:"id" gorm:"column:id;primaryKey"`
-	OrderId   string    `json:"user_id" gorm:"column:user_id;not null"`
+	ShopId    string    `json:"shop_id" gorm:"column:shop_id;not null"`
+	OrderId   string    `json:"order_id" gorm:"column:order_id;not null"`
 	Amount    int       `json:"amount" gorm:"column:amount;not null"`
 	CreatedAt time.Time `json:"created_at" gorm:"column:created_at;not null"`
 }

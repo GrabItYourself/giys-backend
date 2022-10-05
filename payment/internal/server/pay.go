@@ -54,6 +54,7 @@ func (s *Server) Pay(ctx context.Context, in *paymentproto.PayRequest) (*payment
 	}
 
 	err = s.repo.CreatePaymentTransaction(&models.PaymentTransaction{
+		ShopId:  in.ShopId,
 		OrderId: in.OrderId,
 		Amount:  int(in.Amount),
 	})
