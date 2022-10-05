@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS "shop" (
 );
 
 CREATE TABLE IF NOT EXISTS "shop_item" (
-    id INT NOT NULL,
+    id SERIAL,
     shop_id INT NOT NULL,
     name TEXT NOT NULL,
     image TEXT,

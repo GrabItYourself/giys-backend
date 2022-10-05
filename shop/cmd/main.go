@@ -14,6 +14,7 @@ import (
 	"github.com/GrabItYourself/giys-backend/shop/pkg/shopproto"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 func main() {
@@ -36,6 +37,7 @@ func main() {
 
 	// Initialize gRPC server
 	grpcServer := grpc.NewServer()
+	reflection.Register(grpcServer)
 
 	// Register shop service implementation to the gRPC server
 	shopproto.RegisterShopServiceServer(grpcServer, server.NewServer(repo))

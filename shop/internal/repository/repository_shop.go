@@ -19,16 +19,23 @@ func (r *Repository) GetShopById(id string) (*models.Shop, error) {
 	return &shop, nil
 }
 
-func (r *Repository) EditShop(shop *models.Shop) error {
+func (r *Repository) EditShop(shop *models.Shop) (*models.Shop, error) {
 	err := r.pg.Model(&shop).Updates(shop).Error
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	var edited_shop models.Shop
+	r.pg.Where("id = ?", shop.Id).Take(&edited_shop)
+	return &edited_shop, nil
 }
 
 func (r *Repository) DeleteShop(id string) error {
-	err := r.pg.Delete(&models.Shop{}, id).Error
+	var shop models.Shop
+	err := r.pg.Where("id = ?", id).Take(&shop).Error
+	if err != nil {
+		return err
+	}
+	err = r.pg.Delete(shop).Error
 	if err != nil {
 		return err
 	}

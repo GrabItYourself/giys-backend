@@ -14,11 +14,12 @@ import (
 func (s *Server) CreateShop(ctx context.Context, input *shopproto.CreateShopRequest) (*shopproto.ShopResponse, error) {
 	shop := &models.Shop{
 		Name:        input.Name,
-		Image:       *input.Image,
-		Description: *input.Description,
-		Location:    *input.Location,
-		Contact:     *input.Contact,
+		Image:       input.Image,
+		Description: input.Description,
+		Location:    input.Location,
+		Contact:     input.Contact,
 	}
+
 	err := s.repo.CreateShop(shop)
 	if err != nil {
 		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't create shop").Error())
@@ -26,10 +27,11 @@ func (s *Server) CreateShop(ctx context.Context, input *shopproto.CreateShopRequ
 	return &shopproto.ShopResponse{
 		Shop: &shopproto.Shop{
 			Id:          shop.Id,
-			Image:       &shop.Image,
-			Description: &shop.Description,
-			Location:    &shop.Location,
-			Contact:     &shop.Contact,
+			Name:        shop.Name,
+			Image:       shop.Image,
+			Description: shop.Description,
+			Location:    shop.Location,
+			Contact:     shop.Contact,
 		},
 	}, nil
 }
@@ -42,10 +44,11 @@ func (s *Server) GetShop(ctx context.Context, input *shopproto.GetShopRequest) (
 	return &shopproto.ShopResponse{
 		Shop: &shopproto.Shop{
 			Id:          shop.Id,
-			Image:       &shop.Image,
-			Description: &shop.Description,
-			Location:    &shop.Location,
-			Contact:     &shop.Contact,
+			Name:        shop.Name,
+			Image:       shop.Image,
+			Description: shop.Description,
+			Location:    shop.Location,
+			Contact:     shop.Contact,
 		},
 	}, nil
 }
@@ -54,17 +57,24 @@ func (s *Server) EditShop(ctx context.Context, input *shopproto.EditShopRequest)
 	shop := &models.Shop{
 		Id:          input.EditedShop.Id,
 		Name:        input.EditedShop.Name,
-		Image:       *input.EditedShop.Image,
-		Description: *input.EditedShop.Description,
-		Location:    *input.EditedShop.Location,
-		Contact:     *input.EditedShop.Contact,
+		Image:       input.EditedShop.Image,
+		Description: input.EditedShop.Description,
+		Location:    input.EditedShop.Location,
+		Contact:     input.EditedShop.Contact,
 	}
-	err := s.repo.EditShop(shop)
+	edited_shop, err := s.repo.EditShop(shop)
 	if err != nil {
 		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't edit shop").Error())
 	}
 	return &shopproto.ShopResponse{
-		Shop: input.EditedShop,
+		Shop: &shopproto.Shop{
+			Id:          edited_shop.Id,
+			Name:        edited_shop.Name,
+			Image:       edited_shop.Image,
+			Description: edited_shop.Description,
+			Location:    edited_shop.Location,
+			Contact:     edited_shop.Contact,
+		},
 	}, nil
 }
 
