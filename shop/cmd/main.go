@@ -1,14 +1,26 @@
 package main
 
 import (
-	"fmt"
+	"context"
+	"net"
+	"os/signal"
+	"syscall"
 
 	"github.com/GrabItYourself/giys-backend/lib/logger"
 	"github.com/GrabItYourself/giys-backend/lib/postgres"
 	"github.com/GrabItYourself/giys-backend/shop/internal/config"
+	"github.com/GrabItYourself/giys-backend/shop/internal/repository"
+	"github.com/GrabItYourself/giys-backend/shop/internal/server"
+	"github.com/GrabItYourself/giys-backend/shop/pkg/shopproto"
+	"github.com/pkg/errors"
+	"google.golang.org/grpc"
 )
 
 func main() {
+	// Context
+	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGTERM, syscall.SIGINT)
+	defer cancel()
+
 	// Config
 	conf := config.InitConfig()
 
@@ -20,6 +32,28 @@ func main() {
 	if err != nil {
 		logger.Fatal("Failed to initialize PostgreSQL connection: " + err.Error())
 	}
+	repo := repository.New(postgres)
 
-	fmt.Println(postgres)
+	// Initialize gRPC server
+	grpcServer := grpc.NewServer()
+
+	// Register shop service implementation to the gRPC server
+	shopproto.RegisterShopServiceServer(grpcServer, server.NewServer(repo))
+
+	// Serve
+	lis, err := net.Listen("tcp", ":"+conf.Server.Port)
+	if err != nil {
+		logger.Fatal(errors.Wrap(err, "Failed to listen").Error())
+	}
+	logger.Info("Starting gRPC server on port " + conf.Server.Port)
+	go func() {
+		<-ctx.Done()
+		cancel()
+		logger.Info("Received shut down signal. Attempting graceful shutdown...")
+		grpcServer.GracefulStop()
+	}()
+	err = grpcServer.Serve(lis)
+	if err != nil {
+		logger.Fatal(errors.Wrap(err, "Failed to serve").Error())
+	}
 }

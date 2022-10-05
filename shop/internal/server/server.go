@@ -1,17 +1,17 @@
 package server
 
 import (
+	"github.com/GrabItYourself/giys-backend/shop/internal/repository"
 	"github.com/GrabItYourself/giys-backend/shop/pkg/shopproto"
-	"gorm.io/gorm"
 )
 
 type Server struct {
 	shopproto.UnimplementedShopServiceServer
-	pg *gorm.DB
+	repo *repository.Repository
 }
 
-func NewServer(pg *gorm.DB) *Server {
+func NewServer(repo *repository.Repository) *Server {
 	return &Server{
-		pg: pg,
+		repo: repo,
 	}
 }
