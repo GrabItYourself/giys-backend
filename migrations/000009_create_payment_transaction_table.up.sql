@@ -1,6 +1,6 @@
 BEGIN;
 
-CREATE TABLE IF NOT EXISTS "payment_method" (
+CREATE TABLE IF NOT EXISTS "payment_transaction" (
     id SERIAL PRIMARY KEY,
     order_id INT NOT NULL,
     amount INT NOT NULL,
