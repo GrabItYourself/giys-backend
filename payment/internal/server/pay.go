@@ -5,6 +5,7 @@ import (
 
 	"github.com/GrabItYourself/giys-backend/lib/authutils"
 	"github.com/GrabItYourself/giys-backend/lib/postgres"
+	"github.com/GrabItYourself/giys-backend/lib/postgres/models"
 	"github.com/GrabItYourself/giys-backend/payment/pkg/paymentproto"
 	"github.com/omise/omise-go"
 	"github.com/omise/omise-go/operations"
@@ -50,6 +51,14 @@ func (s *Server) Pay(ctx context.Context, in *paymentproto.PayRequest) (*payment
 	}
 	if e := s.omiseClient.Do(transfer, createTransfer); e != nil {
 		return nil, status.Error(InferCodeFromOmiseError(err), errors.Wrap(err, "can't transfer to shop").Error())
+	}
+
+	err = s.repo.CreatePaymentTransaction(&models.PaymentTransaction{
+		OrderId: in.OrderId,
+		Amount:  int(in.Amount),
+	})
+	if err != nil {
+		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't create payment transaction").Error())
 	}
 
 	return &paymentproto.PayResponse{}, nil
