@@ -6,6 +6,7 @@ package user;
 
 service UserService {
   rpc Me (MeReq) returns (MeResp) {}
+  rpc GetUserByGoogleId (GetUserByGoogleIdReq) returns (GetUserByGoogleIdResp) {}
   rpc CreateUser (CreateUserReq) returns (CreateUserResp) {}
 }
 
@@ -19,6 +20,14 @@ message User {
 message MeReq {}
 
 message MeResp {
+  User user = 1;
+}
+
+message GetUserByGoogleIdReq {
+  string google_id = 1;
+}
+
+message GetUserByGoogleIdResp {
   User user = 1;
 }
 

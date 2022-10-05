@@ -23,6 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserServiceClient interface {
 	Me(ctx context.Context, in *MeReq, opts ...grpc.CallOption) (*MeResp, error)
+	GetUserByGoogleId(ctx context.Context, in *GetUserByGoogleIdReq, opts ...grpc.CallOption) (*GetUserByGoogleIdResp, error)
 	CreateUser(ctx context.Context, in *CreateUserReq, opts ...grpc.CallOption) (*CreateUserResp, error)
 }
 
@@ -43,6 +44,15 @@ func (c *userServiceClient) Me(ctx context.Context, in *MeReq, opts ...grpc.Call
 	return out, nil
 }
 
+func (c *userServiceClient) GetUserByGoogleId(ctx context.Context, in *GetUserByGoogleIdReq, opts ...grpc.CallOption) (*GetUserByGoogleIdResp, error) {
+	out := new(GetUserByGoogleIdResp)
+	err := c.cc.Invoke(ctx, "/user.UserService/GetUserByGoogleId", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userServiceClient) CreateUser(ctx context.Context, in *CreateUserReq, opts ...grpc.CallOption) (*CreateUserResp, error) {
 	out := new(CreateUserResp)
 	err := c.cc.Invoke(ctx, "/user.UserService/CreateUser", in, out, opts...)
@@ -57,6 +67,7 @@ func (c *userServiceClient) CreateUser(ctx context.Context, in *CreateUserReq, o
 // for forward compatibility
 type UserServiceServer interface {
 	Me(context.Context, *MeReq) (*MeResp, error)
+	GetUserByGoogleId(context.Context, *GetUserByGoogleIdReq) (*GetUserByGoogleIdResp, error)
 	CreateUser(context.Context, *CreateUserReq) (*CreateUserResp, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
@@ -67,6 +78,9 @@ type UnimplementedUserServiceServer struct {
 
 func (UnimplementedUserServiceServer) Me(context.Context, *MeReq) (*MeResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Me not implemented")
+}
+func (UnimplementedUserServiceServer) GetUserByGoogleId(context.Context, *GetUserByGoogleIdReq) (*GetUserByGoogleIdResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserByGoogleId not implemented")
 }
 func (UnimplementedUserServiceServer) CreateUser(context.Context, *CreateUserReq) (*CreateUserResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateUser not implemented")
@@ -102,6 +116,24 @@ func _UserService_Me_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_GetUserByGoogleId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserByGoogleIdReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).GetUserByGoogleId(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/GetUserByGoogleId",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).GetUserByGoogleId(ctx, req.(*GetUserByGoogleIdReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _UserService_CreateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateUserReq)
 	if err := dec(in); err != nil {
@@ -130,6 +162,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Me",
 			Handler:    _UserService_Me_Handler,
+		},
+		{
+			MethodName: "GetUserByGoogleId",
+			Handler:    _UserService_GetUserByGoogleId_Handler,
 		},
 		{
 			MethodName: "CreateUser",
