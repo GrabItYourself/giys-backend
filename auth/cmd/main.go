@@ -57,10 +57,16 @@ func main() {
 	repo := repository.New(pg, rdb)
 
 	// gRPC Clients
-	userClient, err := client.NewClient(conf.Grpc.User.Addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	userClient, conn, err := client.NewClient(ctx, conf.Grpc.User.Addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		logger.Panic(errors.Wrap(err, "Can't initialize user client").Error())
 	}
+	defer func() {
+		logger.Info("Closing user client connection...")
+		if err := conn.Close(); err != nil {
+			logger.Panic(errors.Wrap(err, "Can't close user client connection").Error())
+		}
+	}()
 
 	// Initialize gRPC server
 	grpcServer := grpc.NewServer()
