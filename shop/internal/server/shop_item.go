@@ -25,6 +25,6 @@ func (*Server) EditShopItem(ctx context.Context, input *shopproto.EditShopItemRe
 	return nil, status.Errorf(codes.Unimplemented, "method EditShopItem not implemented")
 }
 
-func (*Server) DeleteShopItem(ctx context.Context, input *shopproto.DeleteShopItemRequest) (*shopproto.ShopItemResponse, error) {
+func (*Server) DeleteShopItem(ctx context.Context, input *shopproto.DeleteShopItemRequest) (*shopproto.DeleteResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteShopItem not implemented")
 }

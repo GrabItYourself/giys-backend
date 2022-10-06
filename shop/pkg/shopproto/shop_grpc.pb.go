@@ -25,12 +25,12 @@ type ShopServiceClient interface {
 	CreateShop(ctx context.Context, in *CreateShopRequest, opts ...grpc.CallOption) (*ShopResponse, error)
 	GetShop(ctx context.Context, in *GetShopRequest, opts ...grpc.CallOption) (*ShopResponse, error)
 	EditShop(ctx context.Context, in *EditShopRequest, opts ...grpc.CallOption) (*ShopResponse, error)
-	DeleteShop(ctx context.Context, in *DeleteShopRequest, opts ...grpc.CallOption) (*ShopResponse, error)
+	DeleteShop(ctx context.Context, in *DeleteShopRequest, opts ...grpc.CallOption) (*DeleteResponse, error)
 	CreateShopItem(ctx context.Context, in *CreateShopItemRequest, opts ...grpc.CallOption) (*ShopItemResponse, error)
 	GetAllShopItems(ctx context.Context, in *GetAllShopItemsRequest, opts ...grpc.CallOption) (*AllShopItemsResponse, error)
 	GetShopItem(ctx context.Context, in *GetShopItemRequest, opts ...grpc.CallOption) (*ShopItemResponse, error)
 	EditShopItem(ctx context.Context, in *EditShopItemRequest, opts ...grpc.CallOption) (*ShopItemResponse, error)
-	DeleteShopItem(ctx context.Context, in *DeleteShopItemRequest, opts ...grpc.CallOption) (*ShopItemResponse, error)
+	DeleteShopItem(ctx context.Context, in *DeleteShopItemRequest, opts ...grpc.CallOption) (*DeleteResponse, error)
 	AddBankAccount(ctx context.Context, in *AddBankAccountRequest, opts ...grpc.CallOption) (*AddBankAccountResponse, error)
 }
 
@@ -69,8 +69,8 @@ func (c *shopServiceClient) EditShop(ctx context.Context, in *EditShopRequest, o
 	return out, nil
 }
 
-func (c *shopServiceClient) DeleteShop(ctx context.Context, in *DeleteShopRequest, opts ...grpc.CallOption) (*ShopResponse, error) {
-	out := new(ShopResponse)
+func (c *shopServiceClient) DeleteShop(ctx context.Context, in *DeleteShopRequest, opts ...grpc.CallOption) (*DeleteResponse, error) {
+	out := new(DeleteResponse)
 	err := c.cc.Invoke(ctx, "/shop.ShopService/DeleteShop", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -114,8 +114,8 @@ func (c *shopServiceClient) EditShopItem(ctx context.Context, in *EditShopItemRe
 	return out, nil
 }
 
-func (c *shopServiceClient) DeleteShopItem(ctx context.Context, in *DeleteShopItemRequest, opts ...grpc.CallOption) (*ShopItemResponse, error) {
-	out := new(ShopItemResponse)
+func (c *shopServiceClient) DeleteShopItem(ctx context.Context, in *DeleteShopItemRequest, opts ...grpc.CallOption) (*DeleteResponse, error) {
+	out := new(DeleteResponse)
 	err := c.cc.Invoke(ctx, "/shop.ShopService/DeleteShopItem", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -139,12 +139,12 @@ type ShopServiceServer interface {
 	CreateShop(context.Context, *CreateShopRequest) (*ShopResponse, error)
 	GetShop(context.Context, *GetShopRequest) (*ShopResponse, error)
 	EditShop(context.Context, *EditShopRequest) (*ShopResponse, error)
-	DeleteShop(context.Context, *DeleteShopRequest) (*ShopResponse, error)
+	DeleteShop(context.Context, *DeleteShopRequest) (*DeleteResponse, error)
 	CreateShopItem(context.Context, *CreateShopItemRequest) (*ShopItemResponse, error)
 	GetAllShopItems(context.Context, *GetAllShopItemsRequest) (*AllShopItemsResponse, error)
 	GetShopItem(context.Context, *GetShopItemRequest) (*ShopItemResponse, error)
 	EditShopItem(context.Context, *EditShopItemRequest) (*ShopItemResponse, error)
-	DeleteShopItem(context.Context, *DeleteShopItemRequest) (*ShopItemResponse, error)
+	DeleteShopItem(context.Context, *DeleteShopItemRequest) (*DeleteResponse, error)
 	AddBankAccount(context.Context, *AddBankAccountRequest) (*AddBankAccountResponse, error)
 	mustEmbedUnimplementedShopServiceServer()
 }
@@ -162,7 +162,7 @@ func (UnimplementedShopServiceServer) GetShop(context.Context, *GetShopRequest) 
 func (UnimplementedShopServiceServer) EditShop(context.Context, *EditShopRequest) (*ShopResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method EditShop not implemented")
 }
-func (UnimplementedShopServiceServer) DeleteShop(context.Context, *DeleteShopRequest) (*ShopResponse, error) {
+func (UnimplementedShopServiceServer) DeleteShop(context.Context, *DeleteShopRequest) (*DeleteResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteShop not implemented")
 }
 func (UnimplementedShopServiceServer) CreateShopItem(context.Context, *CreateShopItemRequest) (*ShopItemResponse, error) {
@@ -177,7 +177,7 @@ func (UnimplementedShopServiceServer) GetShopItem(context.Context, *GetShopItemR
 func (UnimplementedShopServiceServer) EditShopItem(context.Context, *EditShopItemRequest) (*ShopItemResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method EditShopItem not implemented")
 }
-func (UnimplementedShopServiceServer) DeleteShopItem(context.Context, *DeleteShopItemRequest) (*ShopItemResponse, error) {
+func (UnimplementedShopServiceServer) DeleteShopItem(context.Context, *DeleteShopItemRequest) (*DeleteResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteShopItem not implemented")
 }
 func (UnimplementedShopServiceServer) AddBankAccount(context.Context, *AddBankAccountRequest) (*AddBankAccountResponse, error) {

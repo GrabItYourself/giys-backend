@@ -1,12 +1,12 @@
 package models
 
 type Shop struct {
-	ID          string `json:"id" gorm:"column:id;primaryKey"`
-	Name        string `json:"name" gorm:"column:name;not null"`
-	Image       string `json:"image" gorm:"column:image"`
-	Description string `json:"description" gorm:"column:description"`
-	Location    string `json:"location" gorm:"column:location"`
-	Contact     string `json:"contact" gorm:"column:contact"`
+	Id          int32   `json:"id" gorm:"column:id;primaryKey;autoIncrement"`
+	Name        string  `json:"name" gorm:"column:name;not null;unique"`
+	Image       *string `json:"image,omitempty" gorm:"column:image"`
+	Description *string `json:"description,omitempty" gorm:"column:description"`
+	Location    *string `json:"location,omitempty" gorm:"column:location"`
+	Contact     *string `json:"contact,omitempty" gorm:"column:contact"`
 }
 
 func (Shop) TableName() string {

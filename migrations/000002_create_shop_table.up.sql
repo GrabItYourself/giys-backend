@@ -2,7 +2,7 @@ BEGIN;
 
 CREATE TABLE IF NOT EXISTS "shop" (
     id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL,
+    name TEXT UNIQUE NOT NULL,
     image TEXT,
     description TEXT,
     location TEXT,
@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS "shop" (
 );
 
 CREATE TABLE IF NOT EXISTS "shop_item" (
-    id INT NOT NULL,
+    id SERIAL,
     shop_id INT NOT NULL,
     name TEXT NOT NULL,
     image TEXT,
