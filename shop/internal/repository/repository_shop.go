@@ -1,6 +1,9 @@
 package repository
 
-import "github.com/GrabItYourself/giys-backend/lib/postgres/models"
+import (
+	"github.com/GrabItYourself/giys-backend/lib/postgres/models"
+	"gorm.io/gorm/clause"
+)
 
 func (r *Repository) CreateShop(shop *models.Shop) error {
 	err := r.pg.Create(shop).Error
@@ -20,24 +23,17 @@ func (r *Repository) GetShopById(id string) (*models.Shop, error) {
 }
 
 func (r *Repository) EditShop(shop *models.Shop) (*models.Shop, error) {
-	err := r.pg.Model(&shop).Updates(shop).Error
+	err := r.pg.Model(&shop).Clauses(clause.Returning{}).Updates(shop).Error
 	if err != nil {
 		return nil, err
 	}
-	var edited_shop models.Shop
-	r.pg.Where("id = ?", shop.Id).Take(&edited_shop)
-	return &edited_shop, nil
+	return shop, nil
 }
 
-func (r *Repository) DeleteShop(id string) error {
-	var shop models.Shop
-	err := r.pg.Where("id = ?", id).Take(&shop).Error
-	if err != nil {
-		return err
+func (r *Repository) DeleteShop(id string) (int, error) {
+	result := r.pg.Delete(&models.Shop{}, id)
+	if result.Error != nil {
+		return 0, result.Error
 	}
-	err = r.pg.Delete(shop).Error
-	if err != nil {
-		return err
-	}
-	return nil
+	return int(result.RowsAffected), nil
 }
