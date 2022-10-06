@@ -2,7 +2,6 @@ package authutils
 
 import (
 	"github.com/GrabItYourself/giys-backend/lib/postgres/models"
-	"github.com/gofiber/fiber/v2"
 	"github.com/pkg/errors"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc/metadata"
@@ -12,19 +11,6 @@ const (
 	UserHeader = "Auth-User-Id"
 	RoleHeader = "Auth-User-Role"
 )
-
-// ExtractUserFromFiberContext extracts userId and role from context
-func ExtractUserFromFiberContext(ctx *fiber.Ctx) (string, models.RoleEnum, error) {
-	userId := ctx.Get(UserHeader)
-	if userId == "" {
-		return "", "", errors.Errorf("header %s is empty", UserHeader)
-	}
-	role := ctx.Get(RoleHeader)
-	if role == "" {
-		return "", "", errors.Errorf("header %s is empty", RoleHeader)
-	}
-	return userId, models.RoleEnum(role), nil
-}
 
 // ExtractUserFromGrpcContext extracts userId and role from metadata in gRPC context
 func ExtractUserFromGrpcContext(ctx context.Context) (string, models.RoleEnum, error) {

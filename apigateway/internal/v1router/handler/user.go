@@ -3,7 +3,7 @@ package v1handler
 import (
 	"context"
 
-	"github.com/GrabItYourself/giys-backend/lib/authutils"
+	"github.com/GrabItYourself/giys-backend/auth/pkg/authutils"
 	"github.com/GrabItYourself/giys-backend/lib/postgres/models"
 	"github.com/GrabItYourself/giys-backend/user/pkg/userproto"
 	"github.com/pkg/errors"
