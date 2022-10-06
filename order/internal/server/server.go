@@ -1,17 +1,17 @@
 package server
 
 import (
+	"github.com/GrabItYourself/giys-backend/lib/postgres/repository"
 	"github.com/GrabItYourself/giys-backend/order/pkg/orderproto"
-	"gorm.io/gorm"
 )
 
 type Server struct {
 	orderproto.UnimplementedOrderServer
-	pg *gorm.DB
+	repo *repository.Repository
 }
 
-func NewServer(pg *gorm.DB) *Server {
+func NewServer(repo *repository.Repository) *Server {
 	return &Server{
-		pg: pg,
+		repo: repo,
 	}
 }

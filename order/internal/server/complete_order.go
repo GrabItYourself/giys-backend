@@ -12,12 +12,12 @@ import (
 
 func (s *Server) CompleteOrder(ctx context.Context, in *orderproto.CompleteOrderRequest) (*orderproto.OrderResponse, error) {
 	var (
-		orderId = in.GetOrderId()
-		shopId  = in.GetShopId()
+		orderId = int(in.GetOrderId())
+		shopId  = int(in.GetShopId())
 	)
 
-	order := models.Order{}
-	if err := s.pg.Model(&order).Where("id = ? AND shop_id = ?", orderId, shopId).Update("status", models.CompletedStatus).Error; err != nil {
+	order, err := s.repo.UpdateOrderStatus(orderId, shopId, models.CompletedStatus)
+	if err != nil {
 		return nil, status.Errorf(postgres.InferCodeFromError(err), errors.Wrap(err, "Failed to cancel an order").Error())
 	}
 

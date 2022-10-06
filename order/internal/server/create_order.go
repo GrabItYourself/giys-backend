@@ -33,7 +33,7 @@ func (s *Server) CreateOrder(ctx context.Context, in *orderproto.CreateOrderRequ
 		Items:  orderItems,
 	}
 
-	if err := s.pg.Create(&order).Error; err != nil {
+	if err := s.repo.CreateOrder(&order); err != nil {
 		return nil, status.Errorf(postgres.InferCodeFromError(err), errors.Wrap(err, "Failed to create an order").Error())
 	}
 

@@ -35,7 +35,7 @@ func (s *Server) UpdateOrder(ctx context.Context, in *orderproto.UpdateOrderRequ
 		Items:  orderItems,
 	}
 
-	if err := s.pg.Save(&order).Error; err != nil {
+	if err := s.repo.UpdateOrder(&order); err != nil {
 		return nil, status.Errorf(postgres.InferCodeFromError(err), errors.Wrap(err, "Failed to save an order").Error())
 	}
 
