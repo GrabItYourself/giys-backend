@@ -1,12 +1,12 @@
 server:
-    port: 3000
+  port: 3002
 log:
-    level: info
-    service: order
+  level: info
+  service: order
 postgres:
-    host: localhost
-    port: 5432
-    dbname: <dbname>
-    user: <user>
-    password: <password>
-    sslmode: disable
+  host: localhost
+  port: 5432
+  dbname: postgres
+  user: postgres
+  password: postgres
+  sslmode: disable
