@@ -8,13 +8,13 @@ service ShopService {
     rpc CreateShop(CreateShopRequest) returns (ShopResponse);
     rpc GetShop(GetShopRequest) returns (ShopResponse);
     rpc EditShop(EditShopRequest) returns (ShopResponse);
-    rpc DeleteShop(DeleteShopRequest) returns (ShopResponse);
+    rpc DeleteShop(DeleteShopRequest) returns (DeleteResponse);
 
     rpc CreateShopItem(CreateShopItemRequest) returns (ShopItemResponse);
     rpc GetAllShopItems(GetAllShopItemsRequest) returns (AllShopItemsResponse);
     rpc GetShopItem(GetShopItemRequest) returns (ShopItemResponse);
     rpc EditShopItem(EditShopItemRequest) returns (ShopItemResponse);
-    rpc DeleteShopItem(DeleteShopItemRequest) returns (ShopItemResponse);
+    rpc DeleteShopItem(DeleteShopItemRequest) returns (DeleteResponse);
 
     rpc AddBankAccount(AddBankAccountRequest) returns (AddBankAccountResponse);
 }
@@ -58,6 +58,10 @@ message DeleteShopRequest {
 
 message ShopResponse {
     Shop shop = 1;
+}
+
+message DeleteResponse {
+    int32 rows_affected = 1;
 }
 
 message CreateShopItemRequest {

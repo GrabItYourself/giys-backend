@@ -20,8 +20,7 @@ func (s *Server) CreateShop(ctx context.Context, input *shopproto.CreateShopRequ
 		Contact:     input.Contact,
 	}
 
-	err := s.repo.CreateShop(shop)
-	if err != nil {
+	if err := s.repo.CreateShop(shop); err != nil {
 		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't create shop").Error())
 	}
 	return &shopproto.ShopResponse{
@@ -62,28 +61,28 @@ func (s *Server) EditShop(ctx context.Context, input *shopproto.EditShopRequest)
 		Location:    input.EditedShop.Location,
 		Contact:     input.EditedShop.Contact,
 	}
-	edited_shop, err := s.repo.EditShop(shop)
+	editedShop, err := s.repo.EditShop(shop)
 	if err != nil {
 		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't edit shop").Error())
 	}
 	return &shopproto.ShopResponse{
 		Shop: &shopproto.Shop{
-			Id:          edited_shop.Id,
-			Name:        edited_shop.Name,
-			Image:       edited_shop.Image,
-			Description: edited_shop.Description,
-			Location:    edited_shop.Location,
-			Contact:     edited_shop.Contact,
+			Id:          editedShop.Id,
+			Name:        editedShop.Name,
+			Image:       editedShop.Image,
+			Description: editedShop.Description,
+			Location:    editedShop.Location,
+			Contact:     editedShop.Contact,
 		},
 	}, nil
 }
 
-func (s *Server) DeleteShop(ctx context.Context, input *shopproto.DeleteShopRequest) (*shopproto.ShopResponse, error) {
-	err := s.repo.DeleteShop(input.Id)
+func (s *Server) DeleteShop(ctx context.Context, input *shopproto.DeleteShopRequest) (*shopproto.DeleteResponse, error) {
+	rowsAffected, err := s.repo.DeleteShop(input.Id)
 	if err != nil {
 		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't delete shop").Error())
 	}
-	return &shopproto.ShopResponse{
-		Shop: nil,
+	return &shopproto.DeleteResponse{
+		RowsAffected: int32(rowsAffected),
 	}, nil
 }
