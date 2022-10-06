@@ -29,11 +29,19 @@ func main() {
 	logger.InitLogger(&conf.Log)
 
 	// Establish connection to PostgreSQL database
-	postgres, err := postgres.New(&conf.Postgres)
+	pg, err := postgres.New(&conf.Postgres)
 	if err != nil {
 		logger.Fatal("Failed to initialize PostgreSQL connection: " + err.Error())
 	}
-	repo := repository.New(postgres)
+	defer func() {
+		logger.Info("Closing database connection...")
+		if db, err := pg.DB(); err != nil {
+			logger.Fatal(errors.Wrap(err, "Can't access postgres connection").Error())
+		} else if err := db.Close(); err != nil {
+			logger.Fatal(errors.Wrap(err, "Can't close postgres connection").Error())
+		}
+	}()
+	repo := repository.New(pg)
 
 	// Initialize gRPC server
 	grpcServer := grpc.NewServer()
