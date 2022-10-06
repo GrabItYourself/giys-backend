@@ -12,11 +12,11 @@ import (
 )
 
 func (s *Server) Me(ctx context.Context, in *userproto.MeReq) (*userproto.MeResp, error) {
-	userId, _, err := authutils.ExtractUserFromGrpcContext(ctx)
+	identity, err := authutils.ExtractIdentityFromGrpcContext(ctx)
 	if err != nil {
 		return nil, status.Error(codes.Unauthenticated, errors.Wrap(err, "can't extract user from context").Error())
 	}
-	user, err := s.repo.GetUserById(userId)
+	user, err := s.repo.GetUserById(identity.UserId)
 	if err != nil {
 		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't get user").Error())
 	}

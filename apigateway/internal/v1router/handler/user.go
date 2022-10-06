@@ -1,20 +1,26 @@
 package v1handler
 
 import (
-	"context"
-
 	"github.com/GrabItYourself/giys-backend/auth/pkg/authutils"
-	"github.com/GrabItYourself/giys-backend/lib/postgres/models"
 	"github.com/GrabItYourself/giys-backend/user/pkg/userproto"
+	"github.com/gofiber/fiber/v2"
 	"github.com/pkg/errors"
-	"google.golang.org/grpc/metadata"
 )
 
-func (h *Handler) HandleUserMe(ctx context.Context, userId string, role models.RoleEnum) (*userproto.User, error) {
-	ctx = metadata.AppendToOutgoingContext(ctx, authutils.UserHeader, userId, authutils.RoleHeader, string(role))
-	res, err := h.UserClient.Me(ctx, &userproto.MeReq{})
+func (h *Handler) HandleUserMe(c *fiber.Ctx) (*userproto.User, error) {
+	identity, ok := c.Locals(authutils.IdentityKey).(*authutils.Identity)
+	if !ok {
+		return nil, fiber.NewError(fiber.StatusUnauthorized, "identity not found in context")
+	}
+	ctx, err := authutils.EmbedIdentityToContext(c.Context(), identity)
 	if err != nil {
-		return nil, errors.Wrap(err, "Failed to request GRPC MeReq")
+		return nil, fiber.NewError(fiber.StatusInternalServerError, errors.Wrap(err, "can't embed identity to grpc context").Error())
+	}
+
+	res, err := h.Grpc.User.Me(ctx, &userproto.MeReq{})
+	// TODO: infer error code from grpc error
+	if err != nil {
+		return nil, fiber.NewError(fiber.StatusInternalServerError, errors.Wrap(err, "Failed to request GRPC MeReq").Error())
 	}
 	return res.User, nil
 }

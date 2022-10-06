@@ -1,9 +1,7 @@
 package v1router
 
 import (
-	"context"
-	"encoding/json"
-
+	"github.com/GrabItYourself/giys-backend/apigateway/internal/middlewares"
 	"github.com/GrabItYourself/giys-backend/lib/postgres/models"
 	"github.com/gofiber/fiber/v2"
 )
@@ -13,26 +11,21 @@ type Body struct {
 	Role   models.RoleEnum `json:"role"`
 }
 
-func (r *Router) InitUserRoute(ctx context.Context, basePath string) {
+func (r *Router) InitUserRoutes(basePath string) {
 	f := r.Router.Group(basePath)
 
 	f.Get("/", func(c *fiber.Ctx) error {
-		c.SendString("Hello, World 👋!")
-		return nil
+		return c.SendString("Hello, World 👋!")
 	})
+
+	// protect all paths below
+	f.Use(middlewares.NewAccessTokenGuard(r.Handler.Grpc.Auth))
 
 	f.Get("/me", func(c *fiber.Ctx) error {
-		body := &Body{}
-		if err := json.Unmarshal(c.Body(), body); err != nil {
-			return fiber.NewError(fiber.StatusBadRequest, err.Error())
-		}
-
-		user, err := r.Handler.HandleUserMe(ctx, body.UserId, body.Role)
+		user, err := r.Handler.HandleUserMe(c)
 		if err != nil {
-			return fiber.NewError(fiber.StatusUnauthorized, err.Error())
+			return err
 		}
-		return c.SendString(user.String())
+		return c.JSON(user)
 	})
-
-	// ...
 }

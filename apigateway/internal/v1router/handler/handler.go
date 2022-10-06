@@ -1,17 +1,35 @@
 package v1handler
 
 import (
+	"github.com/GrabItYourself/giys-backend/apigateway/internal/config"
+	"github.com/GrabItYourself/giys-backend/auth/pkg/authproto"
 	"github.com/GrabItYourself/giys-backend/user/pkg/userproto"
+	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/google"
 )
 
 type Handler struct {
-	UserClient userproto.UserServiceClient
+	Grpc        *GrpcClients
+	OAuthConfig *oauth2.Config
+}
+
+type GrpcClients struct {
+	User userproto.UserServiceClient
+	Auth authproto.AuthClient
 }
 
 func NewHandler(
-	userClient userproto.UserServiceClient,
+	grpc *GrpcClients,
+	oauthConf *config.OAuthConfig,
 ) *Handler {
 	return &Handler{
-		UserClient: userClient,
+		Grpc: grpc,
+		OAuthConfig: &oauth2.Config{
+			ClientID:     oauthConf.ClientId,
+			ClientSecret: oauthConf.ClientSecret,
+			RedirectURL:  oauthConf.RedirectURL,
+			Endpoint:     google.Endpoint,
+			Scopes:       []string{"https://www.googleapis.com/auth/userinfo.email", "openid"},
+		},
 	}
 }
