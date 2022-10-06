@@ -1,7 +1,7 @@
 package models
 
 type Shop struct {
-	Id          string  `json:"id" gorm:"column:id;primaryKey;autoIncrement"`
+	Id          int32   `json:"id" gorm:"column:id;primaryKey;autoIncrement"`
 	Name        string  `json:"name" gorm:"column:name;not null;unique"`
 	Image       *string `json:"image,omitempty" gorm:"column:image"`
 	Description *string `json:"description,omitempty" gorm:"column:description"`

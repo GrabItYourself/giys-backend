@@ -83,6 +83,6 @@ func (s *Server) DeleteShop(ctx context.Context, input *shopproto.DeleteShopRequ
 		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't delete shop").Error())
 	}
 	return &shopproto.DeleteResponse{
-		RowsAffected: int32(rowsAffected),
+		RowsAffected: rowsAffected,
 	}, nil
 }

@@ -20,7 +20,7 @@ service ShopService {
 }
 
 message Shop {
-    string id = 1;
+    int32 id = 1;
     string name = 2;
     optional string image = 3;
     optional string description = 4;
@@ -29,8 +29,8 @@ message Shop {
 }
 
 message ShopItem {
-    string id = 1;
-    string shop_id = 2;
+    int32 id = 1;
+    int32 shop_id = 2;
     string name = 3;
     optional string image = 4;
     int32 price = 5;
@@ -45,7 +45,7 @@ message CreateShopRequest {
 }
 
 message GetShopRequest {
-    string id = 1;
+    int32 id = 1;
 }
 
 message EditShopRequest {
@@ -53,7 +53,7 @@ message EditShopRequest {
 }
 
 message DeleteShopRequest {
-    string id = 1;
+    int32 id = 1;
 }
 
 message ShopResponse {
@@ -65,18 +65,18 @@ message DeleteResponse {
 }
 
 message CreateShopItemRequest {
-    string shop_id = 1;
+    int32 shop_id = 1;
     string name = 2;
     optional string image = 3;
     int32 price = 4;
 }
 
 message GetAllShopItemsRequest {
-    string shop_id = 1;
+    int32 shop_id = 1;
 }
 
 message GetShopItemRequest {
-    string id = 1;
+    int32 id = 1;
 }
 
 message EditShopItemRequest {
@@ -84,7 +84,7 @@ message EditShopItemRequest {
 }
 
 message DeleteShopItemRequest {
-    string id = 1;
+    int32 id = 1;
 }
 
 message ShopItemResponse {

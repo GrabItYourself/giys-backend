@@ -13,7 +13,7 @@ func (r *Repository) CreateShop(shop *models.Shop) error {
 	return nil
 }
 
-func (r *Repository) GetShopById(id string) (*models.Shop, error) {
+func (r *Repository) GetShopById(id int32) (*models.Shop, error) {
 	var shop models.Shop
 	err := r.pg.Where("id = ?", id).Take(&shop).Error
 	if err != nil {
@@ -30,10 +30,10 @@ func (r *Repository) EditShop(shop *models.Shop) (*models.Shop, error) {
 	return shop, nil
 }
 
-func (r *Repository) DeleteShop(id string) (int, error) {
+func (r *Repository) DeleteShop(id int32) (int32, error) {
 	result := r.pg.Delete(&models.Shop{}, id)
 	if result.Error != nil {
 		return 0, result.Error
 	}
-	return int(result.RowsAffected), nil
+	return int32(result.RowsAffected), nil
 }
