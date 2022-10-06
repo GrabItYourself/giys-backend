@@ -51,13 +51,17 @@ func main() {
 	grpcServer := grpc.NewServer()
 
 	// Initialize PaymentService server
-	paymentServer, err := server.NewServer(&conf.Omise, repo)
+	omiseClient, e := omise.NewClient(conf.Omise.PublicKey, conf.Omise.SecretKey)
+	if e != nil {
+		logger.Fatal("Failed to initialize payment server: " + err.Error())
+	}
+	paymentServer, err := server.NewServer(omiseClient, repo)
 	if err != nil {
 		logger.Fatal("Failed to initialize payment server: " + err.Error())
 	}
 
 	// Register PaymentService server
-	libproto.RegisterPaymentServiceServer(grpcServer, paymentServer)
+	paymentproto.RegisterPaymentServiceServer(grpcServer, paymentServer)
 
 	// Serve
 	lis, err := net.Listen("tcp", ":"+conf.Server.Port)
