@@ -11,11 +11,9 @@ func InferCodeFromOmiseError(err error) codes.Code {
 	switch errors.As(err, &omiseError); omiseError.StatusCode {
 	case 400:
 		return codes.InvalidArgument
-	case 403:
-		return codes.FailedPrecondition
 	case 404:
 		return codes.NotFound
 	default:
-		return codes.Unavailable
+		return codes.Internal
 	}
 }
