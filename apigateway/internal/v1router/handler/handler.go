@@ -1,13 +1,15 @@
 package v1handler
 
-import "github.com/GrabItYourself/giys-backend/user/pkg/libproto"
+import (
+	"github.com/GrabItYourself/giys-backend/user/pkg/userproto"
+)
 
 type Handler struct {
-	UserClient libproto.UserServiceClient
+	UserClient userproto.UserServiceClient
 }
 
 func NewHandler(
-	userClient libproto.UserServiceClient,
+	userClient userproto.UserServiceClient,
 ) *Handler {
 	return &Handler{
 		UserClient: userClient,

@@ -28,10 +28,14 @@ func main() {
 	logger.InitLogger(&conf.Log)
 
 	// Initialize GRPC client
-	userGrpcClient, err := client.NewClient(ctx, conf.Grpc.User.Addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	userGrpcClient, userGrpcConn, err := client.NewClient(ctx, conf.Grpc.User.Addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		logger.Panic(err.Error())
 	}
+	defer func() {
+		logger.Info("Closing user GRPC connection...")
+		userGrpcConn.Close()
+	}()
 
 	// Initialize fiber app
 	app := fiber.New()
@@ -59,5 +63,4 @@ func main() {
 	if err := app.Listen(":" + conf.Server.Port); err != nil {
 		logger.Panic(errors.Wrap(err, "Failed to start server").Error())
 	}
-
 }
