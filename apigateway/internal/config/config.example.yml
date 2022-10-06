@@ -1,8 +1,0 @@
-server:
-  port: 8080
-log:
-  level: info
-  service: apigateway
-grpc:
-  user:
-    addr: localhost:3001
