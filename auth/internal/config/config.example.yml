@@ -1,0 +1,23 @@
+server:
+    port: 3000
+log:
+    level: info
+    service: auth
+oauth:
+    client_id:
+    client_secret:
+    redirect_url: https://example.com
+postgres:
+    host: localhost
+    port: 5432
+    dbname: <dbname>
+    user: <user>
+    password: <password>
+    sslmode: disable
+redis:
+    address: localhost:6379
+    password:
+    database: 0
+grpc:
+    user:
+        addr: localhost:3001

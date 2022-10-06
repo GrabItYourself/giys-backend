@@ -3,7 +3,7 @@ package server
 import (
 	"context"
 
-	"github.com/GrabItYourself/giys-backend/lib/authutils"
+	"github.com/GrabItYourself/giys-backend/auth/pkg/authutils"
 	"github.com/GrabItYourself/giys-backend/lib/postgres"
 	"github.com/GrabItYourself/giys-backend/user/pkg/userproto"
 	"github.com/pkg/errors"
