@@ -20,15 +20,15 @@ func (s *Server) CreateOrder(ctx context.Context, in *orderproto.CreateOrderRequ
 	orderItems := make([]models.OrderItem, len(items))
 	for index, item := range items {
 		orderItems[index] = models.OrderItem{
-			ShopId:     int(item.ShopId),
-			ShopItemId: int(item.ShopItemId),
-			Quantity:   int(item.Quantity),
+			ShopId:     item.ShopId,
+			ShopItemId: item.ShopItemId,
+			Quantity:   item.Quantity,
 		}
 	}
 
 	order := models.Order{
 		UserId: userId,
-		ShopId: int(shopId),
+		ShopId: shopId,
 		Status: models.InQueueStatus,
 		Items:  orderItems,
 	}
@@ -37,20 +37,5 @@ func (s *Server) CreateOrder(ctx context.Context, in *orderproto.CreateOrderRequ
 		return nil, status.Errorf(postgres.InferCodeFromError(err), errors.Wrap(err, "Failed to create an order").Error())
 	}
 
-	orderResponseItems := make([]*orderproto.OrderItem, len(order.Items))
-	for index, item := range order.Items {
-		orderResponseItems[index] = &orderproto.OrderItem{
-			ShopId:     int32(item.ShopId),
-			ShopItemId: int32(item.ShopItemId),
-			Quantity:   int32(item.Quantity),
-		}
-	}
-
-	return &orderproto.OrderResponse{
-		OrderId: int32(order.Id),
-		UserId:  order.UserId,
-		ShopId:  int32(order.ShopId),
-		Status:  string(order.Status),
-		Items:   orderResponseItems,
-	}, nil
+	return s.toProtoOrderResponse(&order), nil
 }

@@ -30,9 +30,9 @@ func (r *Repository) UpdateOrder(order *models.Order) error {
 	return nil
 }
 
-func (r *Repository) UpdateOrderStatus(orderId int, shopId int, status models.OrderStatus) (*models.Order, error) {
+func (r *Repository) UpdateOrderStatus(orderId int32, shopId int32, status models.OrderStatus) (*models.Order, error) {
 	var order models.Order
-	if err := r.pg.Model(&order).Where("id = ? AND shop_id = ?", orderId, shopId).Update("status", models.CompletedStatus).Error; err != nil {
+	if err := r.pg.Model(&order).Where("id = ? AND shop_id = ?", orderId, shopId).Update("status", status).Error; err != nil {
 		return nil, err
 	}
 	return &order, nil

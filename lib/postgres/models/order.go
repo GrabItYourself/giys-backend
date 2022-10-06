@@ -10,9 +10,9 @@ const (
 )
 
 type Order struct {
-	Id     int         `json:"id" gorm:"column:id;primaryKey"`
+	Id     int32       `json:"id" gorm:"column:id;primaryKey"`
 	UserId string      `json:"user_id" gorm:"column:user_id;type:role;not null"`
-	ShopId int         `json:"shop_id" gorm:"column:shop_id;not null"`
+	ShopId int32       `json:"shop_id" gorm:"column:shop_id;not null"`
 	Status OrderStatus `json:"status" gorm:"column:status;not null;default:IN_QUEUE"`
 
 	Items []OrderItem `json:"items" gorm:"foreignKey:OrderId"`
