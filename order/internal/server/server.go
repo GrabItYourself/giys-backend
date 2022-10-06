@@ -1,12 +1,12 @@
 package server
 
 import (
-	"github.com/GrabItYourself/giys-backend/order/internal/libproto"
+	"github.com/GrabItYourself/giys-backend/order/pkg/orderproto"
 	"gorm.io/gorm"
 )
 
 type Server struct {
-	libproto.UnimplementedOrderServer
+	orderproto.UnimplementedOrderServer
 	pg *gorm.DB
 }
 
