@@ -10,7 +10,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-const OauthCookieName = "oauth-state"
+const OAuthCookieName = "oauth-state"
 
 func generateOAuthStateCookie() (*fiber.Cookie, string) {
 	var expiration = time.Now().Add(365 * 24 * time.Hour)
@@ -19,7 +19,7 @@ func generateOAuthStateCookie() (*fiber.Cookie, string) {
 	state := base64.URLEncoding.EncodeToString(b)
 
 	return &fiber.Cookie{
-		Name:     OauthCookieName,
+		Name:     OAuthCookieName,
 		Value:    state,
 		Expires:  expiration,
 		HTTPOnly: true,
@@ -38,7 +38,7 @@ func (r *Router) InitAuthRoutes(basePath string) {
 
 	f.Get("/google/callback", func(c *fiber.Ctx) error {
 		state := c.Query("state")
-		cookie := c.Cookies(OauthCookieName)
+		cookie := c.Cookies(OAuthCookieName)
 		if state != cookie {
 			return fiber.NewError(fiber.StatusBadRequest, "Invalid OAuth state")
 		}
