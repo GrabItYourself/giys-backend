@@ -35,4 +35,6 @@ message RefreshAccessTokenReq {
 message RefreshAccessTokenResp {
   string access_token = 1;
   string refresh_token = 2;
+  string user_id = 3;
+  string role = 4;
 }

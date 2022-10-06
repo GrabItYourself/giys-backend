@@ -29,6 +29,8 @@ func (s *Server) RefreshAccessToken(ctx context.Context, in *authproto.RefreshAc
 	return &authproto.RefreshAccessTokenResp{
 		AccessToken:  accessToken.Token,
 		RefreshToken: newRefreshToken.Token,
+		UserId:       accessToken.UserId,
+		Role:         string(accessToken.Role),
 	}, nil
 }
 

@@ -67,18 +67,21 @@ func main() {
 	// Handle API v1 routes
 	v1Handler := v1handler.NewHandler(grpcClients, &conf.OAuth)
 	v1Router := v1router.NewRouter(ctx, v1, v1Handler)
-	v1Router.InitUserRoutes(ctx, "/user")
-	v1Router.InitAuthRoutes(ctx, "/auth")
+	v1Router.InitUserRoutes("/user")
+	v1Router.InitAuthRoutes("/auth")
 
 	// Graceful shutdown for fiber app
 	go func() {
 		<-ctx.Done()
 		logger.Info("Gracefully shutting down...")
-		app.Shutdown()
+		err := app.Shutdown()
+		if err != nil {
+			logger.Error(errors.Wrap(err, "Failed to shutdown fiber app").Error())
+		}
 	}()
 
 	// Start the server
 	if err := app.Listen(":" + conf.Server.Port); err != nil {
-		logger.Panic(errors.Wrap(err, "Failed to start server").Error())
+		logger.Panic(errors.Wrap(err, "Server returned with error").Error())
 	}
 }

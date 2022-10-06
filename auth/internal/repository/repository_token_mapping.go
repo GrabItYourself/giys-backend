@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"fmt"
-	"log"
 
 	"github.com/GrabItYourself/giys-backend/auth/internal/types/tokenmapping"
 	"github.com/go-redis/redis/v9"
@@ -30,7 +29,6 @@ func (r *Repository) GetTokenMapping(ctx context.Context, k *TokenMappingKey) (*
 	if err != nil {
 		return nil, errors.Wrapf(err, "HGetAll failed for key '%s'", k.Key())
 	}
-	log.Print(hash)
 	tokenMapping, err := tokenmapping.FromMap(k.Key(), hash)
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to parse TokenMapping from hash")
