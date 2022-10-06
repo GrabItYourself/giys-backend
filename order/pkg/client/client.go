@@ -1,20 +1,19 @@
 package client
 
 import (
-	"github.com/GrabItYourself/giys-backend/lib/logger"
-	"github.com/GrabItYourself/giys-backend/order/internal/libproto"
-	"go.uber.org/zap"
+	"context"
+
+	"github.com/GrabItYourself/giys-backend/order/pkg/orderproto"
+	"github.com/pkg/errors"
 	"google.golang.org/grpc"
 )
 
-func NewClient(addr string, opts ...grpc.DialOption) (*libproto.OrderClient, error) {
-	conn, err := grpc.Dial(addr, opts...)
+func NewClient(ctx context.Context, addr string, opts ...grpc.DialOption) (*orderproto.OrderClient, *grpc.ClientConn, error) {
+	conn, err := grpc.DialContext(ctx, addr, opts...)
 	if err != nil {
-		logger.Error("Failed to connect to order service", zap.Error(err))
-		return nil, err
+		return nil, nil, errors.Wrap(err, "Failed to create Order GRPC client")
 	}
-	defer conn.Close()
 
-	client := libproto.NewOrderClient(conn)
-	return &client, nil
+	client := orderproto.NewOrderClient(conn)
+	return &client, conn, nil
 }
