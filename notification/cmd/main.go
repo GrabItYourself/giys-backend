@@ -12,6 +12,7 @@ import (
 	"github.com/GrabItYourself/giys-backend/notification/internal/config"
 	"github.com/GrabItYourself/giys-backend/notification/internal/handler"
 	"github.com/pkg/errors"
+	amqp "github.com/rabbitmq/amqp091-go"
 )
 
 func main() {
@@ -25,9 +26,16 @@ func main() {
 	// Logger
 	logger.InitLogger(&conf.Log)
 
-	emailConsumer, err := rabbitmq.NewConsumer(conf.RabbitMQ.URL, "email", "email-consumer")
+	// Connect to RabbitMQ
+	conn, err := amqp.Dial(conf.RabbitMQ.URL)
 	if err != nil {
-		logger.Panic(errors.Wrap(err, "Can't initialize consumer").Error())
+		logger.Fatal(errors.Wrap(err, "Failed to connect to RabbitMQ").Error())
+	}
+	defer conn.Close()
+
+	emailConsumer, err := rabbitmq.NewConsumer(conn, "email", "email-consumer")
+	if err != nil {
+		logger.Fatal(errors.Wrap(err, "Can't initialize consumer").Error())
 	}
 	defer emailConsumer.Close()
 

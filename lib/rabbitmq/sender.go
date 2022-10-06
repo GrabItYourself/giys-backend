@@ -10,24 +10,17 @@ import (
 )
 
 type Sender struct {
-	conn *amqp.Connection
-	ch   *amqp.Channel
+	ch *amqp.Channel
 }
 
-func NewSender(url string) (*Sender, error) {
-	conn, err := amqp.Dial(url)
-	if err != nil {
-		return nil, errors.Wrap(err, "Failed to connect to RabbitMQ")
-	}
-
+func NewSender(conn *amqp.Connection) (*Sender, error) {
 	ch, err := conn.Channel()
 	if err != nil {
 		return nil, errors.Wrap(err, "Failed to open a channel")
 	}
 
 	return &Sender{
-		conn: conn,
-		ch:   ch,
+		ch: ch,
 	}, nil
 }
 
@@ -53,6 +46,5 @@ func (s *Sender) SendMessage(queueName string, msg any) error {
 }
 
 func (s *Sender) Close() {
-	s.conn.Close()
 	s.ch.Close()
 }

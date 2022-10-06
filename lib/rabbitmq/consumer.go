@@ -7,17 +7,11 @@ import (
 
 type Consumer struct {
 	name     string
-	conn     *amqp.Connection
 	ch       *amqp.Channel
 	Messages <-chan amqp.Delivery
 }
 
-func NewConsumer(url string, queueName string, consumerName string) (*Consumer, error) {
-	conn, err := amqp.Dial(url)
-	if err != nil {
-		return nil, errors.Wrap(err, "Failed to connect to RabbitMQ")
-	}
-
+func NewConsumer(conn *amqp.Connection, queueName string, consumerName string) (*Consumer, error) {
 	ch, err := conn.Channel()
 	if err != nil {
 		return nil, errors.Wrap(err, "Failed to open a channel")
@@ -43,14 +37,12 @@ func NewConsumer(url string, queueName string, consumerName string) (*Consumer, 
 
 	return &Consumer{
 		name:     consumerName,
-		conn:     conn,
 		ch:       ch,
 		Messages: msgs,
 	}, nil
 }
 
 func (c *Consumer) Close() {
-	c.conn.Close()
 	c.ch.Close()
 }
 
