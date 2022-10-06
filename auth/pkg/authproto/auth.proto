@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+option go_package = "../authproto";
+
+package auth;
+
+service Auth {
+  rpc ExchangeAuthCode(ExchangeAuthCodeReq) returns (ExchangeAuthCodeResp) {}
+  rpc VerifyAccessToken(VerifyAccessTokenReq) returns (VerifyAccessTokenResp) {}
+  rpc RefreshAccessToken(RefreshAccessTokenReq) returns (RefreshAccessTokenResp) {}
+}
+
+message ExchangeAuthCodeReq {
+  string auth_code = 1;
+}
+
+message ExchangeAuthCodeResp {
+  string access_token = 1;
+  string refresh_token = 2;
+}
+
+message VerifyAccessTokenReq {
+  string access_token = 1;
+}
+
+message VerifyAccessTokenResp {
+  string user_id = 1;
+  string role = 2;
+}
+
+message RefreshAccessTokenReq {
+  string refresh_token = 1;
+}
+
+message RefreshAccessTokenResp {
+  string access_token = 1;
+  string refresh_token = 2;
+}

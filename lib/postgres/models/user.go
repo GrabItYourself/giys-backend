@@ -2,6 +2,10 @@ package models
 
 type RoleEnum string
 
+func (r RoleEnum) MarshalBinary() ([]byte, error) {
+	return []byte(r), nil
+}
+
 const (
 	AdminRole RoleEnum = "ADMIN"
 	UserRole  RoleEnum = "USER"
