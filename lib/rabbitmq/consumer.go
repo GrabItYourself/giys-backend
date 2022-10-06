@@ -6,12 +6,13 @@ import (
 )
 
 type Consumer struct {
+	name     string
 	conn     *amqp.Connection
 	ch       *amqp.Channel
 	Messages <-chan amqp.Delivery
 }
 
-func NewConsumer(url string, queueName string) (*Consumer, error) {
+func NewConsumer(url string, queueName string, consumerName string) (*Consumer, error) {
 	conn, err := amqp.Dial(url)
 	if err != nil {
 		return nil, errors.Wrap(err, "Failed to connect to RabbitMQ")
@@ -28,19 +29,20 @@ func NewConsumer(url string, queueName string) (*Consumer, error) {
 	}
 
 	msgs, err := ch.Consume(
-		queue.Name, // queue
-		"",         // consumer
-		true,       // auto-ack
-		false,      // exclusive
-		false,      // no-local
-		false,      // no-wait
-		nil,        // args
+		queue.Name,   // queue
+		consumerName, // consumer
+		true,         // auto-ack
+		false,        // exclusive
+		false,        // no-local
+		false,        // no-wait
+		nil,          // args
 	)
 	if err != nil {
 		return nil, errors.Wrap(err, "Failed to register a consumer")
 	}
 
 	return &Consumer{
+		name:     consumerName,
 		conn:     conn,
 		ch:       ch,
 		Messages: msgs,
@@ -50,4 +52,8 @@ func NewConsumer(url string, queueName string) (*Consumer, error) {
 func (c *Consumer) Close() {
 	c.conn.Close()
 	c.ch.Close()
+}
+
+func (c *Consumer) Cancel() {
+	c.ch.Cancel(c.name, false)
 }
