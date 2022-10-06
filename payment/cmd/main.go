@@ -61,7 +61,7 @@ func main() {
 	// Serve
 	lis, err := net.Listen("tcp", ":"+conf.Server.Port)
 	if err != nil {
-		logger.Fatal("Failed to listen: " + err.Error())
+		logger.Panic(errors.Wrap(err, "Failed to listen").Error())
 	}
 
 	go func() {
@@ -72,6 +72,6 @@ func main() {
 
 	logger.Info("Starting gRPC server on port " + conf.Server.Port)
 	if err = grpcServer.Serve(lis); err != nil {
-		logger.Fatal("Failed to serve: " + err.Error())
+		logger.Panic(errors.Wrap(err, "Failed to serve").Error())
 	}
 }
