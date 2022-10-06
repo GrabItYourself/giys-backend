@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/GrabItYourself/giys-backend/lib/authutils"
+	"github.com/GrabItYourself/giys-backend/auth/pkg/authutils"
 	"github.com/GrabItYourself/giys-backend/lib/postgres"
 	"github.com/GrabItYourself/giys-backend/lib/postgres/models"
 	"github.com/GrabItYourself/giys-backend/payment/internal/libproto"
