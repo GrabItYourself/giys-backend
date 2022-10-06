@@ -13,7 +13,7 @@ type Body struct {
 	Role   models.RoleEnum `json:"role"`
 }
 
-func (r *Router) InitUserRoute(ctx context.Context, basePath string) {
+func (r *Router) InitUserRoutes(ctx context.Context, basePath string) {
 	f := r.Router.Group(basePath)
 
 	f.Get("/", func(c *fiber.Ctx) error {

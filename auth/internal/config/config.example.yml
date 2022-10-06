@@ -6,7 +6,7 @@ log:
 oauth:
     client_id:
     client_secret:
-    redirect_url: https://example.com
+    redirect_url: http://localhost:8080/api/v1/auth/google/callback
 postgres:
     host: localhost
     port: 5432

@@ -12,7 +12,7 @@ import (
 
 func (h *Handler) HandleUserMe(ctx context.Context, userId string, role models.RoleEnum) (*userproto.User, error) {
 	ctx = metadata.AppendToOutgoingContext(ctx, authutils.UserHeader, userId, authutils.RoleHeader, string(role))
-	res, err := h.UserClient.Me(ctx, &userproto.MeReq{})
+	res, err := h.Grpc.User.Me(ctx, &userproto.MeReq{})
 	if err != nil {
 		return nil, errors.Wrap(err, "Failed to request GRPC MeReq")
 	}

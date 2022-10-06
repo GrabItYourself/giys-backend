@@ -22,12 +22,20 @@ type ServerConfig struct {
 
 type GRPCConfig struct {
 	User GrpcConnection `mapstructure:"user"`
+	Auth GrpcConnection `mapstructure:"auth"`
+}
+
+type OAuthConfig struct {
+	ClientId     string `mapstructure:"client_id"`
+	ClientSecret string `mapstructure:"client_secret"`
+	RedirectURL  string `mapstructure:"redirect_url"`
 }
 
 type Config struct {
 	Server ServerConfig  `mapstructure:"server"`
 	Log    logger.Config `mapstructure:"log"`
 	Grpc   GRPCConfig    `mapstructure:"grpc"`
+	OAuth  OAuthConfig   `mapstructure:"oauth"`
 }
 
 func InitConfig() *Config {
