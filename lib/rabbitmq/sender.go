@@ -14,8 +14,8 @@ type Sender struct {
 	ch   *amqp.Channel
 }
 
-func NewSender(config *Config) (*Sender, error) {
-	conn, err := amqp.Dial(config.URL)
+func NewSender(url string) (*Sender, error) {
+	conn, err := amqp.Dial(url)
 	if err != nil {
 		return nil, errors.Wrap(err, "Failed to connect to RabbitMQ")
 	}
