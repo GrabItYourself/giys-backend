@@ -53,7 +53,7 @@ func main() {
 	// Initialize PaymentService server
 	omiseClient, e := omise.NewClient(conf.Omise.PublicKey, conf.Omise.SecretKey)
 	if e != nil {
-		logger.Fatal("Failed to initialize payment server: " + err.Error())
+		logger.Fatal("Failed to initialize omise client: " + err.Error())
 	}
 	paymentServer, err := server.NewServer(omiseClient, repo)
 	if err != nil {
