@@ -34,7 +34,9 @@ func main() {
 	}
 	defer func() {
 		logger.Info("Closing user GRPC connection...")
-		userGrpcConn.Close()
+		if err := userGrpcConn.Close(); err != nil {
+			logger.Panic(errors.Wrap(err, "Failed to close user GRPC connection").Error())
+		}
 	}()
 
 	// Initialize fiber app

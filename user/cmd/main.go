@@ -36,7 +36,9 @@ func main() {
 	defer func() {
 		if db, err := pg.DB(); err == nil {
 			logger.Info("Closing database connection...")
-			db.Close()
+			if err := db.Close(); err != nil {
+				logger.Panic(errors.Wrap(err, "Failed to close database connection").Error())
+			}
 		} else {
 			logger.Panic(errors.Wrap(err, "Can't close postgres").Error())
 		}

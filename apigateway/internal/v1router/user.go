@@ -24,7 +24,7 @@ func (r *Router) InitUserRoute(ctx context.Context, basePath string) {
 	f.Get("/me", func(c *fiber.Ctx) error {
 		body := &Body{}
 		if err := json.Unmarshal(c.Body(), body); err != nil {
-			return err
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
 		}
 
 		user, err := r.Handler.HandleUserMe(ctx, body.UserId, body.Role)
