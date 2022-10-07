@@ -30,7 +30,7 @@ func (s *Sender) SendMessage(queueName string, msg any) error {
 
 	body, err := json.Marshal(msg)
 	if err != nil {
-		return err
+		return errors.Wrap(err, "Can't convert to json")
 	}
 
 	err = s.ch.PublishWithContext(ctx,
@@ -42,7 +42,11 @@ func (s *Sender) SendMessage(queueName string, msg any) error {
 			ContentType: "text/plain",
 			Body:        []byte(body),
 		})
-	return err
+	if err != nil {
+		return errors.Wrap(err, "Can't publish message")
+	}
+
+	return nil
 }
 
 func (s *Sender) Close() {
