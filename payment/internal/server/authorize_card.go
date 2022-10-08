@@ -16,12 +16,12 @@ import (
 )
 
 func (s *Server) AuthorizeCard(ctx context.Context, in *paymentproto.AuthorizeCardRequest) (*paymentproto.AuthorizeCardResponse, error) {
-	userId, _, err := authutils.ExtractUserFromGrpcContext(ctx)
+	identity, err := authutils.ExtractIdentityFromGrpcContext(ctx)
 	if err != nil {
 		return nil, status.Error(codes.Unauthenticated, errors.Wrap(err, "can't extract user from context").Error())
 	}
 
-	user, err := s.repo.GetUserById(userId)
+	user, err := s.repo.GetUserById(identity.UserId)
 	if err != nil {
 		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't get user").Error())
 	}
@@ -47,7 +47,7 @@ func (s *Server) AuthorizeCard(ctx context.Context, in *paymentproto.AuthorizeCa
 			return nil, status.Error(InferCodeFromOmiseError(err), errors.Wrap(err, "can't create omise customer").Error())
 		}
 
-		err = s.repo.UpdateOmiseCustomerId(userId, customer.ID)
+		err = s.repo.UpdateOmiseCustomerId(identity.UserId, customer.ID)
 		if err != nil {
 			return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't update omise customer id").Error())
 		}
@@ -64,7 +64,7 @@ func (s *Server) AuthorizeCard(ctx context.Context, in *paymentproto.AuthorizeCa
 	}
 
 	err = s.repo.CreatePaymentMethod(&models.PaymentMethod{
-		UserId:      userId,
+		UserId:      identity.UserId,
 		OmiseCardId: token.Card.ID,
 	})
 	if err != nil {
