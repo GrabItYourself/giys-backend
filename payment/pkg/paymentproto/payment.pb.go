@@ -2,9 +2,9 @@
 // versions:
 // 	protoc-gen-go v1.28.1
 // 	protoc        v3.21.7
-// source: payment/internal/libproto/payment.proto
+// source: payment/pkg/paymentproto/payment.proto
 
-package libproto
+package paymentproto
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -24,12 +24,17 @@ type PayRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+
+	CardId  string `protobuf:"bytes,1,opt,name=card_id,json=cardId,proto3" json:"card_id,omitempty"`
+	ShopId  string `protobuf:"bytes,2,opt,name=shop_id,json=shopId,proto3" json:"shop_id,omitempty"`
+	OrderId string `protobuf:"bytes,3,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty"`
+	Amount  int64  `protobuf:"varint,4,opt,name=amount,proto3" json:"amount,omitempty"`
 }
 
 func (x *PayRequest) Reset() {
 	*x = PayRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_payment_internal_libproto_payment_proto_msgTypes[0]
+		mi := &file_payment_pkg_paymentproto_payment_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -42,7 +47,7 @@ func (x *PayRequest) String() string {
 func (*PayRequest) ProtoMessage() {}
 
 func (x *PayRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_payment_internal_libproto_payment_proto_msgTypes[0]
+	mi := &file_payment_pkg_paymentproto_payment_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -55,7 +60,35 @@ func (x *PayRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PayRequest.ProtoReflect.Descriptor instead.
 func (*PayRequest) Descriptor() ([]byte, []int) {
-	return file_payment_internal_libproto_payment_proto_rawDescGZIP(), []int{0}
+	return file_payment_pkg_paymentproto_payment_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *PayRequest) GetCardId() string {
+	if x != nil {
+		return x.CardId
+	}
+	return ""
+}
+
+func (x *PayRequest) GetShopId() string {
+	if x != nil {
+		return x.ShopId
+	}
+	return ""
+}
+
+func (x *PayRequest) GetOrderId() string {
+	if x != nil {
+		return x.OrderId
+	}
+	return ""
+}
+
+func (x *PayRequest) GetAmount() int64 {
+	if x != nil {
+		return x.Amount
+	}
+	return 0
 }
 
 type PayResponse struct {
@@ -67,7 +100,7 @@ type PayResponse struct {
 func (x *PayResponse) Reset() {
 	*x = PayResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_payment_internal_libproto_payment_proto_msgTypes[1]
+		mi := &file_payment_pkg_paymentproto_payment_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -80,7 +113,7 @@ func (x *PayResponse) String() string {
 func (*PayResponse) ProtoMessage() {}
 
 func (x *PayResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_payment_internal_libproto_payment_proto_msgTypes[1]
+	mi := &file_payment_pkg_paymentproto_payment_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -93,7 +126,7 @@ func (x *PayResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PayResponse.ProtoReflect.Descriptor instead.
 func (*PayResponse) Descriptor() ([]byte, []int) {
-	return file_payment_internal_libproto_payment_proto_rawDescGZIP(), []int{1}
+	return file_payment_pkg_paymentproto_payment_proto_rawDescGZIP(), []int{1}
 }
 
 type AuthorizeCardRequest struct {
@@ -110,7 +143,7 @@ type AuthorizeCardRequest struct {
 func (x *AuthorizeCardRequest) Reset() {
 	*x = AuthorizeCardRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_payment_internal_libproto_payment_proto_msgTypes[2]
+		mi := &file_payment_pkg_paymentproto_payment_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -123,7 +156,7 @@ func (x *AuthorizeCardRequest) String() string {
 func (*AuthorizeCardRequest) ProtoMessage() {}
 
 func (x *AuthorizeCardRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_payment_internal_libproto_payment_proto_msgTypes[2]
+	mi := &file_payment_pkg_paymentproto_payment_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -136,7 +169,7 @@ func (x *AuthorizeCardRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AuthorizeCardRequest.ProtoReflect.Descriptor instead.
 func (*AuthorizeCardRequest) Descriptor() ([]byte, []int) {
-	return file_payment_internal_libproto_payment_proto_rawDescGZIP(), []int{2}
+	return file_payment_pkg_paymentproto_payment_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *AuthorizeCardRequest) GetName() string {
@@ -176,7 +209,7 @@ type AuthorizeCardResponse struct {
 func (x *AuthorizeCardResponse) Reset() {
 	*x = AuthorizeCardResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_payment_internal_libproto_payment_proto_msgTypes[3]
+		mi := &file_payment_pkg_paymentproto_payment_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -189,7 +222,7 @@ func (x *AuthorizeCardResponse) String() string {
 func (*AuthorizeCardResponse) ProtoMessage() {}
 
 func (x *AuthorizeCardResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_payment_internal_libproto_payment_proto_msgTypes[3]
+	mi := &file_payment_pkg_paymentproto_payment_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -202,19 +235,24 @@ func (x *AuthorizeCardResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AuthorizeCardResponse.ProtoReflect.Descriptor instead.
 func (*AuthorizeCardResponse) Descriptor() ([]byte, []int) {
-	return file_payment_internal_libproto_payment_proto_rawDescGZIP(), []int{3}
+	return file_payment_pkg_paymentproto_payment_proto_rawDescGZIP(), []int{3}
 }
 
 type RegisterRecipientRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+
+	ShopId      string       `protobuf:"bytes,1,opt,name=shop_id,json=shopId,proto3" json:"shop_id,omitempty"`
+	Name        string       `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Type        string       `protobuf:"bytes,3,opt,name=type,proto3" json:"type,omitempty"`
+	BankAccount *BankAccount `protobuf:"bytes,4,opt,name=bank_account,json=bankAccount,proto3" json:"bank_account,omitempty"`
 }
 
 func (x *RegisterRecipientRequest) Reset() {
 	*x = RegisterRecipientRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_payment_internal_libproto_payment_proto_msgTypes[4]
+		mi := &file_payment_pkg_paymentproto_payment_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -227,7 +265,7 @@ func (x *RegisterRecipientRequest) String() string {
 func (*RegisterRecipientRequest) ProtoMessage() {}
 
 func (x *RegisterRecipientRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_payment_internal_libproto_payment_proto_msgTypes[4]
+	mi := &file_payment_pkg_paymentproto_payment_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -240,7 +278,98 @@ func (x *RegisterRecipientRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RegisterRecipientRequest.ProtoReflect.Descriptor instead.
 func (*RegisterRecipientRequest) Descriptor() ([]byte, []int) {
-	return file_payment_internal_libproto_payment_proto_rawDescGZIP(), []int{4}
+	return file_payment_pkg_paymentproto_payment_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *RegisterRecipientRequest) GetShopId() string {
+	if x != nil {
+		return x.ShopId
+	}
+	return ""
+}
+
+func (x *RegisterRecipientRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *RegisterRecipientRequest) GetType() string {
+	if x != nil {
+		return x.Type
+	}
+	return ""
+}
+
+func (x *RegisterRecipientRequest) GetBankAccount() *BankAccount {
+	if x != nil {
+		return x.BankAccount
+	}
+	return nil
+}
+
+type BankAccount struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Name   string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Number string `protobuf:"bytes,2,opt,name=number,proto3" json:"number,omitempty"`
+	Brand  string `protobuf:"bytes,3,opt,name=brand,proto3" json:"brand,omitempty"`
+}
+
+func (x *BankAccount) Reset() {
+	*x = BankAccount{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_payment_pkg_paymentproto_payment_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *BankAccount) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BankAccount) ProtoMessage() {}
+
+func (x *BankAccount) ProtoReflect() protoreflect.Message {
+	mi := &file_payment_pkg_paymentproto_payment_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BankAccount.ProtoReflect.Descriptor instead.
+func (*BankAccount) Descriptor() ([]byte, []int) {
+	return file_payment_pkg_paymentproto_payment_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *BankAccount) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *BankAccount) GetNumber() string {
+	if x != nil {
+		return x.Number
+	}
+	return ""
+}
+
+func (x *BankAccount) GetBrand() string {
+	if x != nil {
+		return x.Brand
+	}
+	return ""
 }
 
 type RegisterRecipientResponse struct {
@@ -252,7 +381,7 @@ type RegisterRecipientResponse struct {
 func (x *RegisterRecipientResponse) Reset() {
 	*x = RegisterRecipientResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_payment_internal_libproto_payment_proto_msgTypes[5]
+		mi := &file_payment_pkg_paymentproto_payment_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -265,7 +394,7 @@ func (x *RegisterRecipientResponse) String() string {
 func (*RegisterRecipientResponse) ProtoMessage() {}
 
 func (x *RegisterRecipientResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_payment_internal_libproto_payment_proto_msgTypes[5]
+	mi := &file_payment_pkg_paymentproto_payment_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -278,7 +407,7 @@ func (x *RegisterRecipientResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RegisterRecipientResponse.ProtoReflect.Descriptor instead.
 func (*RegisterRecipientResponse) Descriptor() ([]byte, []int) {
-	return file_payment_internal_libproto_payment_proto_rawDescGZIP(), []int{5}
+	return file_payment_pkg_paymentproto_payment_proto_rawDescGZIP(), []int{6}
 }
 
 type GetTransactionHistoryRequest struct {
@@ -290,7 +419,7 @@ type GetTransactionHistoryRequest struct {
 func (x *GetTransactionHistoryRequest) Reset() {
 	*x = GetTransactionHistoryRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_payment_internal_libproto_payment_proto_msgTypes[6]
+		mi := &file_payment_pkg_paymentproto_payment_proto_msgTypes[7]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -303,7 +432,7 @@ func (x *GetTransactionHistoryRequest) String() string {
 func (*GetTransactionHistoryRequest) ProtoMessage() {}
 
 func (x *GetTransactionHistoryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_payment_internal_libproto_payment_proto_msgTypes[6]
+	mi := &file_payment_pkg_paymentproto_payment_proto_msgTypes[7]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -316,7 +445,7 @@ func (x *GetTransactionHistoryRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTransactionHistoryRequest.ProtoReflect.Descriptor instead.
 func (*GetTransactionHistoryRequest) Descriptor() ([]byte, []int) {
-	return file_payment_internal_libproto_payment_proto_rawDescGZIP(), []int{6}
+	return file_payment_pkg_paymentproto_payment_proto_rawDescGZIP(), []int{7}
 }
 
 type GetTransactionHistoryResponse struct {
@@ -328,7 +457,7 @@ type GetTransactionHistoryResponse struct {
 func (x *GetTransactionHistoryResponse) Reset() {
 	*x = GetTransactionHistoryResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_payment_internal_libproto_payment_proto_msgTypes[7]
+		mi := &file_payment_pkg_paymentproto_payment_proto_msgTypes[8]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -341,7 +470,7 @@ func (x *GetTransactionHistoryResponse) String() string {
 func (*GetTransactionHistoryResponse) ProtoMessage() {}
 
 func (x *GetTransactionHistoryResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_payment_internal_libproto_payment_proto_msgTypes[7]
+	mi := &file_payment_pkg_paymentproto_payment_proto_msgTypes[8]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -354,31 +483,50 @@ func (x *GetTransactionHistoryResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTransactionHistoryResponse.ProtoReflect.Descriptor instead.
 func (*GetTransactionHistoryResponse) Descriptor() ([]byte, []int) {
-	return file_payment_internal_libproto_payment_proto_rawDescGZIP(), []int{7}
+	return file_payment_pkg_paymentproto_payment_proto_rawDescGZIP(), []int{8}
 }
 
-var File_payment_internal_libproto_payment_proto protoreflect.FileDescriptor
+var File_payment_pkg_paymentproto_payment_proto protoreflect.FileDescriptor
 
-var file_payment_internal_libproto_payment_proto_rawDesc = []byte{
-	0x0a, 0x27, 0x70, 0x61, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x2f, 0x69, 0x6e, 0x74, 0x65, 0x72, 0x6e,
-	0x61, 0x6c, 0x2f, 0x6c, 0x69, 0x62, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x70, 0x61, 0x79, 0x6d,
-	0x65, 0x6e, 0x74, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x07, 0x70, 0x61, 0x79, 0x6d, 0x65,
-	0x6e, 0x74, 0x22, 0x0c, 0x0a, 0x0a, 0x50, 0x61, 0x79, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
-	0x22, 0x0d, 0x0a, 0x0b, 0x50, 0x61, 0x79, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22,
-	0x9f, 0x01, 0x0a, 0x14, 0x41, 0x75, 0x74, 0x68, 0x6f, 0x72, 0x69, 0x7a, 0x65, 0x43, 0x61, 0x72,
-	0x64, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65,
-	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x1f, 0x0a, 0x0b,
-	0x63, 0x61, 0x72, 0x64, 0x5f, 0x6e, 0x75, 0x6d, 0x62, 0x65, 0x72, 0x18, 0x02, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x0a, 0x63, 0x61, 0x72, 0x64, 0x4e, 0x75, 0x6d, 0x62, 0x65, 0x72, 0x12, 0x29, 0x0a,
-	0x10, 0x65, 0x78, 0x70, 0x69, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x6d, 0x6f, 0x6e, 0x74,
-	0x68, 0x18, 0x03, 0x20, 0x01, 0x28, 0x05, 0x52, 0x0f, 0x65, 0x78, 0x70, 0x69, 0x72, 0x61, 0x74,
-	0x69, 0x6f, 0x6e, 0x4d, 0x6f, 0x6e, 0x74, 0x68, 0x12, 0x27, 0x0a, 0x0f, 0x65, 0x78, 0x70, 0x69,
-	0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x79, 0x65, 0x61, 0x72, 0x18, 0x04, 0x20, 0x01, 0x28,
-	0x05, 0x52, 0x0e, 0x65, 0x78, 0x70, 0x69, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x59, 0x65, 0x61,
-	0x72, 0x22, 0x17, 0x0a, 0x15, 0x41, 0x75, 0x74, 0x68, 0x6f, 0x72, 0x69, 0x7a, 0x65, 0x43, 0x61,
-	0x72, 0x64, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x1a, 0x0a, 0x18, 0x52, 0x65,
-	0x67, 0x69, 0x73, 0x74, 0x65, 0x72, 0x52, 0x65, 0x63, 0x69, 0x70, 0x69, 0x65, 0x6e, 0x74, 0x52,
-	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x1b, 0x0a, 0x19, 0x52, 0x65, 0x67, 0x69, 0x73, 0x74,
+var file_payment_pkg_paymentproto_payment_proto_rawDesc = []byte{
+	0x0a, 0x26, 0x70, 0x61, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x2f, 0x70, 0x6b, 0x67, 0x2f, 0x70, 0x61,
+	0x79, 0x6d, 0x65, 0x6e, 0x74, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x70, 0x61, 0x79, 0x6d, 0x65,
+	0x6e, 0x74, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x07, 0x70, 0x61, 0x79, 0x6d, 0x65, 0x6e,
+	0x74, 0x22, 0x71, 0x0a, 0x0a, 0x50, 0x61, 0x79, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12,
+	0x17, 0x0a, 0x07, 0x63, 0x61, 0x72, 0x64, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x06, 0x63, 0x61, 0x72, 0x64, 0x49, 0x64, 0x12, 0x17, 0x0a, 0x07, 0x73, 0x68, 0x6f, 0x70,
+	0x5f, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x73, 0x68, 0x6f, 0x70, 0x49,
+	0x64, 0x12, 0x19, 0x0a, 0x08, 0x6f, 0x72, 0x64, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x18, 0x03, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x07, 0x6f, 0x72, 0x64, 0x65, 0x72, 0x49, 0x64, 0x12, 0x16, 0x0a, 0x06,
+	0x61, 0x6d, 0x6f, 0x75, 0x6e, 0x74, 0x18, 0x04, 0x20, 0x01, 0x28, 0x03, 0x52, 0x06, 0x61, 0x6d,
+	0x6f, 0x75, 0x6e, 0x74, 0x22, 0x0d, 0x0a, 0x0b, 0x50, 0x61, 0x79, 0x52, 0x65, 0x73, 0x70, 0x6f,
+	0x6e, 0x73, 0x65, 0x22, 0x9f, 0x01, 0x0a, 0x14, 0x41, 0x75, 0x74, 0x68, 0x6f, 0x72, 0x69, 0x7a,
+	0x65, 0x43, 0x61, 0x72, 0x64, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x12, 0x0a, 0x04,
+	0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65,
+	0x12, 0x1f, 0x0a, 0x0b, 0x63, 0x61, 0x72, 0x64, 0x5f, 0x6e, 0x75, 0x6d, 0x62, 0x65, 0x72, 0x18,
+	0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x63, 0x61, 0x72, 0x64, 0x4e, 0x75, 0x6d, 0x62, 0x65,
+	0x72, 0x12, 0x29, 0x0a, 0x10, 0x65, 0x78, 0x70, 0x69, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x5f,
+	0x6d, 0x6f, 0x6e, 0x74, 0x68, 0x18, 0x03, 0x20, 0x01, 0x28, 0x05, 0x52, 0x0f, 0x65, 0x78, 0x70,
+	0x69, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x4d, 0x6f, 0x6e, 0x74, 0x68, 0x12, 0x27, 0x0a, 0x0f,
+	0x65, 0x78, 0x70, 0x69, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x79, 0x65, 0x61, 0x72, 0x18,
+	0x04, 0x20, 0x01, 0x28, 0x05, 0x52, 0x0e, 0x65, 0x78, 0x70, 0x69, 0x72, 0x61, 0x74, 0x69, 0x6f,
+	0x6e, 0x59, 0x65, 0x61, 0x72, 0x22, 0x17, 0x0a, 0x15, 0x41, 0x75, 0x74, 0x68, 0x6f, 0x72, 0x69,
+	0x7a, 0x65, 0x43, 0x61, 0x72, 0x64, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x94,
+	0x01, 0x0a, 0x18, 0x52, 0x65, 0x67, 0x69, 0x73, 0x74, 0x65, 0x72, 0x52, 0x65, 0x63, 0x69, 0x70,
+	0x69, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x17, 0x0a, 0x07, 0x73,
+	0x68, 0x6f, 0x70, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x73, 0x68,
+	0x6f, 0x70, 0x49, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x74, 0x79, 0x70, 0x65,
+	0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x74, 0x79, 0x70, 0x65, 0x12, 0x37, 0x0a, 0x0c,
+	0x62, 0x61, 0x6e, 0x6b, 0x5f, 0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x18, 0x04, 0x20, 0x01,
+	0x28, 0x0b, 0x32, 0x14, 0x2e, 0x70, 0x61, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x2e, 0x42, 0x61, 0x6e,
+	0x6b, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x52, 0x0b, 0x62, 0x61, 0x6e, 0x6b, 0x41, 0x63,
+	0x63, 0x6f, 0x75, 0x6e, 0x74, 0x22, 0x4f, 0x0a, 0x0b, 0x42, 0x61, 0x6e, 0x6b, 0x41, 0x63, 0x63,
+	0x6f, 0x75, 0x6e, 0x74, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x6e, 0x75, 0x6d, 0x62,
+	0x65, 0x72, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x6e, 0x75, 0x6d, 0x62, 0x65, 0x72,
+	0x12, 0x14, 0x0a, 0x05, 0x62, 0x72, 0x61, 0x6e, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x05, 0x62, 0x72, 0x61, 0x6e, 0x64, 0x22, 0x1b, 0x0a, 0x19, 0x52, 0x65, 0x67, 0x69, 0x73, 0x74,
 	0x65, 0x72, 0x52, 0x65, 0x63, 0x69, 0x70, 0x69, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f,
 	0x6e, 0x73, 0x65, 0x22, 0x1e, 0x0a, 0x1c, 0x47, 0x65, 0x74, 0x54, 0x72, 0x61, 0x6e, 0x73, 0x61,
 	0x63, 0x74, 0x69, 0x6f, 0x6e, 0x48, 0x69, 0x73, 0x74, 0x6f, 0x72, 0x79, 0x52, 0x65, 0x71, 0x75,
@@ -406,56 +554,58 @@ var file_payment_internal_libproto_payment_proto_rawDesc = []byte{
 	0x74, 0x6f, 0x72, 0x79, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x26, 0x2e, 0x70, 0x61,
 	0x79, 0x6d, 0x65, 0x6e, 0x74, 0x2e, 0x47, 0x65, 0x74, 0x54, 0x72, 0x61, 0x6e, 0x73, 0x61, 0x63,
 	0x74, 0x69, 0x6f, 0x6e, 0x48, 0x69, 0x73, 0x74, 0x6f, 0x72, 0x79, 0x52, 0x65, 0x73, 0x70, 0x6f,
-	0x6e, 0x73, 0x65, 0x22, 0x00, 0x42, 0x0d, 0x5a, 0x0b, 0x2e, 0x2e, 0x2f, 0x6c, 0x69, 0x62, 0x70,
-	0x72, 0x6f, 0x74, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x6e, 0x73, 0x65, 0x22, 0x00, 0x42, 0x11, 0x5a, 0x0f, 0x2e, 0x2e, 0x2f, 0x70, 0x61, 0x79, 0x6d,
+	0x65, 0x6e, 0x74, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
-	file_payment_internal_libproto_payment_proto_rawDescOnce sync.Once
-	file_payment_internal_libproto_payment_proto_rawDescData = file_payment_internal_libproto_payment_proto_rawDesc
+	file_payment_pkg_paymentproto_payment_proto_rawDescOnce sync.Once
+	file_payment_pkg_paymentproto_payment_proto_rawDescData = file_payment_pkg_paymentproto_payment_proto_rawDesc
 )
 
-func file_payment_internal_libproto_payment_proto_rawDescGZIP() []byte {
-	file_payment_internal_libproto_payment_proto_rawDescOnce.Do(func() {
-		file_payment_internal_libproto_payment_proto_rawDescData = protoimpl.X.CompressGZIP(file_payment_internal_libproto_payment_proto_rawDescData)
+func file_payment_pkg_paymentproto_payment_proto_rawDescGZIP() []byte {
+	file_payment_pkg_paymentproto_payment_proto_rawDescOnce.Do(func() {
+		file_payment_pkg_paymentproto_payment_proto_rawDescData = protoimpl.X.CompressGZIP(file_payment_pkg_paymentproto_payment_proto_rawDescData)
 	})
-	return file_payment_internal_libproto_payment_proto_rawDescData
+	return file_payment_pkg_paymentproto_payment_proto_rawDescData
 }
 
-var file_payment_internal_libproto_payment_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
-var file_payment_internal_libproto_payment_proto_goTypes = []interface{}{
+var file_payment_pkg_paymentproto_payment_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_payment_pkg_paymentproto_payment_proto_goTypes = []interface{}{
 	(*PayRequest)(nil),                    // 0: payment.PayRequest
 	(*PayResponse)(nil),                   // 1: payment.PayResponse
 	(*AuthorizeCardRequest)(nil),          // 2: payment.AuthorizeCardRequest
 	(*AuthorizeCardResponse)(nil),         // 3: payment.AuthorizeCardResponse
 	(*RegisterRecipientRequest)(nil),      // 4: payment.RegisterRecipientRequest
-	(*RegisterRecipientResponse)(nil),     // 5: payment.RegisterRecipientResponse
-	(*GetTransactionHistoryRequest)(nil),  // 6: payment.GetTransactionHistoryRequest
-	(*GetTransactionHistoryResponse)(nil), // 7: payment.GetTransactionHistoryResponse
+	(*BankAccount)(nil),                   // 5: payment.BankAccount
+	(*RegisterRecipientResponse)(nil),     // 6: payment.RegisterRecipientResponse
+	(*GetTransactionHistoryRequest)(nil),  // 7: payment.GetTransactionHistoryRequest
+	(*GetTransactionHistoryResponse)(nil), // 8: payment.GetTransactionHistoryResponse
 }
-var file_payment_internal_libproto_payment_proto_depIdxs = []int32{
-	0, // 0: payment.PaymentService.Pay:input_type -> payment.PayRequest
-	2, // 1: payment.PaymentService.AuthorizeCard:input_type -> payment.AuthorizeCardRequest
-	4, // 2: payment.PaymentService.RegisterRecipient:input_type -> payment.RegisterRecipientRequest
-	6, // 3: payment.PaymentService.GetTransactionHistory:input_type -> payment.GetTransactionHistoryRequest
-	1, // 4: payment.PaymentService.Pay:output_type -> payment.PayResponse
-	3, // 5: payment.PaymentService.AuthorizeCard:output_type -> payment.AuthorizeCardResponse
-	5, // 6: payment.PaymentService.RegisterRecipient:output_type -> payment.RegisterRecipientResponse
-	7, // 7: payment.PaymentService.GetTransactionHistory:output_type -> payment.GetTransactionHistoryResponse
-	4, // [4:8] is the sub-list for method output_type
-	0, // [0:4] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+var file_payment_pkg_paymentproto_payment_proto_depIdxs = []int32{
+	5, // 0: payment.RegisterRecipientRequest.bank_account:type_name -> payment.BankAccount
+	0, // 1: payment.PaymentService.Pay:input_type -> payment.PayRequest
+	2, // 2: payment.PaymentService.AuthorizeCard:input_type -> payment.AuthorizeCardRequest
+	4, // 3: payment.PaymentService.RegisterRecipient:input_type -> payment.RegisterRecipientRequest
+	7, // 4: payment.PaymentService.GetTransactionHistory:input_type -> payment.GetTransactionHistoryRequest
+	1, // 5: payment.PaymentService.Pay:output_type -> payment.PayResponse
+	3, // 6: payment.PaymentService.AuthorizeCard:output_type -> payment.AuthorizeCardResponse
+	6, // 7: payment.PaymentService.RegisterRecipient:output_type -> payment.RegisterRecipientResponse
+	8, // 8: payment.PaymentService.GetTransactionHistory:output_type -> payment.GetTransactionHistoryResponse
+	5, // [5:9] is the sub-list for method output_type
+	1, // [1:5] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
-func init() { file_payment_internal_libproto_payment_proto_init() }
-func file_payment_internal_libproto_payment_proto_init() {
-	if File_payment_internal_libproto_payment_proto != nil {
+func init() { file_payment_pkg_paymentproto_payment_proto_init() }
+func file_payment_pkg_paymentproto_payment_proto_init() {
+	if File_payment_pkg_paymentproto_payment_proto != nil {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_payment_internal_libproto_payment_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_payment_pkg_paymentproto_payment_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*PayRequest); i {
 			case 0:
 				return &v.state
@@ -467,7 +617,7 @@ func file_payment_internal_libproto_payment_proto_init() {
 				return nil
 			}
 		}
-		file_payment_internal_libproto_payment_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_payment_pkg_paymentproto_payment_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*PayResponse); i {
 			case 0:
 				return &v.state
@@ -479,7 +629,7 @@ func file_payment_internal_libproto_payment_proto_init() {
 				return nil
 			}
 		}
-		file_payment_internal_libproto_payment_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+		file_payment_pkg_paymentproto_payment_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*AuthorizeCardRequest); i {
 			case 0:
 				return &v.state
@@ -491,7 +641,7 @@ func file_payment_internal_libproto_payment_proto_init() {
 				return nil
 			}
 		}
-		file_payment_internal_libproto_payment_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+		file_payment_pkg_paymentproto_payment_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*AuthorizeCardResponse); i {
 			case 0:
 				return &v.state
@@ -503,7 +653,7 @@ func file_payment_internal_libproto_payment_proto_init() {
 				return nil
 			}
 		}
-		file_payment_internal_libproto_payment_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+		file_payment_pkg_paymentproto_payment_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*RegisterRecipientRequest); i {
 			case 0:
 				return &v.state
@@ -515,7 +665,19 @@ func file_payment_internal_libproto_payment_proto_init() {
 				return nil
 			}
 		}
-		file_payment_internal_libproto_payment_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+		file_payment_pkg_paymentproto_payment_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*BankAccount); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_payment_pkg_paymentproto_payment_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*RegisterRecipientResponse); i {
 			case 0:
 				return &v.state
@@ -527,7 +689,7 @@ func file_payment_internal_libproto_payment_proto_init() {
 				return nil
 			}
 		}
-		file_payment_internal_libproto_payment_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+		file_payment_pkg_paymentproto_payment_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*GetTransactionHistoryRequest); i {
 			case 0:
 				return &v.state
@@ -539,7 +701,7 @@ func file_payment_internal_libproto_payment_proto_init() {
 				return nil
 			}
 		}
-		file_payment_internal_libproto_payment_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+		file_payment_pkg_paymentproto_payment_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*GetTransactionHistoryResponse); i {
 			case 0:
 				return &v.state
@@ -556,18 +718,18 @@ func file_payment_internal_libproto_payment_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: file_payment_internal_libproto_payment_proto_rawDesc,
+			RawDescriptor: file_payment_pkg_paymentproto_payment_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   8,
+			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_payment_internal_libproto_payment_proto_goTypes,
-		DependencyIndexes: file_payment_internal_libproto_payment_proto_depIdxs,
-		MessageInfos:      file_payment_internal_libproto_payment_proto_msgTypes,
+		GoTypes:           file_payment_pkg_paymentproto_payment_proto_goTypes,
+		DependencyIndexes: file_payment_pkg_paymentproto_payment_proto_depIdxs,
+		MessageInfos:      file_payment_pkg_paymentproto_payment_proto_msgTypes,
 	}.Build()
-	File_payment_internal_libproto_payment_proto = out.File
-	file_payment_internal_libproto_payment_proto_rawDesc = nil
-	file_payment_internal_libproto_payment_proto_goTypes = nil
-	file_payment_internal_libproto_payment_proto_depIdxs = nil
+	File_payment_pkg_paymentproto_payment_proto = out.File
+	file_payment_pkg_paymentproto_payment_proto_rawDesc = nil
+	file_payment_pkg_paymentproto_payment_proto_goTypes = nil
+	file_payment_pkg_paymentproto_payment_proto_depIdxs = nil
 }

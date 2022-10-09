@@ -9,9 +9,10 @@ import (
 	"github.com/GrabItYourself/giys-backend/lib/logger"
 	"github.com/GrabItYourself/giys-backend/lib/postgres"
 	"github.com/GrabItYourself/giys-backend/payment/internal/config"
-	"github.com/GrabItYourself/giys-backend/payment/internal/libproto"
 	"github.com/GrabItYourself/giys-backend/payment/internal/repository"
 	"github.com/GrabItYourself/giys-backend/payment/internal/server"
+	"github.com/GrabItYourself/giys-backend/payment/pkg/paymentproto"
+	"github.com/omise/omise-go"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
 )
@@ -50,13 +51,17 @@ func main() {
 	grpcServer := grpc.NewServer()
 
 	// Initialize PaymentService server
-	paymentServer, err := server.NewServer(&conf.Omise, repo)
+	omiseClient, e := omise.NewClient(conf.Omise.PublicKey, conf.Omise.SecretKey)
+	if e != nil {
+		logger.Fatal("Failed to initialize omise client: " + err.Error())
+	}
+	paymentServer, err := server.NewServer(omiseClient, repo)
 	if err != nil {
 		logger.Fatal("Failed to initialize payment server: " + err.Error())
 	}
 
 	// Register PaymentService server
-	libproto.RegisterPaymentServiceServer(grpcServer, paymentServer)
+	paymentproto.RegisterPaymentServiceServer(grpcServer, paymentServer)
 
 	// Serve
 	lis, err := net.Listen("tcp", ":"+conf.Server.Port)

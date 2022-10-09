@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "../libproto";
+option go_package = "../paymentproto";
 
 package payment;
 
@@ -12,6 +12,10 @@ service PaymentService {
 }
 
 message PayRequest {
+  string card_id = 1;
+  string shop_id = 2;
+  string order_id = 3;
+  int64 amount = 4;
 }
 
 message PayResponse {
@@ -28,6 +32,16 @@ message AuthorizeCardResponse {
 }
 
 message RegisterRecipientRequest {
+  string shop_id = 1;
+  string name = 2;
+  string type = 3;
+  BankAccount bank_account = 4;
+}
+
+message BankAccount {
+  string name = 1;
+  string number = 2;
+  string brand = 3;
 }
 
 message RegisterRecipientResponse {
