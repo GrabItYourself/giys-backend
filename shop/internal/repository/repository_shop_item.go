@@ -3,21 +3,13 @@ package repository
 import (
 	"gorm.io/gorm/clause"
 
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
-
 	"github.com/GrabItYourself/giys-backend/lib/postgres/models"
 )
 
 func (r *Repository) CreateShopItem(shopItem *models.ShopItem) error {
-	var shopExists models.Shop
-	err1 := r.pg.Where("id = ?", shopItem.ShopID).First(&shopExists).Error
-	if err1 != nil {
-		return status.Error(codes.InvalidArgument, "specified shop doesn't exist")
-	}
-	err2 := r.pg.Create(shopItem).Error
-	if err2 != nil {
-		return err2
+	err := r.pg.Create(shopItem).Error
+	if err != nil {
+		return err
 	}
 	return nil
 }
@@ -31,9 +23,9 @@ func (r *Repository) GetAllShopItems(shopId int32) (*[]models.ShopItem, error) {
 	return &shopItems, nil
 }
 
-func (r *Repository) GetShopItemById(id int32) (*models.ShopItem, error) {
+func (r *Repository) GetShopItemById(id int32, shopId int32) (*models.ShopItem, error) {
 	var shopItem models.ShopItem
-	err := r.pg.Where("id = ?", id).Take(&shopItem).Error
+	err := r.pg.Where(&models.ShopItem{Id: id, ShopId: shopId}).Take(&shopItem).Error
 	if err != nil {
 		return nil, err
 	}
@@ -48,8 +40,8 @@ func (r *Repository) EditShopItem(shopItem *models.ShopItem) (*models.ShopItem, 
 	return shopItem, nil
 }
 
-func (r *Repository) DeleteShopItem(id int32) (int32, error) {
-	result := r.pg.Delete(&models.ShopItem{}, id)
+func (r *Repository) DeleteShopItem(id int32, shopId int32) (int32, error) {
+	result := r.pg.Where(&models.ShopItem{Id: id, ShopId: shopId}).Delete(&models.ShopItem{})
 	if result.Error != nil {
 		return 0, result.Error
 	}

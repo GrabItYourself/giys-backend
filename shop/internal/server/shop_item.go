@@ -13,7 +13,7 @@ import (
 
 func (s *Server) CreateShopItem(ctx context.Context, input *shopproto.CreateShopItemRequest) (*shopproto.ShopItemResponse, error) {
 	shopItem := &models.ShopItem{
-		ShopID: input.ShopId,
+		ShopId: input.ShopId,
 		Name:   input.Name,
 		Image:  input.Image,
 		Price:  input.Price,
@@ -24,7 +24,7 @@ func (s *Server) CreateShopItem(ctx context.Context, input *shopproto.CreateShop
 	return &shopproto.ShopItemResponse{
 		Item: &shopproto.ShopItem{
 			Id:     shopItem.Id,
-			ShopId: shopItem.ShopID,
+			ShopId: shopItem.ShopId,
 			Name:   shopItem.Name,
 			Image:  shopItem.Image,
 			Price:  shopItem.Price,
@@ -41,7 +41,7 @@ func (s *Server) GetAllShopItems(ctx context.Context, input *shopproto.GetAllSho
 	for index, item := range *shopItems {
 		items[index] = &shopproto.ShopItem{
 			Id:     item.Id,
-			ShopId: item.ShopID,
+			ShopId: item.ShopId,
 			Name:   item.Name,
 			Image:  item.Image,
 			Price:  item.Price,
@@ -53,14 +53,14 @@ func (s *Server) GetAllShopItems(ctx context.Context, input *shopproto.GetAllSho
 }
 
 func (s *Server) GetShopItem(ctx context.Context, input *shopproto.GetShopItemRequest) (*shopproto.ShopItemResponse, error) {
-	shopItem, err := s.repo.GetShopItemById(input.Id)
+	shopItem, err := s.repo.GetShopItemById(input.Id, input.ShopId)
 	if err != nil {
 		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't get shop item").Error())
 	}
 	return &shopproto.ShopItemResponse{
 		Item: &shopproto.ShopItem{
 			Id:     shopItem.Id,
-			ShopId: shopItem.ShopID,
+			ShopId: shopItem.ShopId,
 			Name:   shopItem.Name,
 			Image:  shopItem.Image,
 			Price:  shopItem.Price,
@@ -71,7 +71,7 @@ func (s *Server) GetShopItem(ctx context.Context, input *shopproto.GetShopItemRe
 func (s *Server) EditShopItem(ctx context.Context, input *shopproto.EditShopItemRequest) (*shopproto.ShopItemResponse, error) {
 	shopItem := &models.ShopItem{
 		Id:     input.EditedItem.Id,
-		ShopID: input.EditedItem.ShopId,
+		ShopId: input.EditedItem.ShopId,
 		Name:   input.EditedItem.Name,
 		Image:  input.EditedItem.Image,
 		Price:  input.EditedItem.Price,
@@ -83,7 +83,7 @@ func (s *Server) EditShopItem(ctx context.Context, input *shopproto.EditShopItem
 	return &shopproto.ShopItemResponse{
 		Item: &shopproto.ShopItem{
 			Id:     editedShopItem.Id,
-			ShopId: editedShopItem.ShopID,
+			ShopId: editedShopItem.ShopId,
 			Name:   editedShopItem.Name,
 			Image:  editedShopItem.Image,
 			Price:  editedShopItem.Price,
@@ -92,7 +92,7 @@ func (s *Server) EditShopItem(ctx context.Context, input *shopproto.EditShopItem
 }
 
 func (s *Server) DeleteShopItem(ctx context.Context, input *shopproto.DeleteShopItemRequest) (*shopproto.DeleteResponse, error) {
-	rowsAffected, err := s.repo.DeleteShopItem(input.Id)
+	rowsAffected, err := s.repo.DeleteShopItem(input.Id, input.ShopId)
 	if err != nil {
 		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't delete shop item").Error())
 	}
