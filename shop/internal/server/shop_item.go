@@ -70,6 +70,7 @@ func (s *Server) GetShopItem(ctx context.Context, input *shopproto.GetShopItemRe
 
 func (s *Server) EditShopItem(ctx context.Context, input *shopproto.EditShopItemRequest) (*shopproto.ShopItemResponse, error) {
 	shopItem := &models.ShopItem{
+		Id:     input.EditedItem.Id,
 		ShopID: input.EditedItem.ShopId,
 		Name:   input.EditedItem.Name,
 		Image:  input.EditedItem.Image,
