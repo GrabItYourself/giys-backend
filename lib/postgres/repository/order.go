@@ -4,12 +4,12 @@ import (
 	"github.com/GrabItYourself/giys-backend/lib/postgres/models"
 )
 
-func (r *Repository) GetOrderById(id string) (*models.Order, error) {
-	var order *models.Order
-	if err := r.pg.Where("id = ?", id).First(order).Error; err != nil {
+func (r *Repository) GetOrderById(id int32, shopId int32) (*models.Order, error) {
+	var order models.Order
+	if err := r.pg.Where("id = ? AND shop_id = ?", id, shopId).Preload("Items").Find(&order).Error; err != nil {
 		return nil, err
 	}
-	return order, nil
+	return &order, nil
 }
 
 func (r *Repository) CreateOrder(order *models.Order) error {
@@ -17,6 +17,7 @@ func (r *Repository) CreateOrder(order *models.Order) error {
 		UserId: order.UserId,
 		ShopId: order.ShopId,
 		Status: order.Status,
+		Items:  order.Items,
 	}).Error; err != nil {
 		return err
 	}
