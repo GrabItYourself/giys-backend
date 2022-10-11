@@ -36,9 +36,9 @@ func main() {
 	defer func() {
 		logger.Info("Closing database connection...")
 		if db, err := pg.DB(); err != nil {
-			logger.Fatal(errors.Wrap(err, "Can't access postgres connection").Error())
+			logger.Panic(errors.Wrap(err, "Can't access postgres connection").Error())
 		} else if err := db.Close(); err != nil {
-			logger.Fatal(errors.Wrap(err, "Can't close postgres connection").Error())
+			logger.Panic(errors.Wrap(err, "Can't close postgres connection").Error())
 		}
 	}()
 	repo := repository.New(pg)
@@ -53,7 +53,7 @@ func main() {
 	// Serve
 	lis, err := net.Listen("tcp", ":"+conf.Server.Port)
 	if err != nil {
-		logger.Fatal(errors.Wrap(err, "Failed to listen").Error())
+		logger.Panic(errors.Wrap(err, "Failed to listen").Error())
 	}
 	logger.Info("Starting gRPC server on port " + conf.Server.Port)
 	go func() {
@@ -64,6 +64,6 @@ func main() {
 	}()
 	err = grpcServer.Serve(lis)
 	if err != nil {
-		logger.Fatal(errors.Wrap(err, "Failed to serve").Error())
+		logger.Panic(errors.Wrap(err, "Failed to serve").Error())
 	}
 }
