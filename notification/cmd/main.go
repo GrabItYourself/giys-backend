@@ -35,25 +35,9 @@ func main() {
 	// Initializa handler
 	h := handler.NewHandler(&conf.Email)
 
+	logger.Info("Waiting for messages")
+
 	// Graceful Shutdown
-	done := make(chan bool)
-
-	go func() {
-		for d := range emailConsumer.Messages {
-			emailMessage := types.EmailMessage{}
-			if err := json.Unmarshal(d.Body, &emailMessage); err != nil {
-				logger.Panic(errors.Wrap(err, "Can't get email message").Error())
-			}
-
-			err := h.HandleEmailMessage(&emailMessage)
-			if err != nil {
-				logger.Panic(errors.Wrap(err, "Can't handle email message").Error())
-			}
-		}
-
-		done <- true
-	}()
-
 	go func() {
 		<-ctx.Done()
 		logger.Info("Received shut down signal. Attempting graceful shutdown...")
@@ -61,6 +45,15 @@ func main() {
 		logger.Info("Stopped receiving message from queue")
 	}()
 
-	logger.Info("Waiting for messages")
-	<-done
+	for d := range emailConsumer.Messages {
+		emailMessage := types.EmailMessage{}
+		if err := json.Unmarshal(d.Body, &emailMessage); err != nil {
+			logger.Panic(errors.Wrap(err, "Can't get email message").Error())
+		}
+
+		err := h.HandleEmailMessage(&emailMessage)
+		if err != nil {
+			logger.Panic(errors.Wrap(err, "Can't handle email message").Error())
+		}
+	}
 }
