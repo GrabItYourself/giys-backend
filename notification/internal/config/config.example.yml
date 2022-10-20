@@ -8,3 +8,6 @@ email:
     port: 587
     email: email
     password: password
+email_consumer:
+    consumer_name: notification-email-consumer
+    queue_name: email

@@ -14,9 +14,10 @@ var configOnce sync.Once
 var config *Config
 
 type Config struct {
-	Log      logger.Config   `mapstructure:"log"`
-	RabbitMQ rabbitmq.Config `mapstructure:"rabbitmq"`
-	Email    EmailConfig     `mapstructure:"email"`
+	Log           logger.Config   `mapstructure:"log"`
+	RabbitMQ      rabbitmq.Config `mapstructure:"rabbitmq"`
+	Email         EmailConfig     `mapstructure:"email"`
+	EmailConsumer ConsumerConfig  `mapstructure:"email_consumer"`
 }
 
 type EmailConfig struct {
@@ -24,6 +25,11 @@ type EmailConfig struct {
 	Port     string `mapstructure:"port"`
 	Email    string `mapstructure:"email"`
 	Password string `mapstructure:"password"`
+}
+
+type ConsumerConfig struct {
+	ConsumerName string `mapstructure:"consumer_name"`
+	QueueName    string `mapstructure:"queue_name"`
 }
 
 func InitConfig() *Config {
