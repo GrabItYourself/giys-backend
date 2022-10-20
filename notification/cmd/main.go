@@ -33,7 +33,7 @@ func main() {
 	defer emailConsumer.Close()
 
 	// Initializa handler
-	h := handler.NewHandler(&conf.EmailConfig)
+	h := handler.NewHandler(&conf.Email)
 
 	// Graceful Shutdown
 	done := make(chan bool)
@@ -41,7 +41,7 @@ func main() {
 	go func() {
 		for d := range emailConsumer.Messages {
 			emailMessage := types.EmailMessage{}
-			if err := json.Unmarshal([]byte(d.Body), &emailMessage); err != nil {
+			if err := json.Unmarshal(d.Body, &emailMessage); err != nil {
 				logger.Panic(errors.Wrap(err, "Can't get email message").Error())
 			}
 

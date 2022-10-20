@@ -14,9 +14,9 @@ var configOnce sync.Once
 var config *Config
 
 type Config struct {
-	Log         logger.Config   `mapstructure:"log"`
-	RabbitMQ    rabbitmq.Config `mapstructure:"rabbitmq"`
-	EmailConfig EmailConfig     `mapstructure:"email"`
+	Log      logger.Config   `mapstructure:"log"`
+	RabbitMQ rabbitmq.Config `mapstructure:"rabbitmq"`
+	Email    EmailConfig     `mapstructure:"email"`
 }
 
 type EmailConfig struct {
