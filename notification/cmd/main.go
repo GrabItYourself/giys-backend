@@ -32,7 +32,7 @@ func main() {
 	}
 	defer emailConsumer.Close()
 
-	// Initializa handler
+	// Initialize handler
 	h := handler.NewHandler(&conf.Email)
 
 	logger.Info("Waiting for messages")
