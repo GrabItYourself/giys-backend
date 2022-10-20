@@ -2,14 +2,8 @@ package v1router
 
 import (
 	"github.com/GrabItYourself/giys-backend/apigateway/internal/middlewares"
-	"github.com/GrabItYourself/giys-backend/lib/postgres/models"
 	"github.com/gofiber/fiber/v2"
 )
-
-type Body struct {
-	UserId string          `json:"user_id"`
-	Role   models.RoleEnum `json:"role"`
-}
 
 func (r *Router) InitUserRoutes(basePath string) {
 	f := r.Router.Group(basePath)

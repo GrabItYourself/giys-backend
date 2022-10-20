@@ -10,6 +10,7 @@ import (
 	v1handler "github.com/GrabItYourself/giys-backend/apigateway/internal/v1router/handler"
 	authclient "github.com/GrabItYourself/giys-backend/auth/pkg/client"
 	"github.com/GrabItYourself/giys-backend/lib/logger"
+	orderclient "github.com/GrabItYourself/giys-backend/order/pkg/client"
 	userclient "github.com/GrabItYourself/giys-backend/user/pkg/client"
 	"github.com/gofiber/fiber/v2"
 	"github.com/pkg/errors"
@@ -39,6 +40,7 @@ func main() {
 			logger.Panic(errors.Wrap(err, "Failed to close user GRPC connection").Error())
 		}
 	}()
+
 	authGrpcClient, authGrpcConn, err := authclient.NewClient(ctx, conf.Grpc.Auth.Addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		logger.Panic(errors.Wrap(err, "Failed to initialize auth GRPC client").Error())
@@ -49,9 +51,21 @@ func main() {
 			logger.Panic(errors.Wrap(err, "Failed to close auth GRPC connection").Error())
 		}
 	}()
+
+	orderGrpcClient, orderGrpcConn, err := orderclient.NewClient(ctx, conf.Grpc.Order.Addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		logger.Panic(errors.Wrap(err, "Failed to initialize order GRPC client").Error())
+	}
+	defer func() {
+		logger.Info("Closing auth GRPC connection...")
+		if err := orderGrpcConn.Close(); err != nil {
+			logger.Panic(errors.Wrap(err, "Failed to close order GRPC connection").Error())
+		}
+	}()
 	grpcClients := &v1handler.GrpcClients{
-		User: userGrpcClient,
-		Auth: authGrpcClient,
+		User:  userGrpcClient,
+		Auth:  authGrpcClient,
+		Order: orderGrpcClient,
 	}
 
 	// Initialize fiber app
@@ -69,6 +83,7 @@ func main() {
 	v1Router := v1router.NewRouter(ctx, v1, v1Handler)
 	v1Router.InitUserRoutes("/user")
 	v1Router.InitAuthRoutes("/auth")
+	v1Router.InitOrderRoute("/shops/:shopId/orders")
 
 	// Graceful shutdown for fiber app
 	go func() {

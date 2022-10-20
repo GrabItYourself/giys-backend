@@ -1,4 +1,4 @@
-package client
+package orderclient
 
 import (
 	"context"
@@ -8,12 +8,12 @@ import (
 	"google.golang.org/grpc"
 )
 
-func NewClient(ctx context.Context, addr string, opts ...grpc.DialOption) (*orderproto.OrderClient, *grpc.ClientConn, error) {
+func NewClient(ctx context.Context, addr string, opts ...grpc.DialOption) (orderproto.OrderClient, *grpc.ClientConn, error) {
 	conn, err := grpc.DialContext(ctx, addr, opts...)
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "Failed to create Order GRPC client")
 	}
 
 	client := orderproto.NewOrderClient(conn)
-	return &client, conn, nil
+	return client, conn, nil
 }
