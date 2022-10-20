@@ -23,7 +23,7 @@ func NewConsumer(url string, queueName string, consumerName string) (*Consumer, 
 		return nil, errors.Wrap(err, "Failed to open a channel")
 	}
 
-	queue, err := ch.QueueDeclare("email", true, false, false, false, nil)
+	queue, err := ch.QueueDeclare(queueName, true, false, false, false, nil)
 	if err != nil {
 		return nil, errors.Wrap(err, "Failed to declare a queue")
 	}
