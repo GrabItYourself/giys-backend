@@ -28,7 +28,7 @@ func main() {
 	// Initialize email consumer
 	emailConsumer, err := rabbitmq.NewConsumer(conf.RabbitMQ.URL, "email", "email-consumer")
 	if err != nil {
-		logger.Fatal(errors.Wrap(err, "Can't initialize consumer").Error())
+		logger.Panic(errors.Wrap(err, "Can't initialize consumer").Error())
 	}
 	defer emailConsumer.Close()
 
