@@ -3,7 +3,6 @@ package rabbitmq
 import (
 	"context"
 	"encoding/json"
-	"time"
 
 	"github.com/pkg/errors"
 	amqp "github.com/rabbitmq/amqp091-go"
@@ -31,10 +30,7 @@ func NewSender(url string) (*Sender, error) {
 	}, nil
 }
 
-func (s *Sender) SendMessage(queueName string, msg any) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-
+func (s *Sender) SendMessage(ctx context.Context, queueName string, msg any) error {
 	body, err := json.Marshal(msg)
 	if err != nil {
 		return errors.Wrap(err, "Can't convert to json")
