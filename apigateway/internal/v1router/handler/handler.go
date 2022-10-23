@@ -3,6 +3,7 @@ package v1handler
 import (
 	"github.com/GrabItYourself/giys-backend/apigateway/internal/config"
 	"github.com/GrabItYourself/giys-backend/auth/pkg/authproto"
+	"github.com/GrabItYourself/giys-backend/shop/pkg/shopproto"
 	"github.com/GrabItYourself/giys-backend/user/pkg/userproto"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
@@ -16,6 +17,7 @@ type Handler struct {
 type GrpcClients struct {
 	User userproto.UserServiceClient
 	Auth authproto.AuthClient
+	Shop shopproto.ShopServiceClient
 }
 
 func NewHandler(

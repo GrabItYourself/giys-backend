@@ -23,6 +23,7 @@ type ServerConfig struct {
 type GRPCConfig struct {
 	User GrpcConnection `mapstructure:"user"`
 	Auth GrpcConnection `mapstructure:"auth"`
+	Shop GrpcConnection `mapstructure:"shop"`
 }
 
 type OAuthConfig struct {
