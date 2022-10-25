@@ -9,9 +9,11 @@ service Order {
   rpc CreateOrder (CreateOrderRequest) returns (OrderResponse);
   rpc UpdateOrder (UpdateOrderRequest) returns (OrderResponse);
   rpc ReadyOrder (ReadyOrderRequest) returns (OrderResponse);
+  rpc DeleteOrder (DeleteOrderRequest) returns (OrderResponse);
   rpc CompleteOrder (CompleteOrderRequest) returns (OrderResponse);
   rpc CancelOrder (CancelOrderRequest) returns (OrderResponse);
 }
+
 message GetOrderRequest {
   int32 order_id = 1;
   int32 shop_id = 2;
@@ -28,6 +30,12 @@ message UpdateOrderRequest {
   int32 shop_id = 2;
   string user_id = 3;
   repeated OrderItem items = 4;
+}
+
+message DeleteOrderRequest {
+  int32 order_id = 1;
+  int32 shop_id = 2;
+  string user_id = 3;
 }
 
 message ReadyOrderRequest {
