@@ -9,6 +9,7 @@ require (
 	github.com/jackc/pgconn v1.13.0
 	github.com/omise/omise-go v1.0.8
 	github.com/pkg/errors v0.9.1
+	github.com/rabbitmq/amqp091-go v1.5.0
 	github.com/spf13/viper v1.13.0
 	go.uber.org/zap v1.17.0
 	golang.org/x/net v0.0.0-20220520000938-2e3eb7b945c2
