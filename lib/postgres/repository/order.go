@@ -40,7 +40,7 @@ func (r *Repository) UpdateOrderStatus(orderId int32, shopId int32, status model
 }
 
 func (r *Repository) DeleteOrder(shopId int32, orderId int32, userId string) error {
-	if err := r.pg.Where("id = ? AND shop_id = ? AND user_id", orderId, shopId, userId).Delete(&models.Order{}).Error; err != nil {
+	if err := r.pg.Where("id = ? AND shop_id = ? AND user_id = ?", orderId, shopId, userId).Delete(&models.Order{}).Error; err != nil {
 		return err
 	}
 	return nil
