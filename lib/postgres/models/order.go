@@ -15,7 +15,7 @@ type Order struct {
 	ShopId int32       `json:"shop_id" gorm:"column:shop_id;not null"`
 	Status OrderStatus `json:"status" gorm:"column:status;not null;default:IN_QUEUE"`
 
-	Items []OrderItem `json:"items" gorm:"foreignKey:OrderId,ShopId;references:ShopId,Id"`
+	Items []OrderItem `json:"items" gorm:"foreignKey:OrderId,ShopId;references:Id,ShopId"`
 }
 
 func (Order) TableName() string {
