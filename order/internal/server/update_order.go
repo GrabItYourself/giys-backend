@@ -21,6 +21,7 @@ func (s *Server) UpdateOrder(ctx context.Context, in *orderproto.UpdateOrderRequ
 	orderItems := make([]models.OrderItem, len(items))
 	for index, item := range items {
 		orderItems[index] = models.OrderItem{
+			OrderId:    orderId,
 			ShopId:     item.ShopId,
 			ShopItemId: item.ShopItemId,
 			Quantity:   item.Quantity,
