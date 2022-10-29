@@ -95,7 +95,8 @@ func main() {
 	v1Router := v1router.NewRouter(ctx, v1, v1Handler)
 	v1Router.InitUserRoutes("/user")
 	v1Router.InitAuthRoutes("/auth")
-	v1Router.InitShopRoutes("/shop")
+	v1Router.InitShopRoutes("/shops")
+	v1Router.InitShopItemRoutes("/shops/:shopId/items")
 	v1Router.InitOrderRoute("/shops/:shopId/orders")
 
 	// Graceful shutdown for fiber app
