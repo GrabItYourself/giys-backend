@@ -26,6 +26,7 @@ type OrderClient interface {
 	CreateOrder(ctx context.Context, in *CreateOrderRequest, opts ...grpc.CallOption) (*OrderResponse, error)
 	UpdateOrder(ctx context.Context, in *UpdateOrderRequest, opts ...grpc.CallOption) (*OrderResponse, error)
 	ReadyOrder(ctx context.Context, in *ReadyOrderRequest, opts ...grpc.CallOption) (*OrderResponse, error)
+	DeleteOrder(ctx context.Context, in *DeleteOrderRequest, opts ...grpc.CallOption) (*OrderResponse, error)
 	CompleteOrder(ctx context.Context, in *CompleteOrderRequest, opts ...grpc.CallOption) (*OrderResponse, error)
 	CancelOrder(ctx context.Context, in *CancelOrderRequest, opts ...grpc.CallOption) (*OrderResponse, error)
 }
@@ -74,6 +75,15 @@ func (c *orderClient) ReadyOrder(ctx context.Context, in *ReadyOrderRequest, opt
 	return out, nil
 }
 
+func (c *orderClient) DeleteOrder(ctx context.Context, in *DeleteOrderRequest, opts ...grpc.CallOption) (*OrderResponse, error) {
+	out := new(OrderResponse)
+	err := c.cc.Invoke(ctx, "/order.Order/DeleteOrder", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *orderClient) CompleteOrder(ctx context.Context, in *CompleteOrderRequest, opts ...grpc.CallOption) (*OrderResponse, error) {
 	out := new(OrderResponse)
 	err := c.cc.Invoke(ctx, "/order.Order/CompleteOrder", in, out, opts...)
@@ -100,6 +110,7 @@ type OrderServer interface {
 	CreateOrder(context.Context, *CreateOrderRequest) (*OrderResponse, error)
 	UpdateOrder(context.Context, *UpdateOrderRequest) (*OrderResponse, error)
 	ReadyOrder(context.Context, *ReadyOrderRequest) (*OrderResponse, error)
+	DeleteOrder(context.Context, *DeleteOrderRequest) (*OrderResponse, error)
 	CompleteOrder(context.Context, *CompleteOrderRequest) (*OrderResponse, error)
 	CancelOrder(context.Context, *CancelOrderRequest) (*OrderResponse, error)
 	mustEmbedUnimplementedOrderServer()
@@ -120,6 +131,9 @@ func (UnimplementedOrderServer) UpdateOrder(context.Context, *UpdateOrderRequest
 }
 func (UnimplementedOrderServer) ReadyOrder(context.Context, *ReadyOrderRequest) (*OrderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ReadyOrder not implemented")
+}
+func (UnimplementedOrderServer) DeleteOrder(context.Context, *DeleteOrderRequest) (*OrderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteOrder not implemented")
 }
 func (UnimplementedOrderServer) CompleteOrder(context.Context, *CompleteOrderRequest) (*OrderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CompleteOrder not implemented")
@@ -212,6 +226,24 @@ func _Order_ReadyOrder_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Order_DeleteOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteOrderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrderServer).DeleteOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/order.Order/DeleteOrder",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrderServer).DeleteOrder(ctx, req.(*DeleteOrderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Order_CompleteOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CompleteOrderRequest)
 	if err := dec(in); err != nil {
@@ -270,6 +302,10 @@ var Order_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ReadyOrder",
 			Handler:    _Order_ReadyOrder_Handler,
+		},
+		{
+			MethodName: "DeleteOrder",
+			Handler:    _Order_DeleteOrder_Handler,
 		},
 		{
 			MethodName: "CompleteOrder",
