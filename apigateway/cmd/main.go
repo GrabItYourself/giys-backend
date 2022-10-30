@@ -12,6 +12,7 @@ import (
 	"github.com/GrabItYourself/giys-backend/lib/logger"
 	orderclient "github.com/GrabItYourself/giys-backend/order/pkg/client"
 	shopclient "github.com/GrabItYourself/giys-backend/shop/pkg/shopclient"
+	paymentclient "github.com/GrabItYourself/giys-backend/payment/pkg/client"
 	userclient "github.com/GrabItYourself/giys-backend/user/pkg/client"
 	"github.com/gofiber/fiber/v2"
 	"github.com/pkg/errors"
@@ -80,11 +81,24 @@ func main() {
 	}()
 	logger.Info("Initialized order GRPC client", zap.String("addr", conf.Grpc.Order.Addr))
 
+
+	paymentGrpcClient, paymentGrpcConn, err := paymentclient.NewClient(ctx, conf.Grpc.Payment.Addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		logger.Panic(errors.Wrap(err, "Failed to initialize payment GRPC client").Error())
+	}
+	defer func() {
+		logger.Info("Closing auth GRPC connection...")
+		if err := paymentGrpcConn.Close(); err != nil {
+			logger.Panic(errors.Wrap(err, "Failed to close payment GRPC connection").Error())
+		}
+	}()
+
 	grpcClients := &v1handler.GrpcClients{
 		User:  userGrpcClient,
 		Auth:  authGrpcClient,
 		Shop:  shopGrpcClient,
 		Order: orderGrpcClient,
+		Payment: paymentGrpcClient,
 	}
 
 	// Initialize fiber app

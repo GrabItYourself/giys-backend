@@ -25,6 +25,7 @@ type GRPCConfig struct {
 	Auth  GrpcConnection `mapstructure:"auth"`
 	Order GrpcConnection `mapstructure:"order"`
 	Shop  GrpcConnection `mapstructure:"shop"`
+	Payment GrpcConnection `mapstructure:"payment"`
 }
 
 type Config struct {
