@@ -11,19 +11,24 @@ import (
 
 type Server struct {
 	authproto.UnimplementedAuthServer
-	repo        *repository.Repository
-	oauthConfig *oauth2.Config
-	userClient  userproto.UserServiceClient
+	repo         *repository.Repository
+	oauthIOS     *oauth2.Config
+	oauthAndroid *oauth2.Config
+	userClient   userproto.UserServiceClient
 }
 
-func NewServer(repo *repository.Repository, oauthConf *config.OAuthConfig, userClient userproto.UserServiceClient) *Server {
+func NewServer(repo *repository.Repository, conf *config.Config, userClient userproto.UserServiceClient) *Server {
 	return &Server{
 		repo: repo,
-		oauthConfig: &oauth2.Config{
-			ClientID:     oauthConf.ClientId,
-			ClientSecret: oauthConf.ClientSecret,
-			RedirectURL:  oauthConf.RedirectURL,
-			Endpoint:     google.Endpoint,
+		oauthIOS: &oauth2.Config{
+			ClientID:    conf.OAuth.IOS.ClientId,
+			RedirectURL: conf.OAuth.IOS.RedirectURL,
+			Endpoint:    google.Endpoint,
+		},
+		oauthAndroid: &oauth2.Config{
+			ClientID:    conf.OAuth.Android.ClientId,
+			RedirectURL: conf.OAuth.Android.RedirectURL,
+			Endpoint:    google.Endpoint,
 		},
 		userClient: userClient,
 	}

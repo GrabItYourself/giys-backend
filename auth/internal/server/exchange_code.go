@@ -25,7 +25,15 @@ type UserInfo struct {
 }
 
 func (s *Server) ExchangeAuthCode(ctx context.Context, in *authproto.ExchangeAuthCodeReq) (*authproto.ExchangeAuthCodeResp, error) {
-	token, err := s.oauthConfig.Exchange(ctx, in.AuthCode)
+	var oauthConf *oauth2.Config
+	if in.Client == authproto.ClientType_ANDROID {
+		oauthConf = s.oauthAndroid
+	} else if in.Client == authproto.ClientType_IOS {
+		oauthConf = s.oauthIOS
+	} else {
+		return nil, status.Errorf(codes.InvalidArgument, "invalid client")
+	}
+	token, err := oauthConf.Exchange(ctx, in.AuthCode)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, errors.Wrap(err, "error during code exchange").Error())
 	}
