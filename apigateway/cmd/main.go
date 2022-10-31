@@ -15,6 +15,7 @@ import (
 	userclient "github.com/GrabItYourself/giys-backend/user/pkg/client"
 	"github.com/gofiber/fiber/v2"
 	"github.com/pkg/errors"
+	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -41,7 +42,7 @@ func main() {
 			logger.Panic(errors.Wrap(err, "Failed to close user GRPC connection").Error())
 		}
 	}()
-	logger.Info("Initialized user GRPC client")
+	logger.Info("Initialized user GRPC client", zap.String("addr", conf.Grpc.User.Addr))
 
 	authGrpcClient, authGrpcConn, err := authclient.NewClient(ctx, conf.Grpc.Auth.Addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
@@ -53,9 +54,9 @@ func main() {
 			logger.Panic(errors.Wrap(err, "Failed to close auth GRPC connection").Error())
 		}
 	}()
-	logger.Info("Initialized auth GRPC client")
+	logger.Info("Initialized auth GRPC client", zap.String("addr", conf.Grpc.Auth.Addr))
 
-	shopGrpcClient, shopGrpcConn, err := shopclient.NewClient(ctx, conf.Grpc.Auth.Addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	shopGrpcClient, shopGrpcConn, err := shopclient.NewClient(ctx, conf.Grpc.Shop.Addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		logger.Panic(errors.Wrap(err, "Failed to initialize shop GRPC client").Error())
 	}
@@ -65,7 +66,7 @@ func main() {
 			logger.Panic(errors.Wrap(err, "Failed to close shop GRPC connection").Error())
 		}
 	}()
-	logger.Info("Initialized shop GRPC client")
+	logger.Info("Initialized shop GRPC client", zap.String("addr", conf.Grpc.Shop.Addr))
 
 	orderGrpcClient, orderGrpcConn, err := orderclient.NewClient(ctx, conf.Grpc.Order.Addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
@@ -77,7 +78,7 @@ func main() {
 			logger.Panic(errors.Wrap(err, "Failed to close order GRPC connection").Error())
 		}
 	}()
-	logger.Info("Initialized order GRPC client")
+	logger.Info("Initialized order GRPC client", zap.String("addr", conf.Grpc.Order.Addr))
 
 	grpcClients := &v1handler.GrpcClients{
 		User:  userGrpcClient,

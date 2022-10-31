@@ -8,6 +8,8 @@ grpc:
     addr: localhost:3000
   shop:
     addr: localhost:3001
+  order:
+    addr: localhost:3002
   auth:
     addr: localhost:3003
 oauth:
