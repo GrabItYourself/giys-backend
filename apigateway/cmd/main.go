@@ -41,6 +41,7 @@ func main() {
 			logger.Panic(errors.Wrap(err, "Failed to close user GRPC connection").Error())
 		}
 	}()
+	logger.Info("Initialized user GRPC client")
 
 	authGrpcClient, authGrpcConn, err := authclient.NewClient(ctx, conf.Grpc.Auth.Addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
@@ -52,6 +53,8 @@ func main() {
 			logger.Panic(errors.Wrap(err, "Failed to close auth GRPC connection").Error())
 		}
 	}()
+	logger.Info("Initialized auth GRPC client")
+
 	shopGrpcClient, shopGrpcConn, err := shopclient.NewClient(ctx, conf.Grpc.Auth.Addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		logger.Panic(errors.Wrap(err, "Failed to initialize shop GRPC client").Error())
@@ -62,6 +65,7 @@ func main() {
 			logger.Panic(errors.Wrap(err, "Failed to close shop GRPC connection").Error())
 		}
 	}()
+	logger.Info("Initialized shop GRPC client")
 
 	orderGrpcClient, orderGrpcConn, err := orderclient.NewClient(ctx, conf.Grpc.Order.Addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
@@ -73,6 +77,8 @@ func main() {
 			logger.Panic(errors.Wrap(err, "Failed to close order GRPC connection").Error())
 		}
 	}()
+	logger.Info("Initialized order GRPC client")
+
 	grpcClients := &v1handler.GrpcClients{
 		User:  userGrpcClient,
 		Auth:  authGrpcClient,
