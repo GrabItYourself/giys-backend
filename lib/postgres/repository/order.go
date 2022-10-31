@@ -2,6 +2,7 @@ package repository
 
 import (
 	"github.com/GrabItYourself/giys-backend/lib/postgres/models"
+	"gorm.io/gorm"
 )
 
 func (r *Repository) GetOrderById(id int32, shopId int32) (*models.Order, error) {
@@ -25,7 +26,7 @@ func (r *Repository) CreateOrder(order *models.Order) error {
 }
 
 func (r *Repository) UpdateOrder(order *models.Order) error {
-	if err := r.pg.Save(order).Error; err != nil {
+	if err := r.pg.Session(&gorm.Session{FullSaveAssociations: true}).Save(order).Error; err != nil {
 		return err
 	}
 	return nil
