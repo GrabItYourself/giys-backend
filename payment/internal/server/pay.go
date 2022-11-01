@@ -3,7 +3,6 @@ package server
 import (
 	"context"
 
-	"github.com/GrabItYourself/giys-backend/auth/pkg/authutils"
 	"github.com/GrabItYourself/giys-backend/lib/postgres"
 	"github.com/GrabItYourself/giys-backend/lib/postgres/models"
 	"github.com/GrabItYourself/giys-backend/payment/pkg/paymentproto"
@@ -15,17 +14,16 @@ import (
 )
 
 func (s *Server) Pay(ctx context.Context, in *paymentproto.PayRequest) (*paymentproto.PayResponse, error) {
-	identity, err := authutils.ExtractIdentityFromGrpcContext(ctx)
-	if err != nil {
-		return nil, status.Error(codes.Unauthenticated, errors.Wrap(err, "can't extract user from context").Error())
-	}
-
-	user, err := s.repo.GetUserById(identity.UserId)
+	user, err := s.repo.GetUserById(in.UserId)
 	if err != nil {
 		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't get user").Error())
 	}
 
-	paymentMethod, err := s.repo.GetPaymentMethodById(in.PaymentMethodId)
+	if user.DefaultPaymentMethodId == nil {
+		return nil, status.Error(codes.FailedPrecondition, errors.Wrap(err, "no default payment method").Error())
+	}
+
+	paymentMethod, err := s.repo.GetPaymentMethodById(int64(*user.DefaultPaymentMethodId))
 	if err != nil {
 		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't get payment method").Error())
 	}

@@ -13,7 +13,7 @@ service PaymentService {
 }
 
 message PayRequest {
-  int64 payment_method_id = 1;
+  string user_id = 1;
   string shop_id = 2;
   string order_id = 3;
   int64 amount = 4;
