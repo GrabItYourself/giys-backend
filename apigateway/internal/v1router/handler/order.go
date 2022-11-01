@@ -3,6 +3,7 @@ package v1handler
 import (
 	"github.com/GrabItYourself/giys-backend/auth/pkg/authutils"
 	"github.com/GrabItYourself/giys-backend/order/pkg/orderproto"
+	"github.com/GrabItYourself/giys-backend/payment/pkg/paymentproto"
 	"github.com/GrabItYourself/giys-backend/user/pkg/userproto"
 	"github.com/gofiber/fiber/v2"
 	"github.com/pkg/errors"
@@ -115,6 +116,14 @@ func (h *Handler) HandleCompleteOrder(c *fiber.Ctx, shopId int32, orderId int32)
 	ctx, err := authutils.EmbedIdentityToContext(c.Context(), identity)
 	if err != nil {
 		return nil, fiber.NewError(fiber.StatusInternalServerError, errors.Wrap(err, "can't embed identity to grpc context").Error())
+	}
+
+	_, err = h.Grpc.Payment.Pay(ctx, &paymentproto.PayRequest{
+		ShopId:  shopId,
+		OrderId: orderId,
+	})
+	if err != nil {
+		return nil, fiber.NewError(fiber.StatusInternalServerError, errors.Wrap(err, "Failed to request GRPC Pay").Error())
 	}
 
 	orderRes, err := h.Grpc.Order.CompleteOrder(ctx, &orderproto.CompleteOrderRequest{
