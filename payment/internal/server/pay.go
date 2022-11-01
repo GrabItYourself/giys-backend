@@ -14,7 +14,19 @@ import (
 )
 
 func (s *Server) Pay(ctx context.Context, in *paymentproto.PayRequest) (*paymentproto.PayResponse, error) {
-	user, err := s.repo.GetUserById(in.UserId)
+	var totalAmountTHB int64 = 0
+	order, err := s.repo.GetOrderById(in.OrderId, in.ShopId)
+	if err != nil {
+		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't get order").Error())
+	}
+
+	for _, orderItem := range order.Items {
+		totalAmountTHB += int64(orderItem.Quantity) * int64(orderItem.ShopItem.Price)
+	}
+
+	totalAmount := totalAmountTHB * 100
+
+	user, err := s.repo.GetUserById(order.UserId)
 	if err != nil {
 		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't get user").Error())
 	}
@@ -38,7 +50,7 @@ func (s *Server) Pay(ctx context.Context, in *paymentproto.PayRequest) (*payment
 	}
 
 	charge, createCharge := &omise.Charge{}, &operations.CreateCharge{
-		Amount:   in.Amount,
+		Amount:   totalAmount,
 		Currency: "thb",
 		Customer: *user.OmiseCustomerId,
 		Card:     paymentMethod.OmiseCardId,
@@ -48,7 +60,7 @@ func (s *Server) Pay(ctx context.Context, in *paymentproto.PayRequest) (*payment
 	}
 
 	transfer, createTransfer := &omise.Transfer{}, &operations.CreateTransfer{
-		Amount:    in.Amount,
+		Amount:    totalAmount,
 		Recipient: *shop.OmiseResipientId,
 	}
 	if err := s.omiseClient.Do(transfer, createTransfer); err != nil {
@@ -58,7 +70,7 @@ func (s *Server) Pay(ctx context.Context, in *paymentproto.PayRequest) (*payment
 	err = s.repo.CreatePaymentTransaction(&models.PaymentTransaction{
 		ShopId:  in.ShopId,
 		OrderId: in.OrderId,
-		Amount:  int(in.Amount),
+		Amount:  int(totalAmount),
 	})
 	if err != nil {
 		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't create payment transaction").Error())

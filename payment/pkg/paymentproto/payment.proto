@@ -13,10 +13,8 @@ service PaymentService {
 }
 
 message PayRequest {
-  string user_id = 1;
-  int32 shop_id = 2;
-  int32 order_id = 3;
-  int64 amount = 4;
+  int32 shop_id = 1;
+  int32 order_id = 2;
 }
 
 message PayResponse {
