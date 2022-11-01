@@ -30,6 +30,7 @@ message AuthorizeCardRequest {
 }
 
 message AuthorizeCardResponse {
+  PaymentMethod paymentMethod = 1;
 }
 
 message RegisterRecipientRequest {

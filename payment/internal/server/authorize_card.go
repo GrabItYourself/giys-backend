@@ -80,5 +80,10 @@ func (s *Server) AuthorizeCard(ctx context.Context, in *paymentproto.AuthorizeCa
 		}
 	}
 
-	return &paymentproto.AuthorizeCardResponse{}, nil
+	return &paymentproto.AuthorizeCardResponse{
+		PaymentMethod: &paymentproto.PaymentMethod{
+			Id:             int64(paymentMethod.Id),
+			LastFourDigits: paymentMethod.LastFourDigits,
+		},
+	}, nil
 }
