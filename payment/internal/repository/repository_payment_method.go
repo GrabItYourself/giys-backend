@@ -13,6 +13,15 @@ func (r *Repository) GetPaymentMethodById(id string) (*models.PaymentMethod, err
 	return &paymentMethod, nil
 }
 
+func (r *Repository) GetMyPaymentMethods(userId string) (*[]models.PaymentMethod, error) {
+	var paymentMethods []models.PaymentMethod
+	err := r.pg.Where("user_id = ?", userId).Find(&paymentMethods).Error
+	if err != nil {
+		return nil, err
+	}
+	return &paymentMethods, nil
+}
+
 func (r *Repository) CreatePaymentMethod(paymentMethod *models.PaymentMethod) error {
 	err := r.pg.Create(paymentMethod).Error
 	if err != nil {

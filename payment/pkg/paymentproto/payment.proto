@@ -8,7 +8,8 @@ service PaymentService {
   rpc Pay(PayRequest) returns (PayResponse) {}
   rpc AuthorizeCard(AuthorizeCardRequest) returns (AuthorizeCardResponse) {}
   rpc RegisterRecipient(RegisterRecipientRequest) returns (RegisterRecipientResponse) {}
-  rpc GetTransactionHistory(GetTransactionHistoryRequest) returns (GetTransactionHistoryResponse) {}
+  rpc GetMyPaymentMethods(GetMyPaymentMethodsRequest) returns (GetMyPaymentMethodsResponse) {}
+  rpc UpdateDefaultPaymentMethod(UpdateDefaultPaymentMethodRequest) returns (UpdateDefaultPaymentMethodResponse) {}
 }
 
 message PayRequest {
@@ -47,8 +48,20 @@ message BankAccount {
 message RegisterRecipientResponse {
 }
 
-message GetTransactionHistoryRequest {
+message GetMyPaymentMethodsRequest {
 }
 
-message GetTransactionHistoryResponse {
+message GetMyPaymentMethodsResponse {
+  repeated PaymentMethod paymentMethods = 1;
+}
+
+message PaymentMethod {
+  string lastFourDigits = 1;
+}
+
+message UpdateDefaultPaymentMethodRequest {
+  string payment_method_id = 1;
+}
+
+message UpdateDefaultPaymentMethodResponse {
 }
