@@ -63,12 +63,20 @@ func (s *Server) AuthorizeCard(ctx context.Context, in *paymentproto.AuthorizeCa
 		}
 	}
 
-	err = s.repo.CreatePaymentMethod(&models.PaymentMethod{
+	paymentMethod := &models.PaymentMethod{
 		UserId:      identity.UserId,
 		OmiseCardId: token.Card.ID,
-	})
+	}
+	err = s.repo.CreatePaymentMethod(paymentMethod)
 	if err != nil {
 		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't create payment method").Error())
+	}
+
+	if user.DefaultPaymentMethodId == nil {
+		err = s.repo.UpdateDefaultPaymentMethodId(identity.UserId, paymentMethod.Id)
+		if err != nil {
+			return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't update default payment method").Error())
+		}
 	}
 
 	return &paymentproto.AuthorizeCardResponse{}, nil
