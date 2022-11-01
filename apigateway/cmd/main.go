@@ -119,6 +119,7 @@ func main() {
 	v1Router.InitShopRoutes("/shops")
 	v1Router.InitShopItemRoutes("/shops/:shopId/items")
 	v1Router.InitOrderRoute("/shops/:shopId/orders")
+	v1Router.InitPaymentMethodRoutes("/user/me/paymentMethods")
 
 	// Graceful shutdown for fiber app
 	go func() {
