@@ -56,7 +56,8 @@ message GetMyPaymentMethodsResponse {
 }
 
 message PaymentMethod {
-  string lastFourDigits = 1;
+  int64 id = 1;
+  string lastFourDigits = 2;
 }
 
 message UpdateDefaultPaymentMethodRequest {
