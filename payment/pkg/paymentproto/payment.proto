@@ -14,8 +14,8 @@ service PaymentService {
 
 message PayRequest {
   string user_id = 1;
-  string shop_id = 2;
-  string order_id = 3;
+  int32 shop_id = 2;
+  int32 order_id = 3;
   int64 amount = 4;
 }
 
@@ -34,7 +34,7 @@ message AuthorizeCardResponse {
 }
 
 message RegisterRecipientRequest {
-  string shop_id = 1;
+  int32 shop_id = 1;
   string name = 2;
   string type = 3;
   BankAccount bank_account = 4;
@@ -57,12 +57,12 @@ message GetMyPaymentMethodsResponse {
 }
 
 message PaymentMethod {
-  int64 id = 1;
+  int32 id = 1;
   string lastFourDigits = 2;
 }
 
 message UpdateDefaultPaymentMethodRequest {
-  int64 payment_method_id = 1;
+  int32 payment_method_id = 1;
 }
 
 message UpdateDefaultPaymentMethodResponse {

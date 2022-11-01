@@ -25,7 +25,7 @@ func (s *Server) GetMyPaymentMethods(ctx context.Context, in *paymentproto.GetMy
 	paymentMethodsResponse := make([]*paymentproto.PaymentMethod, len(*paymentMethods))
 	for index, paymentMethod := range *paymentMethods {
 		paymentMethodsResponse[index] = &paymentproto.PaymentMethod{
-			Id:             int64(paymentMethod.Id),
+			Id:             paymentMethod.Id,
 			LastFourDigits: paymentMethod.LastFourDigits,
 		}
 	}

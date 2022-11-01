@@ -17,7 +17,7 @@ func (s *Server) UpdateDefaultPaymentMethod(ctx context.Context, in *paymentprot
 		return nil, status.Error(codes.Unauthenticated, errors.Wrap(err, "can't extract user from context").Error())
 	}
 
-	err = s.repo.UpdateDefaultPaymentMethodId(identity.UserId, uint(in.PaymentMethodId))
+	err = s.repo.UpdateDefaultPaymentMethodId(identity.UserId, in.PaymentMethodId)
 	if err != nil {
 		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't update default payment method").Error())
 	}

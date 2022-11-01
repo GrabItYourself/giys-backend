@@ -43,7 +43,7 @@ func (r *Router) InitPaymentMethodRoutes(basePath string) {
 			return fiber.NewError(fiber.StatusBadRequest, "paymentMethodId is not a number")
 		}
 
-		res, err := r.Handler.HandleSetDefaultPaymentMethod(c, int64(paymentMethodId))
+		res, err := r.Handler.HandleSetDefaultPaymentMethod(c, int32(paymentMethodId))
 		if err != nil {
 			return err
 		}

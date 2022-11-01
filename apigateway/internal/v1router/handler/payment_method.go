@@ -46,7 +46,7 @@ func (h *Handler) HandleAddPaymentMethod(c *fiber.Ctx, name string, cardNumber s
 	return res.PaymentMethod, nil
 }
 
-func (h *Handler) HandleSetDefaultPaymentMethod(c *fiber.Ctx, paymentMethodId int64) (*paymentproto.UpdateDefaultPaymentMethodResponse, error) {
+func (h *Handler) HandleSetDefaultPaymentMethod(c *fiber.Ctx, paymentMethodId int32) (*paymentproto.UpdateDefaultPaymentMethodResponse, error) {
 	identity, ok := c.Locals(authutils.IdentityKey).(*authutils.Identity)
 	if !ok {
 		return nil, fiber.NewError(fiber.StatusUnauthorized, "identity not found in context")
