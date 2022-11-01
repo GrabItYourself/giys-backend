@@ -35,6 +35,10 @@ func (s *Server) Pay(ctx context.Context, in *paymentproto.PayRequest) (*payment
 		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't get shop").Error())
 	}
 
+	if shop.OmiseResipientId == nil {
+		return nil, status.Error(codes.FailedPrecondition, errors.Wrap(err, "shop is unregistered").Error())
+	}
+
 	charge, createCharge := &omise.Charge{}, &operations.CreateCharge{
 		Amount:   in.Amount,
 		Currency: "thb",
