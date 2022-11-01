@@ -64,8 +64,9 @@ func (s *Server) AuthorizeCard(ctx context.Context, in *paymentproto.AuthorizeCa
 	}
 
 	paymentMethod := &models.PaymentMethod{
-		UserId:      identity.UserId,
-		OmiseCardId: token.Card.ID,
+		UserId:         identity.UserId,
+		OmiseCardId:    token.Card.ID,
+		LastFourDigits: in.CardNumber[len(in.CardNumber)-4:],
 	}
 	err = s.repo.CreatePaymentMethod(paymentMethod)
 	if err != nil {
