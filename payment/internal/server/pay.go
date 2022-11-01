@@ -25,7 +25,7 @@ func (s *Server) Pay(ctx context.Context, in *paymentproto.PayRequest) (*payment
 		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't get user").Error())
 	}
 
-	paymentMethod, err := s.repo.GetPaymentMethodById(in.CardId)
+	paymentMethod, err := s.repo.GetPaymentMethodById(in.PaymentMethodId)
 	if err != nil {
 		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't get payment method").Error())
 	}

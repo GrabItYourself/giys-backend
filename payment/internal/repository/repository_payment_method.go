@@ -4,7 +4,7 @@ import (
 	"github.com/GrabItYourself/giys-backend/lib/postgres/models"
 )
 
-func (r *Repository) GetPaymentMethodById(id string) (*models.PaymentMethod, error) {
+func (r *Repository) GetPaymentMethodById(id int64) (*models.PaymentMethod, error) {
 	var paymentMethod models.PaymentMethod
 	err := r.pg.Where("id = ?", id).Take(&paymentMethod).Error
 	if err != nil {
