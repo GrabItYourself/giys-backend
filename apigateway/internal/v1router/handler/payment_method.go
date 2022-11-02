@@ -21,6 +21,11 @@ func (h *Handler) HandleGetMyPaymentMethods(c *fiber.Ctx) ([]*paymentproto.Payme
 	if err != nil {
 		return nil, fiber.NewError(fiber.StatusInternalServerError, errors.Wrap(err, "Failed to request GRPC GetMyPaymentMethods").Error())
 	}
+
+	if len(res.PaymentMethods) == 0 {
+		return make([]*paymentproto.PaymentMethod, 0), nil
+	}
+
 	return res.PaymentMethods, nil
 }
 
