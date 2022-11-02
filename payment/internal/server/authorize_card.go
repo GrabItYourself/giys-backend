@@ -78,12 +78,21 @@ func (s *Server) AuthorizeCard(ctx context.Context, in *paymentproto.AuthorizeCa
 		if err != nil {
 			return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't update default payment method").Error())
 		}
+
+		return &paymentproto.AuthorizeCardResponse{
+			PaymentMethod: &paymentproto.PaymentMethod{
+				Id:             paymentMethod.Id,
+				LastFourDigits: paymentMethod.LastFourDigits,
+				IsDefault:      true,
+			},
+		}, nil
 	}
 
 	return &paymentproto.AuthorizeCardResponse{
 		PaymentMethod: &paymentproto.PaymentMethod{
 			Id:             paymentMethod.Id,
 			LastFourDigits: paymentMethod.LastFourDigits,
+			IsDefault:      false,
 		},
 	}, nil
 }
