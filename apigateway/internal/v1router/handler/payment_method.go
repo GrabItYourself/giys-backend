@@ -7,7 +7,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (h *Handler) HandleGetAllPaymentMethods(c *fiber.Ctx) ([]*paymentproto.PaymentMethod, error) {
+func (h *Handler) HandleGetMyPaymentMethods(c *fiber.Ctx) ([]*paymentproto.PaymentMethod, error) {
 	identity, ok := c.Locals(authutils.IdentityKey).(*authutils.Identity)
 	if !ok {
 		return nil, fiber.NewError(fiber.StatusUnauthorized, "identity not found in context")

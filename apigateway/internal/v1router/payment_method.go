@@ -15,7 +15,7 @@ func (r *Router) InitPaymentMethodRoutes(basePath string) {
 	f.Use(middlewares.NewAccessTokenGuard(r.Handler.Grpc.Auth))
 
 	f.Get("/", func(c *fiber.Ctx) error {
-		paymentMethods, err := r.Handler.HandleGetAllPaymentMethods(c)
+		paymentMethods, err := r.Handler.HandleGetMyPaymentMethods(c)
 		if err != nil {
 			return err
 		}
