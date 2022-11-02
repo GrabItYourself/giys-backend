@@ -28,7 +28,7 @@ message AuthorizeCardRequest {
 }
 
 message AuthorizeCardResponse {
-  PaymentMethod paymentMethod = 1;
+  PaymentMethod payment_method = 1;
 }
 
 message RegisterRecipientRequest {
@@ -51,12 +51,13 @@ message GetMyPaymentMethodsRequest {
 }
 
 message GetMyPaymentMethodsResponse {
-  repeated PaymentMethod paymentMethods = 1;
+  repeated PaymentMethod payment_methods = 1;
 }
 
 message PaymentMethod {
   int32 id = 1;
-  string lastFourDigits = 2;
+  string last_four_digits = 2;
+  bool is_default = 3;
 }
 
 message UpdateDefaultPaymentMethodRequest {

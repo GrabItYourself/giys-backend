@@ -17,7 +17,7 @@ type User struct {
 	Email                  string   `json:"email" gorm:"column:email;not null"`
 	GoogleId               string   `json:"google_id" gorm:"column:google_id;not null"`
 	OmiseCustomerId        *string  `json:"omise_customer_id" gorm:"column:omise_customer_id"`
-	DefaultPaymentMethodId *uint    `json:"default_payment_method_id" gorm:"column:default_payment_method_id"`
+	DefaultPaymentMethodId *int32   `json:"default_payment_method_id" gorm:"column:default_payment_method_id"`
 }
 
 func (User) TableName() string {

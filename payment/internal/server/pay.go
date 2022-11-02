@@ -35,7 +35,7 @@ func (s *Server) Pay(ctx context.Context, in *paymentproto.PayRequest) (*payment
 		return nil, status.Error(codes.FailedPrecondition, errors.Wrap(err, "no default payment method").Error())
 	}
 
-	paymentMethod, err := s.repo.GetPaymentMethodById(int64(*user.DefaultPaymentMethodId))
+	paymentMethod, err := s.repo.GetPaymentMethodById(*user.DefaultPaymentMethodId)
 	if err != nil {
 		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't get payment method").Error())
 	}
