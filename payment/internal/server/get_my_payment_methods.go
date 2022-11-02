@@ -17,6 +17,17 @@ func (s *Server) GetMyPaymentMethods(ctx context.Context, in *paymentproto.GetMy
 		return nil, status.Error(codes.Unauthenticated, errors.Wrap(err, "can't extract user from context").Error())
 	}
 
+	user, err := s.repo.GetUserById(identity.UserId)
+	if err != nil {
+		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't get user").Error())
+	}
+
+	if user.DefaultPaymentMethodId == nil {
+		return &paymentproto.GetMyPaymentMethodsResponse{
+			PaymentMethods: make([]*paymentproto.PaymentMethod, 0),
+		}, nil
+	}
+
 	paymentMethods, err := s.repo.GetMyPaymentMethods(identity.UserId)
 	if err != nil {
 		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't get all payment methods").Error())
@@ -27,6 +38,7 @@ func (s *Server) GetMyPaymentMethods(ctx context.Context, in *paymentproto.GetMy
 		paymentMethodsResponse[index] = &paymentproto.PaymentMethod{
 			Id:             paymentMethod.Id,
 			LastFourDigits: paymentMethod.LastFourDigits,
+			IsDefault:      paymentMethod.Id == *user.DefaultPaymentMethodId,
 		}
 	}
 
