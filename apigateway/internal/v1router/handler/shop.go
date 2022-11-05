@@ -1,7 +1,9 @@
 package v1handler
 
 import (
+	"github.com/GrabItYourself/giys-backend/apigateway/internal/v1router/types"
 	"github.com/GrabItYourself/giys-backend/auth/pkg/authutils"
+	"github.com/GrabItYourself/giys-backend/payment/pkg/paymentproto"
 	"github.com/GrabItYourself/giys-backend/shop/pkg/shopproto"
 	"github.com/gofiber/fiber/v2"
 	"github.com/pkg/errors"
@@ -98,6 +100,32 @@ func (h *Handler) HandleDeleteShop(c *fiber.Ctx, shopId int32) (*shopproto.Delet
 	})
 	if err != nil {
 		return nil, fiber.NewError(fiber.StatusInternalServerError, errors.Wrap(err, "Failed to request GRPC shop").Error())
+	}
+	return res, nil
+}
+
+func (h *Handler) HandleAddBankAccount(c *fiber.Ctx, shopId int32, bankAccount *types.AddBankAccountRequest) (*paymentproto.RegisterRecipientResponse, error) {
+	identity, ok := c.Locals(authutils.IdentityKey).(*authutils.Identity)
+	if !ok {
+		return nil, fiber.NewError(fiber.StatusUnauthorized, "identity not found in context")
+	}
+	ctx, err := authutils.EmbedIdentityToContext(c.Context(), identity)
+	if err != nil {
+		return nil, fiber.NewError(fiber.StatusInternalServerError, errors.Wrap(err, "can't embed identity to grpc context").Error())
+	}
+
+	res, err := h.Grpc.Payment.RegisterRecipient(ctx, &paymentproto.RegisterRecipientRequest{
+		ShopId: shopId,
+		Name:   bankAccount.Name,
+		Type:   bankAccount.Type,
+		BankAccount: &paymentproto.BankAccount{
+			Name:   bankAccount.Name,
+			Number: bankAccount.Number,
+			Brand:  bankAccount.Brand,
+		},
+	})
+	if err != nil {
+		return nil, fiber.NewError(fiber.StatusInternalServerError, errors.Wrap(err, "Failed to request GRPC payment").Error())
 	}
 	return res, nil
 }
