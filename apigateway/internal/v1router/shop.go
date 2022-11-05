@@ -28,6 +28,14 @@ func (r *Router) InitShopRoutes(basePath string) {
 		return c.JSON(shop)
 	})
 
+	f.Get("/", func(c *fiber.Ctx) error {
+		shops, err := r.Handler.HandleGetAllShops(c)
+		if err != nil {
+			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+		}
+		return c.JSON(shops)
+	})
+
 	f.Post("/", func(c *fiber.Ctx) error {
 		reqBody := new(shopproto.CreateShopRequest)
 		if err := c.BodyParser(reqBody); err != nil {
