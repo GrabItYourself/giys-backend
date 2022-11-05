@@ -23,6 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ShopServiceClient interface {
 	CreateShop(ctx context.Context, in *CreateShopRequest, opts ...grpc.CallOption) (*ShopResponse, error)
+	GetAllShops(ctx context.Context, in *GetAllShopsRequest, opts ...grpc.CallOption) (*AllShopsResponse, error)
 	GetShop(ctx context.Context, in *GetShopRequest, opts ...grpc.CallOption) (*ShopResponse, error)
 	EditShop(ctx context.Context, in *EditShopRequest, opts ...grpc.CallOption) (*ShopResponse, error)
 	DeleteShop(ctx context.Context, in *DeleteShopRequest, opts ...grpc.CallOption) (*DeleteResponse, error)
@@ -45,6 +46,15 @@ func NewShopServiceClient(cc grpc.ClientConnInterface) ShopServiceClient {
 func (c *shopServiceClient) CreateShop(ctx context.Context, in *CreateShopRequest, opts ...grpc.CallOption) (*ShopResponse, error) {
 	out := new(ShopResponse)
 	err := c.cc.Invoke(ctx, "/shop.ShopService/CreateShop", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *shopServiceClient) GetAllShops(ctx context.Context, in *GetAllShopsRequest, opts ...grpc.CallOption) (*AllShopsResponse, error) {
+	out := new(AllShopsResponse)
+	err := c.cc.Invoke(ctx, "/shop.ShopService/GetAllShops", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -137,6 +147,7 @@ func (c *shopServiceClient) AddBankAccount(ctx context.Context, in *AddBankAccou
 // for forward compatibility
 type ShopServiceServer interface {
 	CreateShop(context.Context, *CreateShopRequest) (*ShopResponse, error)
+	GetAllShops(context.Context, *GetAllShopsRequest) (*AllShopsResponse, error)
 	GetShop(context.Context, *GetShopRequest) (*ShopResponse, error)
 	EditShop(context.Context, *EditShopRequest) (*ShopResponse, error)
 	DeleteShop(context.Context, *DeleteShopRequest) (*DeleteResponse, error)
@@ -155,6 +166,9 @@ type UnimplementedShopServiceServer struct {
 
 func (UnimplementedShopServiceServer) CreateShop(context.Context, *CreateShopRequest) (*ShopResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateShop not implemented")
+}
+func (UnimplementedShopServiceServer) GetAllShops(context.Context, *GetAllShopsRequest) (*AllShopsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllShops not implemented")
 }
 func (UnimplementedShopServiceServer) GetShop(context.Context, *GetShopRequest) (*ShopResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetShop not implemented")
@@ -210,6 +224,24 @@ func _ShopService_CreateShop_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ShopServiceServer).CreateShop(ctx, req.(*CreateShopRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ShopService_GetAllShops_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllShopsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ShopServiceServer).GetAllShops(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/shop.ShopService/GetAllShops",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShopServiceServer).GetAllShops(ctx, req.(*GetAllShopsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -386,6 +418,10 @@ var ShopService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateShop",
 			Handler:    _ShopService_CreateShop_Handler,
+		},
+		{
+			MethodName: "GetAllShops",
+			Handler:    _ShopService_GetAllShops_Handler,
 		},
 		{
 			MethodName: "GetShop",

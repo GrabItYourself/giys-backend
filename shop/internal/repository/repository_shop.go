@@ -13,6 +13,15 @@ func (r *Repository) CreateShop(shop *models.Shop) error {
 	return nil
 }
 
+func (r *Repository) GetAllShops() (*[]models.Shop, error) {
+	var shops []models.Shop
+	err := r.pg.Find(&shops).Error
+	if err != nil {
+		return nil, err
+	}
+	return &shops, nil
+}
+
 func (r *Repository) GetShopById(id int32) (*models.Shop, error) {
 	var shop models.Shop
 	err := r.pg.Where("id = ?", id).Take(&shop).Error
