@@ -6,6 +6,7 @@ package shop;
 
 service ShopService {
     rpc CreateShop(CreateShopRequest) returns (ShopResponse);
+    rpc GetAllShops(GetAllShopsRequest) returns (AllShopsResponse);
     rpc GetShop(GetShopRequest) returns (ShopResponse);
     rpc EditShop(EditShopRequest) returns (ShopResponse);
     rpc DeleteShop(DeleteShopRequest) returns (DeleteResponse);
@@ -46,6 +47,13 @@ message CreateShopRequest {
 
 message GetShopRequest {
     int32 id = 1;
+}
+
+message GetAllShopsRequest {
+}
+
+message AllShopsResponse {
+    repeated Shop shops = 1;
 }
 
 message EditShopRequest {

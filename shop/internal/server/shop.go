@@ -35,6 +35,27 @@ func (s *Server) CreateShop(ctx context.Context, input *shopproto.CreateShopRequ
 	}, nil
 }
 
+func (s *Server) GetAllShops(ctx context.Context, input *shopproto.GetAllShopsRequest) (*shopproto.AllShopsResponse, error) {
+	shops, err := s.repo.GetAllShops()
+	if err != nil {
+		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't get shops").Error())
+	}
+	items := make([]*shopproto.Shop, len(*shops))
+	for index, item := range *shops {
+		items[index] = &shopproto.Shop{
+			Id:          item.Id,
+			Name:        item.Name,
+			Image:       item.Image,
+			Description: item.Description,
+			Location:    item.Location,
+			Contact:     item.Contact,
+		}
+	}
+	return &shopproto.AllShopsResponse{
+		Shops: items,
+	}, nil
+}
+
 func (s *Server) GetShop(ctx context.Context, input *shopproto.GetShopRequest) (*shopproto.ShopResponse, error) {
 	shop, err := s.repo.GetShopById(input.Id)
 	if err != nil {
