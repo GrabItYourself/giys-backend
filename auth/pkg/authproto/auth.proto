@@ -10,8 +10,15 @@ service Auth {
   rpc RefreshAccessToken(RefreshAccessTokenReq) returns (RefreshAccessTokenResp) {}
 }
 
+enum ClientType {
+  UNSPECIFIED = 0;
+  ANDROID = 1;
+  IOS = 2;
+}
+
 message ExchangeAuthCodeReq {
   string auth_code = 1;
+  ClientType client_type = 2;
 }
 
 message ExchangeAuthCodeResp {

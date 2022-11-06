@@ -17,10 +17,13 @@ var config *Config
 type Config struct {
 	Server   ServerConfig    `mapstructure:"server"`
 	Log      logger.Config   `mapstructure:"log"`
-	OAuth    OAuthConfig     `mapstructure:"oauth"`
 	Postgres postgres.Config `mapstructure:"postgres"`
 	Redis    redis.Config    `mapstructure:"redis"`
 	Grpc     GrpcConfig      `mapstructure:"grpc"`
+	OAuth    struct {
+		IOS     OAuthConfig `mapstructure:"ios"`
+		Android OAuthConfig `mapstructure:"android"`
+	} `mapstructure:"oauth"`
 }
 
 type ServerConfig struct {
@@ -28,9 +31,8 @@ type ServerConfig struct {
 }
 
 type OAuthConfig struct {
-	ClientId     string `mapstructure:"client_id"`
-	ClientSecret string `mapstructure:"client_secret"`
-	RedirectURL  string `mapstructure:"redirect_url"`
+	ClientId    string `mapstructure:"client_id"`
+	RedirectURL string `mapstructure:"redirect_url"`
 }
 
 type GrpcConfig struct {

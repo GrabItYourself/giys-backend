@@ -98,7 +98,7 @@ func main() {
 	v1 := api.Group("/v1")
 
 	// Handle API v1 routes
-	v1Handler := v1handler.NewHandler(grpcClients, &conf.OAuth)
+	v1Handler := v1handler.NewHandler(grpcClients)
 	v1Router := v1router.NewRouter(ctx, v1, v1Handler)
 	v1Router.InitUserRoutes("/user")
 	v1Router.InitAuthRoutes("/auth")
