@@ -1,6 +1,7 @@
 version: '3.9'
 
 services:
+  #  DATABASES
   postgres:
     image: postgres:14.5
     container_name: giys_postgres
@@ -13,6 +14,20 @@ services:
       - '5432:5432'
     volumes:
       - postgres:/var/lib/postgresql/data
+
+  # migration with gomigrate
+  migration:
+    build:
+      context: .
+      dockerfile: ./migrations/Dockerfile
+      args:
+        PLATFORM: linux-amd64 # see migrations/Dockerfile for list of available platforms. For M1/M2, use linux-arm64
+    container_name: giys_migration
+    depends_on:
+      - postgres
+    volumes:
+      - ./migrations:/migrations
+    command: sh -c "/app/migrate -path /migrations -database postgres://postgres:postgres@postgres:5432/postgres?sslmode=disable up"
 
   redis:
     image: redis:7.0
@@ -35,6 +50,99 @@ services:
       - '15672:15672'
     volumes:
       - rabbitmq:/var/lib/rabbitmq/
+
+  #  BACKEND
+  apigateway:
+    build:
+      context: .
+      args:
+        SERVICE: apigateway
+    container_name: giys_apigateway
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      - auth
+      - order
+      - payment
+      - shop
+      - user
+    volumes:
+      - ./docker-configs/config.apigateway.yml:/config/config.yml
+
+  auth:
+    build:
+      context: .
+      args:
+        SERVICE: auth
+    container_name: giys_auth
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - redis
+      - user
+    volumes:
+      - ./docker-configs/config.auth.yml:/config/config.yml
+
+  notification:
+    build:
+      context: .
+      args:
+        SERVICE: notification
+    container_name: giys_notification
+    restart: unless-stopped
+    depends_on:
+      - rabbitmq
+    volumes:
+      - ./docker-configs/config.notification.yml:/config/config.yml
+
+  order:
+    build:
+      context: .
+      args:
+        SERVICE: order
+    container_name: giys_order
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    volumes:
+      - ./docker-configs/config.order.yml:/config/config.yml
+
+  payment:
+    build:
+      context: .
+      args:
+        SERVICE: payment
+    container_name: giys_payment
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    volumes:
+      - ./docker-configs/config.payment.yml:/config/config.yml
+
+  shop:
+    build:
+      context: .
+      args:
+        SERVICE: shop
+    container_name: giys_shop
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    volumes:
+      - ./docker-configs/config.shop.yml:/config/config.yml
+
+  user:
+    build:
+      context: .
+      args:
+        SERVICE: user
+    container_name: giys_user
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    volumes:
+      - ./docker-configs/config.user.yml:/config/config.yml
 
 volumes:
   postgres:

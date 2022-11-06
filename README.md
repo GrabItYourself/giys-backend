@@ -83,3 +83,20 @@ migrate -path ./migrations -database "postgres://postgres:postgres@localhost:543
 | Order   | 3002 |
 | Auth    | 3003 |
 | Payment | 3004 |
+
+# Docker Compose
+To run the entire project with docker compose, run the following:
+1. Up postgres
+```bash
+docker-compose up -d postgres redis rabbitmq
+```
+
+2. Up migration (important!)
+```bash
+docker-compose up migration
+```
+
+3. Up all services
+```bash
+docker-compose up -d
+```

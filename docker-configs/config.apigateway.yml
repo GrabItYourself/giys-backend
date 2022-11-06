@@ -1,0 +1,16 @@
+server:
+    port: 8080
+log:
+    level: info
+    service: apigateway
+grpc:
+    user:
+        addr: user:3000
+    shop:
+        addr: shop:3001
+    order:
+        addr: order:3002
+    auth:
+        addr: auth:3003
+    payment:
+        addr: payment:3003
