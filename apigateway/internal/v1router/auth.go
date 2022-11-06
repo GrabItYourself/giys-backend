@@ -16,14 +16,15 @@ func (r *Router) InitAuthRoutes(basePath string) {
 			return fiber.NewError(fiber.StatusBadRequest, "code is required")
 		}
 		clientType := c.Query("clientType")
-		if clientType == "" {
-			return fiber.NewError(fiber.StatusBadRequest, "clientType is required")
+		var clientTypeProto authproto.ClientType
+		if clientType == "android" {
+			clientTypeProto = authproto.ClientType_ANDROID
+		} else if clientType == "iOS" {
+
+		} else {
+			return fiber.NewError(fiber.StatusBadRequest, "clientType is invalid")
 		}
-		clientTypeEnum, ok := authproto.ClientType_value[clientType]
-		if !ok {
-			return fiber.NewError(fiber.StatusBadRequest, "invalid client")
-		}
-		resp, err := r.Handler.HandleGoogleOAuthCallback(c.Context(), code, authproto.ClientType(clientTypeEnum))
+		resp, err := r.Handler.HandleGoogleOAuthCallback(c.Context(), code, clientTypeProto)
 		// TODO: infer error code from grpc error
 		if err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, err.Error())

@@ -26,9 +26,9 @@ type UserInfo struct {
 
 func (s *Server) ExchangeAuthCode(ctx context.Context, in *authproto.ExchangeAuthCodeReq) (*authproto.ExchangeAuthCodeResp, error) {
 	var oauthConf *oauth2.Config
-	if in.Client == authproto.ClientType_ANDROID {
+	if in.ClientType == authproto.ClientType_ANDROID {
 		oauthConf = s.oauthAndroid
-	} else if in.Client == authproto.ClientType_IOS {
+	} else if in.ClientType == authproto.ClientType_IOS {
 		oauthConf = s.oauthIOS
 	} else {
 		return nil, status.Errorf(codes.InvalidArgument, "invalid client")
