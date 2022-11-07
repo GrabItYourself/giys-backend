@@ -1,20 +1,19 @@
 package client
 
 import (
-	"github.com/GrabItYourself/giys-backend/lib/logger"
+	"context"
+
 	"github.com/GrabItYourself/giys-backend/payment/pkg/paymentproto"
-	"go.uber.org/zap"
+	"github.com/pkg/errors"
 	"google.golang.org/grpc"
 )
 
-func NewClient(addr string, opts ...grpc.DialOption) (*paymentproto.PaymentServiceClient, error) {
-	conn, err := grpc.Dial(addr, opts...)
+func NewClient(ctx context.Context, addr string, opts ...grpc.DialOption) (paymentproto.PaymentServiceClient, *grpc.ClientConn, error) {
+	conn, err := grpc.DialContext(ctx, addr, opts...)
 	if err != nil {
-		logger.Error("Failed to connect to payment service", zap.Error(err))
-		return nil, err
+		return nil, nil, errors.Wrap(err, "Failed to connect to payment service")
 	}
-	defer conn.Close()
 
 	client := paymentproto.NewPaymentServiceClient(conn)
-	return &client, nil
+	return client, conn, nil
 }

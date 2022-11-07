@@ -12,6 +12,8 @@ grpc:
     addr: localhost:3002
   auth:
     addr: localhost:3003
+  payment:
+    addr: localhost:3004
 oauth:
   client_id:
   client_secret:

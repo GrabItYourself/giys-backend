@@ -63,13 +63,36 @@ func (s *Server) AuthorizeCard(ctx context.Context, in *paymentproto.AuthorizeCa
 		}
 	}
 
-	err = s.repo.CreatePaymentMethod(&models.PaymentMethod{
-		UserId:      identity.UserId,
-		OmiseCardId: token.Card.ID,
-	})
+	paymentMethod := &models.PaymentMethod{
+		UserId:         identity.UserId,
+		OmiseCardId:    token.Card.ID,
+		LastFourDigits: in.CardNumber[len(in.CardNumber)-4:],
+	}
+	err = s.repo.CreatePaymentMethod(paymentMethod)
 	if err != nil {
 		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't create payment method").Error())
 	}
 
-	return &paymentproto.AuthorizeCardResponse{}, nil
+	if user.DefaultPaymentMethodId == nil {
+		err = s.repo.UpdateDefaultPaymentMethodId(identity.UserId, paymentMethod.Id)
+		if err != nil {
+			return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't update default payment method").Error())
+		}
+
+		return &paymentproto.AuthorizeCardResponse{
+			PaymentMethod: &paymentproto.PaymentMethod{
+				Id:             paymentMethod.Id,
+				LastFourDigits: paymentMethod.LastFourDigits,
+				IsDefault:      true,
+			},
+		}, nil
+	}
+
+	return &paymentproto.AuthorizeCardResponse{
+		PaymentMethod: &paymentproto.PaymentMethod{
+			Id:             paymentMethod.Id,
+			LastFourDigits: paymentMethod.LastFourDigits,
+			IsDefault:      false,
+		},
+	}, nil
 }
