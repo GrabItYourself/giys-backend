@@ -1,0 +1,13 @@
+log:
+    level: info
+    service: notification
+rabbitmq:
+    url: amqp://guest:guest@rabbitmq:5672/
+email:
+    host: smtp.gmail.com
+    port: 587
+    email: email@gmail.com
+    password: password
+email_consumer:
+    consumer_name: notification-email-consumer
+    queue_name: email

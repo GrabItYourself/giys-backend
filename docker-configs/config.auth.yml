@@ -1,0 +1,25 @@
+server:
+    port: 3003
+log:
+    level: info
+    service: auth
+postgres:
+    host: postgres
+    port: 5432
+    dbname: postgres
+    user: postgres
+    password: postgres
+redis:
+    address: redis:6379
+    password:
+    database: 0
+grpc:
+    user:
+        addr: user:3000
+oauth:
+    ios:
+        client_id: 964375831805-ptcf2kf7uuee47g7dhoj2ghhbvq5t9c1.apps.googleusercontent.com
+        redirect_url: com.googleusercontent.apps.964375831805-ptcf2kf7uuee47g7dhoj2ghhbvq5t9c1:/
+    android:
+        client_id: 964375831805-9onpqjl0ufgfu9o752mn3o01jgm4sggu.apps.googleusercontent.com
+        redirect_url: dev.saenyakorn.giys:/
