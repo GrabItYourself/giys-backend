@@ -18,7 +18,7 @@ func (r *Router) InitUserRoutes(basePath string) {
 	f.Get("/me", func(c *fiber.Ctx) error {
 		user, err := r.Handler.HandleUserMe(c)
 		if err != nil {
-			return err
+			return fiber.NewError(fiber.StatusUnauthorized, err.Error())
 		}
 		return c.JSON(user)
 	})
