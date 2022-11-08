@@ -6,6 +6,8 @@ package order;
 
 service Order {
   rpc GetOrder (GetOrderRequest) returns (OrderResponse);
+  rpc GetMyOrders (GetMyOrdersRequest) returns (OrderListResponse);
+  rpc GetShopOrders (GetShopOrdersRequest) returns (OrderListResponse);
   rpc CreateOrder (CreateOrderRequest) returns (OrderResponse);
   rpc UpdateOrder (UpdateOrderRequest) returns (OrderResponse);
   rpc ReadyOrder (ReadyOrderRequest) returns (OrderResponse);
@@ -17,25 +19,35 @@ service Order {
 message GetOrderRequest {
   int32 order_id = 1;
   int32 shop_id = 2;
+  // Need user_id to check if user is owner of order from context
+}
+
+message GetMyOrdersRequest {
+  // Need user_id to check if user is owner of order from context
+}
+
+message GetShopOrdersRequest {
+  int32 shop_id = 1;
+  // Need user_id to check if user is owner of shop from context
 }
 
 message CreateOrderRequest {
   int32 shop_id = 1;
-  string user_id = 2;
-  repeated OrderItem items = 3;
+  repeated OrderItem items = 2;
+  // Need user_id to check if user is owner of order from context
 }
 
 message UpdateOrderRequest {
   int32 order_id = 1;
   int32 shop_id = 2;
-  string user_id = 3;
-  repeated OrderItem items = 4;
+  repeated OrderItem items = 3;
+  // Need user_id to check if user is owner of order from context
 }
 
 message DeleteOrderRequest {
   int32 order_id = 1;
   int32 shop_id = 2;
-  string user_id = 3;
+  // Need user_id to check if user is owner of order from context
 }
 
 message ReadyOrderRequest {
@@ -53,17 +65,20 @@ message CancelOrderRequest {
   int32 shop_id = 2;
 }
 
-message OrderItem {
-  int32 shop_id = 1;
-  int32 shop_item_id = 2;
-  int32 quantity = 3;
-  optional string note = 4;
-}
-
 message OrderResponse {
   int32 order_id = 1;
   int32 shop_id = 2;
   string user_id = 3;
   string status = 4;
   repeated OrderItem items = 5;
+}
+
+message OrderItem {
+  int32 shop_item_id = 1;
+  int32 quantity = 2;
+  optional string note = 3;
+}
+
+message OrderListResponse {
+  repeated OrderResponse result = 1;
 }

@@ -11,20 +11,16 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (s *Server) DeleteOrder(ctx context.Context, in *orderproto.DeleteOrderRequest) (*orderproto.OrderResponse, error) {
-	var (
-		shopId  = in.GetShopId()
-		orderId = in.GetOrderId()
-	)
-
+func (s *Server) GetMyOrders(ctx context.Context, in *orderproto.GetMyOrdersRequest) (*orderproto.OrderListResponse, error) {
 	identity, err := authutils.ExtractIdentityFromGrpcContext(ctx)
 	if err != nil {
 		return nil, status.Error(codes.Unauthenticated, errors.Wrap(err, "can't extract user from context").Error())
 	}
-
-	if err := s.repo.DeleteOrder(shopId, orderId, identity.UserId); err != nil {
-		return nil, status.Errorf(postgres.InferCodeFromError(err), errors.Wrap(err, "Failed to create an order").Error())
+	order, err := s.repo.GetMyOrders(identity.UserId)
+	if err != nil {
+		return nil, status.Errorf(postgres.InferCodeFromError(err), errors.Wrap(err, "Failed to get my an order").Error())
 	}
-
-	return &orderproto.OrderResponse{}, nil
+	return &orderproto.OrderListResponse{
+		Result: s.toProtoOrderListResponse(order),
+	}, nil
 }
