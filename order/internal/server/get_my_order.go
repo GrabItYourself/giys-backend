@@ -18,7 +18,7 @@ func (s *Server) GetMyOrders(ctx context.Context, in *orderproto.GetMyOrdersRequ
 	}
 	order, err := s.repo.GetMyOrders(identity.UserId)
 	if err != nil {
-		return nil, status.Errorf(postgres.InferCodeFromError(err), errors.Wrap(err, "Failed to get my an order").Error())
+		return nil, status.Errorf(postgres.InferCodeFromError(err), errors.Wrap(err, "Failed to get my orders").Error())
 	}
 	return &orderproto.OrderListResponse{
 		Result: s.toProtoOrderListResponse(order),
