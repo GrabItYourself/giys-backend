@@ -5,6 +5,7 @@ import (
 
 	"github.com/GrabItYourself/giys-backend/apigateway/internal/middlewares"
 	"github.com/GrabItYourself/giys-backend/apigateway/internal/v1router/types"
+	"github.com/GrabItYourself/giys-backend/lib/logger"
 	"github.com/GrabItYourself/giys-backend/shop/pkg/shopproto"
 	"github.com/gofiber/fiber/v2"
 )
@@ -19,11 +20,12 @@ func (r *Router) InitShopRoutes(basePath string) {
 		shopIdStr := c.Params("shopId")
 		shopId, err := strconv.Atoi(shopIdStr)
 		if err != nil {
+			logger.Error(err.Error())
 			return fiber.NewError(fiber.StatusBadRequest, "shopId is not a number")
 		}
-
 		shop, err := r.Handler.HandleGetShop(c, int32(shopId))
 		if err != nil {
+			logger.Error(err.Error())
 			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 		}
 		return c.JSON(shop)
@@ -38,12 +40,15 @@ func (r *Router) InitShopRoutes(basePath string) {
 	})
 
 	f.Post("/", func(c *fiber.Ctx) error {
-		reqBody := new(shopproto.CreateShopRequest)
-		if err := c.BodyParser(reqBody); err != nil {
+		var reqBody shopproto.CreateShopRequest
+		if err := c.BodyParser(&reqBody); err != nil {
+			logger.Error(err.Error())
 			return fiber.NewError(fiber.StatusBadRequest, "shop is not valid json")
 		}
-		shop, err := r.Handler.HandleCreateShop(c, reqBody)
+		logger.Debug(reqBody.String())
+		shop, err := r.Handler.HandleCreateShop(c, &reqBody)
 		if err != nil {
+			logger.Error(err.Error())
 			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 		}
 		return c.JSON(shop)
