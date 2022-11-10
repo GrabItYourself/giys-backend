@@ -10,13 +10,13 @@ import (
 
 func (s *Server) toProtoUsers(shopOwners []models.ShopOwner) []*shopproto.User {
 	protoUsers := make([]*shopproto.User, len(shopOwners))
-	for _, owner := range shopOwners {
-		protoUsers = append(protoUsers, &shopproto.User{
+	for index, owner := range shopOwners {
+		protoUsers[index] = &shopproto.User{
 			Id:       owner.User.Id,
 			Email:    owner.User.Email,
 			Role:     string(owner.User.Role),
 			GoogleId: owner.User.GoogleId,
-		})
+		}
 	}
 
 	return protoUsers
