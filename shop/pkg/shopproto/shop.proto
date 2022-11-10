@@ -72,7 +72,7 @@ message EditShopRequest {
 
 message EditShopOwnersRequest {
     int32 shop_id = 1;
-    repeated string ownerEmails = 2;
+    repeated string owner_emails = 2;
 }
 
 message DeleteShopRequest {
