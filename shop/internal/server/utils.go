@@ -24,14 +24,22 @@ func (s *Server) toProtoUsers(shopOwners []models.ShopOwner) []*shopproto.User {
 
 func (s *Server) toShopOwners(emails []string) ([]models.ShopOwner, error) {
 	owners := make([]models.ShopOwner, len(emails))
-	for _, email := range emails {
+	for index, email := range emails {
 		user, err := s.repo.GetUserByEmail(email)
+
+		// out, err := json.Marshal(user)
+		// if err != nil {
+		// }
+		// logger.Info(string(out))
+
 		if err != nil {
 			return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't get user, "+email).Error())
 		}
-		owners = append(owners, models.ShopOwner{
+		// FIXME since there is no shopId, the db mutatuons e.g. deletion in EditShopOwners() won't work
+		owners[index] = models.ShopOwner{
 			UserId: user.Id,
-		})
+			User:   *user,
+		}
 	}
 	return owners, nil
 }
