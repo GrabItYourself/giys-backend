@@ -61,12 +61,31 @@ func (r *Router) InitShopRoutes(basePath string) {
 			return fiber.NewError(fiber.StatusBadRequest, "shopId is not a number")
 		}
 
-		reqBody := new(shopproto.EditShopRequest)
-		if err := c.BodyParser(reqBody); err != nil {
+		var reqBody shopproto.EditShopRequest
+		if err := c.BodyParser(&reqBody); err != nil {
 			return fiber.NewError(fiber.StatusBadRequest, "shop is not valid json")
 		}
 
 		shop, err := r.Handler.HandleEditShop(c, int32(shopId), reqBody.EditedShop)
+		if err != nil {
+			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+		}
+		return c.JSON(shop)
+	})
+
+	f.Put("/:shopId/owners", func(c *fiber.Ctx) error {
+		shopIdStr := c.Params("shopId")
+		shopId, err := strconv.Atoi(shopIdStr)
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, "shopId is not a number")
+		}
+
+		var reqBody shopproto.EditShopOwnersRequest
+		if err := c.BodyParser(&reqBody); err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, "shop is not valid json")
+		}
+
+		shop, err := r.Handler.HandleEditShopOwners(c, int32(shopId), reqBody.OwnerEmails)
 		if err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 		}
