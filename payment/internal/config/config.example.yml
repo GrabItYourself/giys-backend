@@ -1,5 +1,5 @@
 server:
-  port: 3001
+  port: 3004
 log:
   level: info
   service: payment
@@ -13,4 +13,6 @@ postgres:
   user: postgres
   password: postgres
   sslmode: disable
+rabbitmq:
+  url: amqp://guest:guest@localhost:5672/
   
