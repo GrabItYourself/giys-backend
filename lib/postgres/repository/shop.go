@@ -3,7 +3,6 @@ package repository
 import (
 	"fmt"
 
-	"github.com/GrabItYourself/giys-backend/lib/logger"
 	"github.com/GrabItYourself/giys-backend/lib/postgres/models"
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
@@ -58,7 +57,7 @@ func (r *Repository) EditShop(shop *models.Shop) (*models.Shop, error) {
 }
 
 func (r *Repository) EditShopOwners(shopId int32, shopOwners []models.ShopOwner) (*models.Shop, error) {
-	for index, _ := range shopOwners {
+	for index := range shopOwners {
 		if shopOwners[index].ShopId != 0 && shopOwners[index].ShopId != shopId {
 			return nil, fmt.Errorf("shopId in shopshopOwners[index] must be equal to shopId in request")
 		}
@@ -66,16 +65,9 @@ func (r *Repository) EditShopOwners(shopId int32, shopOwners []models.ShopOwner)
 			shopOwners[index].ShopId = shopId
 		}
 	}
-	// Clear the old shop owners
-	for _, shopOwner := range shopOwners {
-		if err := r.pg.Where("shop_id = ? AND user_id = ?", shopOwner.ShopId, shopOwner.UserId).Delete(&models.ShopOwner{}).Error; err != nil {
-			return nil, errors.Wrap(err, "failed to delete shop owner")
-		}
-	}
 
-	for _, owner := range shopOwners {
-		logger.Info("SID 2: " + fmt.Sprintf("%d", owner.ShopId))
-		logger.Info("UID 2: " + owner.UserId)
+	if err := r.pg.Debug().Where("shop_id = ?", shopId).Delete(&models.ShopOwner{}).Error; err != nil {
+		return nil, errors.Wrap(err, "failed to delete shop owners")
 	}
 
 	// Add new shop owners
