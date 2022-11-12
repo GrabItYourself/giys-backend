@@ -9,6 +9,7 @@ service ShopService {
     rpc GetAllShops(GetAllShopsRequest) returns (AllShopsResponse);
     rpc GetShop(GetShopRequest) returns (ShopResponse);
     rpc EditShop(EditShopRequest) returns (ShopResponse);
+    rpc EditShopOwners(EditShopOwnersRequest) returns (ShopResponse);
     rpc DeleteShop(DeleteShopRequest) returns (DeleteResponse);
 
     rpc CreateShopItem(CreateShopItemRequest) returns (ShopItemResponse);
@@ -20,13 +21,21 @@ service ShopService {
     rpc AddBankAccount(AddBankAccountRequest) returns (AddBankAccountResponse);
 }
 
+message User {
+  string id = 1;
+  string role = 2;
+  string email = 3;
+  string google_id = 4;
+}
+
 message Shop {
     int32 id = 1;
     string name = 2;
-    optional string image = 3;
-    optional string description = 4;
-    optional string location = 5;
-    optional string contact = 6;
+    repeated User owners = 3;
+    optional string image = 4;
+    optional string description = 5;
+    optional string location = 6;
+    optional string contact = 7;
 }
 
 message ShopItem {
@@ -39,10 +48,11 @@ message ShopItem {
 
 message CreateShopRequest {
     string name = 1;
-    optional string image = 2;
-    optional string description = 3;
-    optional string location = 4;
-    optional string contact = 5;
+    repeated string ownerEmails = 2;
+    optional string image = 3;
+    optional string description = 4;
+    optional string location = 5;
+    optional string contact = 6;
 }
 
 message GetShopRequest {
@@ -58,6 +68,11 @@ message AllShopsResponse {
 
 message EditShopRequest {
     Shop edited_shop = 1;
+}
+
+message EditShopOwnersRequest {
+    int32 shop_id = 1;
+    repeated string owner_emails = 2;
 }
 
 message DeleteShopRequest {

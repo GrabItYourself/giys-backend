@@ -85,6 +85,26 @@ func (h *Handler) HandleEditShop(c *fiber.Ctx, shopId int32, editedShop *shoppro
 	return res, nil
 }
 
+func (h *Handler) HandleEditShopOwners(c *fiber.Ctx, shopId int32, ownerEmails []string) (*shopproto.ShopResponse, error) {
+	identity, ok := c.Locals(authutils.IdentityKey).(*authutils.Identity)
+	if !ok {
+		return nil, fiber.NewError(fiber.StatusUnauthorized, "identity not found in context")
+	}
+	ctx, err := authutils.EmbedIdentityToContext(c.Context(), identity)
+	if err != nil {
+		return nil, fiber.NewError(fiber.StatusInternalServerError, errors.Wrap(err, "can't embed identity to grpc context").Error())
+	}
+
+	res, err := h.Grpc.Shop.EditShopOwners(ctx, &shopproto.EditShopOwnersRequest{
+		ShopId:      shopId,
+		OwnerEmails: ownerEmails,
+	})
+	if err != nil {
+		return nil, fiber.NewError(fiber.StatusInternalServerError, errors.Wrap(err, "Failed to request GRPC shop").Error())
+	}
+	return res, nil
+}
+
 func (h *Handler) HandleDeleteShop(c *fiber.Ctx, shopId int32) (*shopproto.DeleteResponse, error) {
 	identity, ok := c.Locals(authutils.IdentityKey).(*authutils.Identity)
 	if !ok {

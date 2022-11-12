@@ -12,17 +12,23 @@ import (
 )
 
 func (s *Server) CreateShop(ctx context.Context, input *shopproto.CreateShopRequest) (*shopproto.ShopResponse, error) {
+	owners, err := s.toShopOwners(input.OwnerEmails)
+	if err != nil {
+		return nil, errors.Wrap(err, "can't create shop")
+	}
 	shop := &models.Shop{
 		Name:        input.Name,
 		Image:       input.Image,
 		Description: input.Description,
 		Location:    input.Location,
 		Contact:     input.Contact,
+		Owners:      owners,
 	}
 
 	if err := s.repo.CreateShop(shop); err != nil {
 		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't create shop").Error())
 	}
+
 	return &shopproto.ShopResponse{
 		Shop: &shopproto.Shop{
 			Id:          shop.Id,
@@ -31,6 +37,7 @@ func (s *Server) CreateShop(ctx context.Context, input *shopproto.CreateShopRequ
 			Description: shop.Description,
 			Location:    shop.Location,
 			Contact:     shop.Contact,
+			Owners:      s.toProtoUsers(shop.Owners),
 		},
 	}, nil
 }
@@ -49,6 +56,7 @@ func (s *Server) GetAllShops(ctx context.Context, input *shopproto.GetAllShopsRe
 			Description: item.Description,
 			Location:    item.Location,
 			Contact:     item.Contact,
+			Owners:      s.toProtoUsers(item.Owners),
 		}
 	}
 	return &shopproto.AllShopsResponse{
@@ -69,6 +77,7 @@ func (s *Server) GetShop(ctx context.Context, input *shopproto.GetShopRequest) (
 			Description: shop.Description,
 			Location:    shop.Location,
 			Contact:     shop.Contact,
+			Owners:      s.toProtoUsers(shop.Owners),
 		},
 	}, nil
 }
@@ -94,6 +103,7 @@ func (s *Server) EditShop(ctx context.Context, input *shopproto.EditShopRequest)
 			Description: editedShop.Description,
 			Location:    editedShop.Location,
 			Contact:     editedShop.Contact,
+			Owners:      s.toProtoUsers(editedShop.Owners),
 		},
 	}, nil
 }
@@ -105,5 +115,27 @@ func (s *Server) DeleteShop(ctx context.Context, input *shopproto.DeleteShopRequ
 	}
 	return &shopproto.DeleteResponse{
 		RowsAffected: rowsAffected,
+	}, nil
+}
+
+func (s *Server) EditShopOwners(ctx context.Context, in *shopproto.EditShopOwnersRequest) (*shopproto.ShopResponse, error) {
+	owners, err := s.toShopOwners(in.OwnerEmails)
+	if err != nil {
+		return nil, errors.Wrap(err, "can't edit shop owners")
+	}
+	shop, err := s.repo.EditShopOwners(in.ShopId, owners)
+	if err != nil {
+		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't edit shop owners").Error())
+	}
+	return &shopproto.ShopResponse{
+		Shop: &shopproto.Shop{
+			Id:          shop.Id,
+			Name:        shop.Name,
+			Image:       shop.Image,
+			Description: shop.Description,
+			Location:    shop.Location,
+			Contact:     shop.Contact,
+			Owners:      s.toProtoUsers(shop.Owners),
+		},
 	}, nil
 }
