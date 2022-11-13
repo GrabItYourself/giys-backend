@@ -14,18 +14,17 @@ import (
 )
 
 func CompressImage(buffer string) (string, error) {
-
 	decoded, err := base64.StdEncoding.DecodeString(buffer)
 	if err != nil {
 		return "", errors.Wrap(err, "can't decode base64 image")
 	}
-	logger.Info(fmt.Sprintf("len (pre): %d", len(decoded)))
+	logger.Debug(fmt.Sprintf("(image) (pre) len: %d", len(decoded)))
 
 	img, _, err := image.Decode(bytes.NewReader(decoded))
 	if err != nil {
 		return "", errors.Wrap(err, "can't create image from bytes")
 	}
-	logger.Info(fmt.Sprintf("(pre) width: %d, height: %d", img.Bounds().Dx(), img.Bounds().Dy()))
+	logger.Debug(fmt.Sprintf("(image) (pre) width: %d, height: %d", img.Bounds().Dx(), img.Bounds().Dy()))
 
 	img, err = cutter.Crop(img, cutter.Config{
 		Width:   1,
@@ -38,7 +37,7 @@ func CompressImage(buffer string) (string, error) {
 	}
 
 	img = resize.Thumbnail(500, 500, img, resize.Lanczos3)
-	logger.Info(fmt.Sprintf("(post) width: %d, height: %d", img.Bounds().Dx(), img.Bounds().Dy()))
+	logger.Debug(fmt.Sprintf("(image) (post) width: %d, height: %d", img.Bounds().Dx(), img.Bounds().Dy()))
 
 	var buf bytes.Buffer
 
@@ -46,7 +45,7 @@ func CompressImage(buffer string) (string, error) {
 	if err != nil {
 		return "", errors.Wrap(err, "can't encode image as jpg")
 	}
-	logger.Info(fmt.Sprintf("len (post): %d", len(buf.Bytes())))
+	logger.Debug(fmt.Sprintf("(image) (post) len: %d", len(buf.Bytes())))
 
 	return base64.StdEncoding.EncodeToString(buf.Bytes()), nil
 }
