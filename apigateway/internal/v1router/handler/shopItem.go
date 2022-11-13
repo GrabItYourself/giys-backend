@@ -1,6 +1,7 @@
 package v1handler
 
 import (
+	"github.com/GrabItYourself/giys-backend/apigateway/internal/utils"
 	"github.com/GrabItYourself/giys-backend/auth/pkg/authutils"
 	"github.com/GrabItYourself/giys-backend/shop/pkg/shopproto"
 	"github.com/gofiber/fiber/v2"
@@ -56,6 +57,14 @@ func (h *Handler) HandleCreateShopItem(c *fiber.Ctx, shopItem *shopproto.CreateS
 		return nil, fiber.NewError(fiber.StatusInternalServerError, errors.Wrap(err, "can't embed identity to grpc context").Error())
 	}
 
+	if shopItem.Image != nil {
+		image, err := utils.CompressImage(*shopItem.Image)
+		if err != nil {
+			return nil, fiber.NewError(fiber.StatusInternalServerError, errors.Wrap(err, "failed to compress image").Error())
+		}
+		shopItem.Image = &image
+	}
+
 	res, err := h.Grpc.Shop.CreateShopItem(ctx, shopItem)
 	if err != nil {
 		return nil, fiber.NewError(fiber.StatusInternalServerError, errors.Wrap(err, "Failed to request GRPC shop").Error())
@@ -75,6 +84,14 @@ func (h *Handler) HandleEditShopItem(c *fiber.Ctx, shopId int32, shopItemId int3
 
 	if shopItemId != editedItem.Id {
 		return nil, fiber.NewError(fiber.StatusBadRequest, "shopItemId params is not the same as shopItemId in body")
+	}
+
+	if editedItem.Image != nil {
+		image, err := utils.CompressImage(*editedItem.Image)
+		if err != nil {
+			return nil, fiber.NewError(fiber.StatusInternalServerError, errors.Wrap(err, "failed to compress image").Error())
+		}
+		editedItem.Image = &image
 	}
 
 	res, err := h.Grpc.Shop.EditShopItem(ctx, &shopproto.EditShopItemRequest{
