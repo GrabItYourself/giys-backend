@@ -126,7 +126,7 @@ func (r *Router) InitOrderRoute(basePath string) {
 		if err != nil {
 			return fiber.NewError(fiber.StatusBadRequest, "orderId is not a number")
 		}
-		order, err := r.Handler.HandleReadyOrder(c, int32(orderId), int32(shopId))
+		order, err := r.Handler.HandleReadyOrder(c, int32(shopId), int32(orderId))
 		if err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 		}
