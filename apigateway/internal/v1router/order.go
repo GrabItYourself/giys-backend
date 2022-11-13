@@ -14,6 +14,19 @@ func (r *Router) InitOrderRoute(basePath string) {
 	// protect all paths below
 	f.Use(middlewares.NewAccessTokenGuard(r.Handler.Grpc.Auth))
 
+	f.Get("/", func(c *fiber.Ctx) error {
+		shopIdStr := c.Params("shopId")
+		shopId, err := strconv.Atoi(shopIdStr)
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, "shopId is not a number")
+		}
+		order, err := r.Handler.HandleGetShopOrders(c, int32(shopId))
+		if err != nil {
+			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+		}
+		return c.JSON(order)
+	})
+
 	f.Get("/:orderId", func(c *fiber.Ctx) error {
 		shopIdStr, orderIdStr := c.Params("shopId"), c.Params("orderId")
 		shopId, err := strconv.Atoi(shopIdStr)

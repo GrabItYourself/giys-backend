@@ -9,7 +9,6 @@ func (s *Server) toProtoOrderResponse(order *models.Order) *orderproto.OrderResp
 	orderResponseItems := make([]*orderproto.OrderItem, len(order.Items))
 	for index, item := range order.Items {
 		orderResponseItems[index] = &orderproto.OrderItem{
-			ShopId:     item.ShopId,
 			ShopItemId: item.ShopItemId,
 			Quantity:   item.Quantity,
 		}
@@ -22,4 +21,12 @@ func (s *Server) toProtoOrderResponse(order *models.Order) *orderproto.OrderResp
 		Status:  string(order.Status),
 		Items:   orderResponseItems,
 	}
+}
+
+func (s *Server) toProtoOrderListResponse(order []models.Order) []*orderproto.OrderResponse {
+	orderResponses := make([]*orderproto.OrderResponse, len(order))
+	for index, item := range order {
+		orderResponses[index] = s.toProtoOrderResponse(&item)
+	}
+	return orderResponses
 }

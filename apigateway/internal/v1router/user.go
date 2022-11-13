@@ -22,4 +22,12 @@ func (r *Router) InitUserRoutes(basePath string) {
 		}
 		return c.JSON(user)
 	})
+
+	f.Get("/orders", func(c *fiber.Ctx) error {
+		order, err := r.Handler.HandleGetMyOrders(c)
+		if err != nil {
+			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+		}
+		return c.JSON(order)
+	})
 }
