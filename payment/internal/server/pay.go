@@ -32,7 +32,7 @@ func (s *Server) Pay(ctx context.Context, in *paymentproto.PayRequest) (*payment
 	}
 
 	if user.DefaultPaymentMethodId == nil {
-		return nil, status.Error(codes.FailedPrecondition, errors.Wrap(err, "no default payment method").Error())
+		return nil, status.Error(codes.FailedPrecondition, "no default payment method")
 	}
 
 	paymentMethod, err := s.repo.GetPaymentMethodById(*user.DefaultPaymentMethodId)
@@ -46,7 +46,7 @@ func (s *Server) Pay(ctx context.Context, in *paymentproto.PayRequest) (*payment
 	}
 
 	if shop.OmiseResipientId == nil {
-		return nil, status.Error(codes.FailedPrecondition, errors.Wrap(err, "shop is unregistered").Error())
+		return nil, status.Error(codes.FailedPrecondition, "shop is unregistered")
 	}
 
 	charge, createCharge := &omise.Charge{}, &operations.CreateCharge{
