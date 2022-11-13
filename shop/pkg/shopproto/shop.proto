@@ -48,7 +48,7 @@ message ShopItem {
 
 message CreateShopRequest {
     string name = 1;
-    repeated string ownerEmails = 2;
+    repeated string owner_emails = 2;
     optional string image = 3;
     optional string description = 4;
     optional string location = 5;

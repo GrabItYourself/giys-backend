@@ -45,7 +45,6 @@ func (r *Router) InitShopRoutes(basePath string) {
 			logger.Error(err.Error())
 			return fiber.NewError(fiber.StatusBadRequest, "shop is not valid json")
 		}
-		logger.Debug(reqBody.String())
 		shop, err := r.Handler.HandleCreateShop(c, &reqBody)
 		if err != nil {
 			logger.Error(err.Error())
