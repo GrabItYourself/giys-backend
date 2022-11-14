@@ -6,6 +6,7 @@ import (
 
 	"github.com/GrabItYourself/giys-backend/lib/logger"
 	"github.com/GrabItYourself/giys-backend/lib/postgres"
+	"github.com/GrabItYourself/giys-backend/lib/rabbitmq"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 )
@@ -18,6 +19,7 @@ type Config struct {
 	Log      logger.Config   `mapstructure:"log"`
 	Omise    OmiseConfig     `mapstructure:"omise"`
 	Postgres postgres.Config `mapstructure:"postgres"`
+	RabbitMQ rabbitmq.Config `mapstructure:"rabbitmq"`
 }
 
 type ServerConfig struct {

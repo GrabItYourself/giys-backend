@@ -8,6 +8,7 @@ import (
 
 	"github.com/GrabItYourself/giys-backend/lib/logger"
 	"github.com/GrabItYourself/giys-backend/lib/postgres"
+	"github.com/GrabItYourself/giys-backend/lib/rabbitmq"
 	"github.com/GrabItYourself/giys-backend/payment/internal/config"
 	"github.com/GrabItYourself/giys-backend/payment/internal/repository"
 	"github.com/GrabItYourself/giys-backend/payment/internal/server"
@@ -47,6 +48,13 @@ func main() {
 	// Repository
 	repo := repository.New(pg)
 
+	// RabbitMQ Sender
+	rabbitSender, err := rabbitmq.NewSender(conf.RabbitMQ.URL)
+	if err != nil {
+		panic(err)
+	}
+	defer rabbitSender.Close()
+
 	// Initialize gRPC server
 	grpcServer := grpc.NewServer()
 
@@ -55,7 +63,7 @@ func main() {
 	if e != nil {
 		logger.Fatal("Failed to initialize omise client: " + err.Error())
 	}
-	paymentServer, err := server.NewServer(omiseClient, repo)
+	paymentServer, err := server.NewServer(omiseClient, repo, rabbitSender)
 	if err != nil {
 		logger.Fatal("Failed to initialize payment server: " + err.Error())
 	}

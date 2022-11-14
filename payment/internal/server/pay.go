@@ -76,5 +76,8 @@ func (s *Server) Pay(ctx context.Context, in *paymentproto.PayRequest) (*payment
 		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't create payment transaction").Error())
 	}
 
+	emailMessage := s.createPaymentEmailMessage(user.Email, shop.Name, int(totalAmountTHB), order)
+	s.rabbitSender.SendMessage(ctx, "email", emailMessage)
+
 	return &paymentproto.PayResponse{}, nil
 }
