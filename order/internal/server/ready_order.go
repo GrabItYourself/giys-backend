@@ -31,7 +31,7 @@ func (s *Server) ReadyOrder(ctx context.Context, in *orderproto.ReadyOrderReques
 		return nil, status.Errorf(postgres.InferCodeFromError(err), errors.Wrap(err, "Failed to get shop").Error())
 	}
 
-	emailMessage := s.toReadyOrderEmailMessage(user.Email, shop.Name, orderId)
+	emailMessage := s.toOrderEmailMessage(user.Email, shop.Name, order)
 	s.rabbitSender.SendMessage(ctx, "email", emailMessage)
 
 	return s.toProtoOrderResponse(order), nil

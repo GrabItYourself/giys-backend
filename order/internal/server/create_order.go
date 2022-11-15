@@ -49,7 +49,7 @@ func (s *Server) CreateOrder(ctx context.Context, in *orderproto.CreateOrderRequ
 	}
 
 	for _, owner := range shop.Owners {
-		emailMessage := s.toCreateOrderEmailMessage(owner.User.Email, order.Id)
+		emailMessage := s.toOrderEmailMessage(owner.User.Email, shop.Name, &order)
 		s.rabbitSender.SendMessage(ctx, "email", emailMessage)
 	}
 

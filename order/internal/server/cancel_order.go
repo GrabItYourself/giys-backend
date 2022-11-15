@@ -32,12 +32,12 @@ func (s *Server) CancelOrder(ctx context.Context, in *orderproto.CancelOrderRequ
 	}
 
 	// Send email to customer
-	emailMessage := s.toCancelOrderEmailMessage(user.Email, shop.Name, orderId)
+	emailMessage := s.toOrderEmailMessage(user.Email, shop.Name, order)
 	s.rabbitSender.SendMessage(ctx, "email", emailMessage)
 
 	// Send email to shop owners
 	for _, owner := range shop.Owners {
-		emailMessage := s.toCancelOrderEmailMessage(owner.User.Email, shop.Name, orderId)
+		emailMessage := s.toOrderEmailMessage(owner.User.Email, shop.Name, order)
 		s.rabbitSender.SendMessage(ctx, "email", emailMessage)
 	}
 

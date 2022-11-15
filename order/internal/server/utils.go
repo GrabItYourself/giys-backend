@@ -34,31 +34,20 @@ func (s *Server) toProtoOrderListResponse(order []models.Order) []*orderproto.Or
 	return orderResponses
 }
 
-func (s *Server) toCreateOrderEmailMessage(toEmail string, orderId int32) *types.EmailMessage {
-	subject := "GIYS: New order has been created"
-	body := fmt.Sprintf("New order(Order ID %d) has been created.", orderId)
+func (s *Server) toOrderEmailMessage(toEmail string, shopName string, order *models.Order) *types.EmailMessage {
+	var subject, body string
 
-	return &types.EmailMessage{
-		To:      toEmail,
-		Subject: subject,
-		Body:    body,
+	switch order.Status {
+	case models.InQueueStatus:
+		subject = "GIYS: New order has been created"
+		body = fmt.Sprintf("New order(Order ID %d) has been created.", order.Id)
+	case models.ReadyStatus:
+		subject = "GIYS: The order is ready"
+		body = fmt.Sprintf("The order(Order ID %d) from Shop %s is now ready for picking up.", order.Id, shopName)
+	case models.CanceledStatus:
+		subject = "GIYS: The order has been canceled"
+		body = fmt.Sprintf("The order(Order ID %d) from Shop %s has been canceled.", order.Id, shopName)
 	}
-}
-
-func (s *Server) toCancelOrderEmailMessage(toEmail string, shopName string, orderId int32) *types.EmailMessage {
-	subject := "GIYS: The order has been canceled"
-	body := fmt.Sprintf("The order(Order ID %d) from Shop %s has been canceled.", orderId, shopName)
-
-	return &types.EmailMessage{
-		To:      toEmail,
-		Subject: subject,
-		Body:    body,
-	}
-}
-
-func (s *Server) toReadyOrderEmailMessage(toEmail string, shopName string, orderId int32) *types.EmailMessage {
-	subject := "GIYS: The order is ready"
-	body := fmt.Sprintf("The order(Order ID %d) from Shop %s is now ready for picking up.", orderId, shopName)
 
 	return &types.EmailMessage{
 		To:      toEmail,
