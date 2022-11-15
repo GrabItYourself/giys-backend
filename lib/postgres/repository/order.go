@@ -30,12 +30,7 @@ func (r *Repository) GetShopOrders(shopId int32) ([]models.Order, error) {
 }
 
 func (r *Repository) CreateOrder(order *models.Order) error {
-	if err := r.pg.Create(&models.Order{
-		UserId: order.UserId,
-		ShopId: order.ShopId,
-		Status: order.Status,
-		Items:  order.Items,
-	}).Error; err != nil {
+	if err := r.pg.Create(order).Error; err != nil {
 		return err
 	}
 	return nil

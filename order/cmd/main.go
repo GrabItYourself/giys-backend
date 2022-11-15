@@ -9,6 +9,7 @@ import (
 	"github.com/GrabItYourself/giys-backend/lib/logger"
 	"github.com/GrabItYourself/giys-backend/lib/postgres"
 	"github.com/GrabItYourself/giys-backend/lib/postgres/repository"
+	"github.com/GrabItYourself/giys-backend/lib/rabbitmq"
 	"github.com/GrabItYourself/giys-backend/order/internal/config"
 	"github.com/GrabItYourself/giys-backend/order/internal/server"
 	"github.com/GrabItYourself/giys-backend/order/pkg/orderproto"
@@ -47,12 +48,19 @@ func main() {
 	// Repository
 	repo := repository.New(pg)
 
+	// RabbitMQ Sender
+	rabbitSender, err := rabbitmq.NewSender(conf.RabbitMQ.URL)
+	if err != nil {
+		panic(err)
+	}
+	defer rabbitSender.Close()
+
 	// Initialize gRPC server
 	grpcServer := grpc.NewServer()
 	reflection.Register(grpcServer)
 
 	// Register OrderService server
-	orderproto.RegisterOrderServer(grpcServer, server.NewServer(repo))
+	orderproto.RegisterOrderServer(grpcServer, server.NewServer(repo, rabbitSender))
 
 	// Serve
 	lis, err := net.Listen("tcp", ":"+conf.Server.Port)
