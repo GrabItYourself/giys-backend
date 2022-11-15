@@ -1,7 +1,10 @@
 package server
 
 import (
+	"fmt"
+
 	"github.com/GrabItYourself/giys-backend/lib/postgres/models"
+	"github.com/GrabItYourself/giys-backend/lib/rabbitmq/types"
 	"github.com/GrabItYourself/giys-backend/order/pkg/orderproto"
 )
 
@@ -29,4 +32,26 @@ func (s *Server) toProtoOrderListResponse(order []models.Order) []*orderproto.Or
 		orderResponses[index] = s.toProtoOrderResponse(&item)
 	}
 	return orderResponses
+}
+
+func (s *Server) toOrderEmailMessage(toEmail string, shopName string, order *models.Order) *types.EmailMessage {
+	var subject, body string
+
+	switch order.Status {
+	case models.InQueueStatus:
+		subject = "GIYS: New order has been created"
+		body = fmt.Sprintf("New order(Order ID %d) has been created.", order.Id)
+	case models.ReadyStatus:
+		subject = "GIYS: The order is ready"
+		body = fmt.Sprintf("The order(Order ID %d) from Shop %s is now ready for picking up.", order.Id, shopName)
+	case models.CanceledStatus:
+		subject = "GIYS: The order has been canceled"
+		body = fmt.Sprintf("The order(Order ID %d) from Shop %s has been canceled.", order.Id, shopName)
+	}
+
+	return &types.EmailMessage{
+		To:      toEmail,
+		Subject: subject,
+		Body:    body,
+	}
 }

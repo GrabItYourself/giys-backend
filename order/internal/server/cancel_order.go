@@ -21,5 +21,25 @@ func (s *Server) CancelOrder(ctx context.Context, in *orderproto.CancelOrderRequ
 		return nil, status.Errorf(postgres.InferCodeFromError(err), errors.Wrap(err, "Failed to cancel an order").Error())
 	}
 
+	user, err := s.repo.GetUserById(order.UserId)
+	if err != nil {
+		return nil, status.Errorf(postgres.InferCodeFromError(err), errors.Wrap(err, "can't get user").Error())
+	}
+
+	shop, err := s.repo.GetShopById(shopId)
+	if err != nil {
+		return nil, status.Errorf(postgres.InferCodeFromError(err), errors.Wrap(err, "Failed to get shop").Error())
+	}
+
+	// Send email to customer
+	emailMessage := s.toOrderEmailMessage(user.Email, shop.Name, order)
+	s.rabbitSender.SendMessage(ctx, "email", emailMessage)
+
+	// Send email to shop owners
+	for _, owner := range shop.Owners {
+		emailMessage := s.toOrderEmailMessage(owner.User.Email, shop.Name, order)
+		s.rabbitSender.SendMessage(ctx, "email", emailMessage)
+	}
+
 	return s.toProtoOrderResponse(order), nil
 }

@@ -43,5 +43,15 @@ func (s *Server) CreateOrder(ctx context.Context, in *orderproto.CreateOrderRequ
 		return nil, status.Errorf(postgres.InferCodeFromError(err), errors.Wrap(err, "Failed to create an order").Error())
 	}
 
+	shop, err := s.repo.GetShopById(shopId)
+	if err != nil {
+		return nil, status.Errorf(postgres.InferCodeFromError(err), errors.Wrap(err, "Failed to get shop").Error())
+	}
+
+	for _, owner := range shop.Owners {
+		emailMessage := s.toOrderEmailMessage(owner.User.Email, shop.Name, &order)
+		s.rabbitSender.SendMessage(ctx, "email", emailMessage)
+	}
+
 	return s.toProtoOrderResponse(&order), nil
 }

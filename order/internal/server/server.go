@@ -2,16 +2,19 @@ package server
 
 import (
 	"github.com/GrabItYourself/giys-backend/lib/postgres/repository"
+	"github.com/GrabItYourself/giys-backend/lib/rabbitmq"
 	"github.com/GrabItYourself/giys-backend/order/pkg/orderproto"
 )
 
 type Server struct {
 	orderproto.UnimplementedOrderServer
-	repo *repository.Repository
+	repo         *repository.Repository
+	rabbitSender *rabbitmq.Sender
 }
 
-func NewServer(repo *repository.Repository) *Server {
+func NewServer(repo *repository.Repository, rabbitSender *rabbitmq.Sender) *Server {
 	return &Server{
-		repo: repo,
+		repo:         repo,
+		rabbitSender: rabbitSender,
 	}
 }
