@@ -3,6 +3,7 @@ package repository
 import (
 	"github.com/GrabItYourself/giys-backend/lib/postgres/models"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 func (r *Repository) GetOrderById(id int32, shopId int32, userId string) (*models.Order, error) {
@@ -45,7 +46,7 @@ func (r *Repository) UpdateOrder(order *models.Order) error {
 
 func (r *Repository) UpdateOrderStatus(orderId int32, shopId int32, status models.OrderStatus) (*models.Order, error) {
 	var order models.Order
-	if err := r.pg.Model(&order).Where("id = ? AND shop_id = ?", orderId, shopId).Update("status", status).Error; err != nil {
+	if err := r.pg.Model(&order).Clauses(clause.Returning{}).Where("id = ? AND shop_id = ?", orderId, shopId).Update("status", status).Error; err != nil {
 		return nil, err
 	}
 	return &order, nil
