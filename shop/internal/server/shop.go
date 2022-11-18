@@ -41,6 +41,12 @@ func (s *Server) CreateShop(ctx context.Context, input *shopproto.CreateShopRequ
 		Contact:          input.Contact,
 		Owners:           owners,
 		OmiseResipientId: registerRecipientResp.RecipientId,
+		BankAccount: &models.BankAccount{
+			Name:   input.BankAccount.Name,
+			Type:   input.BankAccount.Type,
+			Brand:  input.BankAccount.Brand,
+			Number: input.BankAccount.Number,
+		},
 	}
 
 	if err := s.repo.CreateShop(shop); err != nil {
@@ -56,6 +62,7 @@ func (s *Server) CreateShop(ctx context.Context, input *shopproto.CreateShopRequ
 			Location:    shop.Location,
 			Contact:     shop.Contact,
 			Owners:      s.toProtoUsers(shop.Owners),
+			BankAccount: s.toProtoBankAccount(shop.BankAccount),
 		},
 	}, nil
 }
@@ -75,6 +82,7 @@ func (s *Server) GetAllShops(ctx context.Context, input *shopproto.GetAllShopsRe
 			Location:    item.Location,
 			Contact:     item.Contact,
 			Owners:      s.toProtoUsers(item.Owners),
+			BankAccount: s.toProtoBankAccount(item.BankAccount),
 		}
 	}
 	return &shopproto.AllShopsResponse{
@@ -96,6 +104,7 @@ func (s *Server) GetShop(ctx context.Context, input *shopproto.GetShopRequest) (
 			Location:    shop.Location,
 			Contact:     shop.Contact,
 			Owners:      s.toProtoUsers(shop.Owners),
+			BankAccount: s.toProtoBankAccount(shop.BankAccount),
 		},
 	}, nil
 }
@@ -127,6 +136,15 @@ func (s *Server) EditShop(ctx context.Context, input *shopproto.EditShopRequest)
 		if err != nil {
 			return nil, status.Error(codes.Internal, errors.Wrap(err, "Failed to request GRPC payment: UpdateRecipient").Error())
 		}
+
+		shop := &models.Shop{
+			Id:          input.EditedShop.Id,
+			BankAccount: s.toBankAccount(input.EditedShop.BankAccount),
+		}
+		editedShop, err = s.repo.EditShop(shop)
+		if err != nil {
+			return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't edit shop").Error())
+		}
 	}
 
 	return &shopproto.ShopResponse{
@@ -138,6 +156,7 @@ func (s *Server) EditShop(ctx context.Context, input *shopproto.EditShopRequest)
 			Location:    editedShop.Location,
 			Contact:     editedShop.Contact,
 			Owners:      s.toProtoUsers(editedShop.Owners),
+			BankAccount: s.toProtoBankAccount(editedShop.BankAccount),
 		},
 	}, nil
 }
@@ -170,6 +189,7 @@ func (s *Server) EditShopOwners(ctx context.Context, in *shopproto.EditShopOwner
 			Location:    shop.Location,
 			Contact:     shop.Contact,
 			Owners:      s.toProtoUsers(shop.Owners),
+			BankAccount: s.toProtoBankAccount(shop.BankAccount),
 		},
 	}, nil
 }
