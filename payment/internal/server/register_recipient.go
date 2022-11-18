@@ -13,8 +13,8 @@ import (
 
 func (s *Server) RegisterRecipient(ctx context.Context, in *paymentproto.RegisterRecipientRequest) (*paymentproto.RegisterRecipientResponse, error) {
 	recipient, create := &omise.Recipient{}, &operations.CreateRecipient{
-		Name: in.Name,
-		Type: omise.RecipientType(in.Type),
+		Name: in.BankAccount.Name,
+		Type: omise.RecipientType(in.BankAccount.Type),
 		BankAccount: &omise.BankAccount{
 			Brand:  in.BankAccount.Brand,
 			Number: in.BankAccount.Number,

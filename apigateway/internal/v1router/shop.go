@@ -40,7 +40,7 @@ func (r *Router) InitShopRoutes(basePath string) {
 	})
 
 	f.Post("/", func(c *fiber.Ctx) error {
-		var reqBody shopproto.CreateShopRequest
+		var reqBody types.CreateShopWithBankAccountRequest
 		if err := c.BodyParser(&reqBody); err != nil {
 			logger.Error(err.Error())
 			return fiber.NewError(fiber.StatusBadRequest, "shop is not valid json")
@@ -102,26 +102,6 @@ func (r *Router) InitShopRoutes(basePath string) {
 		if err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 		}
-		return c.JSON(res)
-	})
-
-	f.Post("/:shopId/bankAccount", func(c *fiber.Ctx) error {
-		shopIdStr := c.Params("shopId")
-		shopId, err := strconv.Atoi(shopIdStr)
-		if err != nil {
-			return fiber.NewError(fiber.StatusBadRequest, "shopId is not a number")
-		}
-
-		reqBody := new(types.AddBankAccountRequest)
-		if err := c.BodyParser(reqBody); err != nil {
-			return fiber.NewError(fiber.StatusBadRequest, "request is not valid json")
-		}
-
-		res, err := r.Handler.HandleAddBankAccount(c, int32(shopId), reqBody)
-		if err != nil {
-			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
-		}
-
 		return c.JSON(res)
 	})
 }

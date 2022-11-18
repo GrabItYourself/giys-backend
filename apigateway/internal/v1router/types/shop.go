@@ -1,8 +1,11 @@
 package types
 
-type AddBankAccountRequest struct {
-	Name   string `json:"name"`
-	Type   string `json:"type"`
-	Number string `json:"number"`
-	Brand  string `json:"brand"`
+import (
+	"github.com/GrabItYourself/giys-backend/payment/pkg/paymentproto"
+	"github.com/GrabItYourself/giys-backend/shop/pkg/shopproto"
+)
+
+type CreateShopWithBankAccountRequest struct {
+	*shopproto.CreateShopRequest
+	BankAccount paymentproto.BankAccount `json:"bank_account"`
 }

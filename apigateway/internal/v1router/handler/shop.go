@@ -46,7 +46,7 @@ func (h *Handler) HandleGetAllShops(c *fiber.Ctx) (*shopproto.AllShopsResponse, 
 	return res, nil
 }
 
-func (h *Handler) HandleCreateShop(c *fiber.Ctx, shop *shopproto.CreateShopRequest) (*shopproto.ShopResponse, error) {
+func (h *Handler) HandleCreateShop(c *fiber.Ctx, shop *types.CreateShopWithBankAccountRequest) (*shopproto.ShopResponse, error) {
 	identity, ok := c.Locals(authutils.IdentityKey).(*authutils.Identity)
 	if !ok {
 		return nil, fiber.NewError(fiber.StatusUnauthorized, "identity not found in context")
@@ -64,10 +64,19 @@ func (h *Handler) HandleCreateShop(c *fiber.Ctx, shop *shopproto.CreateShopReque
 		shop.Image = &image
 	}
 
-	res, err := h.Grpc.Shop.CreateShop(ctx, shop)
+	res, err := h.Grpc.Shop.CreateShop(ctx, shop.CreateShopRequest)
 	if err != nil {
 		return nil, fiber.NewError(fiber.StatusInternalServerError, errors.Wrap(err, "Failed to request GRPC shop").Error())
 	}
+
+	_, err = h.Grpc.Payment.RegisterRecipient(ctx, &paymentproto.RegisterRecipientRequest{
+		ShopId:      res.Shop.Id,
+		BankAccount: &shop.BankAccount,
+	})
+	if err != nil {
+		return nil, fiber.NewError(fiber.StatusInternalServerError, errors.Wrap(err, "Failed to request GRPC payment").Error())
+	}
+
 	return res, nil
 }
 
@@ -137,32 +146,6 @@ func (h *Handler) HandleDeleteShop(c *fiber.Ctx, shopId int32) (*shopproto.Delet
 	})
 	if err != nil {
 		return nil, fiber.NewError(fiber.StatusInternalServerError, errors.Wrap(err, "Failed to request GRPC shop").Error())
-	}
-	return res, nil
-}
-
-func (h *Handler) HandleAddBankAccount(c *fiber.Ctx, shopId int32, bankAccount *types.AddBankAccountRequest) (*paymentproto.RegisterRecipientResponse, error) {
-	identity, ok := c.Locals(authutils.IdentityKey).(*authutils.Identity)
-	if !ok {
-		return nil, fiber.NewError(fiber.StatusUnauthorized, "identity not found in context")
-	}
-	ctx, err := authutils.EmbedIdentityToContext(c.Context(), identity)
-	if err != nil {
-		return nil, fiber.NewError(fiber.StatusInternalServerError, errors.Wrap(err, "can't embed identity to grpc context").Error())
-	}
-
-	res, err := h.Grpc.Payment.RegisterRecipient(ctx, &paymentproto.RegisterRecipientRequest{
-		ShopId: shopId,
-		Name:   bankAccount.Name,
-		Type:   bankAccount.Type,
-		BankAccount: &paymentproto.BankAccount{
-			Name:   bankAccount.Name,
-			Number: bankAccount.Number,
-			Brand:  bankAccount.Brand,
-		},
-	})
-	if err != nil {
-		return nil, fiber.NewError(fiber.StatusInternalServerError, errors.Wrap(err, "Failed to request GRPC payment").Error())
 	}
 	return res, nil
 }
