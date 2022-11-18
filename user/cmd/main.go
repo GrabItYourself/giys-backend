@@ -8,8 +8,8 @@ import (
 
 	"github.com/GrabItYourself/giys-backend/lib/logger"
 	"github.com/GrabItYourself/giys-backend/lib/postgres"
+	"github.com/GrabItYourself/giys-backend/lib/postgres/repository"
 	"github.com/GrabItYourself/giys-backend/user/internal/config"
-	"github.com/GrabItYourself/giys-backend/user/internal/repository"
 	"github.com/GrabItYourself/giys-backend/user/internal/server"
 	"github.com/GrabItYourself/giys-backend/user/pkg/userproto"
 	"github.com/pkg/errors"
