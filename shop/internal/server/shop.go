@@ -3,10 +3,12 @@ package server
 import (
 	"context"
 
+	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
 	"github.com/GrabItYourself/giys-backend/lib/postgres"
 	"github.com/GrabItYourself/giys-backend/lib/postgres/models"
+	"github.com/GrabItYourself/giys-backend/payment/pkg/paymentproto"
 	"github.com/GrabItYourself/giys-backend/shop/pkg/shopproto"
 	"github.com/pkg/errors"
 )
@@ -27,6 +29,19 @@ func (s *Server) CreateShop(ctx context.Context, input *shopproto.CreateShopRequ
 
 	if err := s.repo.CreateShop(shop); err != nil {
 		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't create shop").Error())
+	}
+
+	_, err = s.paymentClient.RegisterRecipient(ctx, &paymentproto.RegisterRecipientRequest{
+		ShopId: shop.Id,
+		BankAccount: &paymentproto.BankAccount{
+			Name:   input.BankAccount.Name,
+			Number: input.BankAccount.Number,
+			Brand:  input.BankAccount.Brand,
+			Type:   input.BankAccount.Type,
+		},
+	})
+	if err != nil {
+		return nil, status.Error(codes.Internal, errors.Wrap(err, "Failed to request GRPC payment: RegisterRecipient").Error())
 	}
 
 	return &shopproto.ShopResponse{

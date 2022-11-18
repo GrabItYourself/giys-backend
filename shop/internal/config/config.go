@@ -17,10 +17,19 @@ type Config struct {
 	Server   ServerConfig    `mapstructure:"server"`
 	Log      logger.Config   `mapstructure:"log"`
 	Postgres postgres.Config `mapstructure:"postgres"`
+	Grpc     GrpcConfig      `mapstructure:"grpc"`
 }
 
 type ServerConfig struct {
 	Port string `mapstructure:"port"`
+}
+
+type GrpcConfig struct {
+	Payment GrpcConnection `mapstructure:"payment"`
+}
+
+type GrpcConnection struct {
+	Addr string `mapstructure:"addr"`
 }
 
 func InitConfig() *Config {

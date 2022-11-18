@@ -2,9 +2,7 @@ package v1handler
 
 import (
 	"github.com/GrabItYourself/giys-backend/apigateway/internal/utils"
-	"github.com/GrabItYourself/giys-backend/apigateway/internal/v1router/types"
 	"github.com/GrabItYourself/giys-backend/auth/pkg/authutils"
-	"github.com/GrabItYourself/giys-backend/payment/pkg/paymentproto"
 	"github.com/GrabItYourself/giys-backend/shop/pkg/shopproto"
 	"github.com/gofiber/fiber/v2"
 	"github.com/pkg/errors"
@@ -46,7 +44,7 @@ func (h *Handler) HandleGetAllShops(c *fiber.Ctx) (*shopproto.AllShopsResponse, 
 	return res, nil
 }
 
-func (h *Handler) HandleCreateShop(c *fiber.Ctx, shop *types.CreateShopWithBankAccountRequest) (*shopproto.ShopResponse, error) {
+func (h *Handler) HandleCreateShop(c *fiber.Ctx, shop *shopproto.CreateShopRequest) (*shopproto.ShopResponse, error) {
 	identity, ok := c.Locals(authutils.IdentityKey).(*authutils.Identity)
 	if !ok {
 		return nil, fiber.NewError(fiber.StatusUnauthorized, "identity not found in context")
@@ -64,17 +62,9 @@ func (h *Handler) HandleCreateShop(c *fiber.Ctx, shop *types.CreateShopWithBankA
 		shop.Image = &image
 	}
 
-	res, err := h.Grpc.Shop.CreateShop(ctx, shop.CreateShopRequest)
+	res, err := h.Grpc.Shop.CreateShop(ctx, shop)
 	if err != nil {
 		return nil, fiber.NewError(fiber.StatusInternalServerError, errors.Wrap(err, "Failed to request GRPC shop").Error())
-	}
-
-	_, err = h.Grpc.Payment.RegisterRecipient(ctx, &paymentproto.RegisterRecipientRequest{
-		ShopId:      res.Shop.Id,
-		BankAccount: &shop.BankAccount,
-	})
-	if err != nil {
-		return nil, fiber.NewError(fiber.StatusInternalServerError, errors.Wrap(err, "Failed to request GRPC payment").Error())
 	}
 
 	return res, nil

@@ -4,7 +4,6 @@ import (
 	"strconv"
 
 	"github.com/GrabItYourself/giys-backend/apigateway/internal/middlewares"
-	"github.com/GrabItYourself/giys-backend/apigateway/internal/v1router/types"
 	"github.com/GrabItYourself/giys-backend/lib/logger"
 	"github.com/GrabItYourself/giys-backend/shop/pkg/shopproto"
 	"github.com/gofiber/fiber/v2"
@@ -40,7 +39,7 @@ func (r *Router) InitShopRoutes(basePath string) {
 	})
 
 	f.Post("/", func(c *fiber.Ctx) error {
-		var reqBody types.CreateShopWithBankAccountRequest
+		var reqBody shopproto.CreateShopRequest
 		if err := c.BodyParser(&reqBody); err != nil {
 			logger.Error(err.Error())
 			return fiber.NewError(fiber.StatusBadRequest, "shop is not valid json")
