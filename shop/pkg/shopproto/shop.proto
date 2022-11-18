@@ -36,6 +36,7 @@ message Shop {
     optional string description = 5;
     optional string location = 6;
     optional string contact = 7;
+    optional BankAccount bank_account = 8;
 }
 
 message ShopItem {
