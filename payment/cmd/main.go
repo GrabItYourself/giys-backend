@@ -8,9 +8,9 @@ import (
 
 	"github.com/GrabItYourself/giys-backend/lib/logger"
 	"github.com/GrabItYourself/giys-backend/lib/postgres"
+	"github.com/GrabItYourself/giys-backend/lib/postgres/repository"
 	"github.com/GrabItYourself/giys-backend/lib/rabbitmq"
 	"github.com/GrabItYourself/giys-backend/payment/internal/config"
-	"github.com/GrabItYourself/giys-backend/payment/internal/repository"
 	"github.com/GrabItYourself/giys-backend/payment/internal/server"
 	"github.com/GrabItYourself/giys-backend/payment/pkg/paymentproto"
 	"github.com/omise/omise-go"

@@ -15,7 +15,7 @@ import (
 
 func (s *Server) Pay(ctx context.Context, in *paymentproto.PayRequest) (*paymentproto.PayResponse, error) {
 	var totalAmountTHB int64 = 0
-	order, err := s.repo.GetOrderById(in.OrderId, in.ShopId)
+	order, err := s.repo.GetOrderWithShopItemsById(in.OrderId, in.ShopId)
 	if err != nil {
 		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't get order").Error())
 	}

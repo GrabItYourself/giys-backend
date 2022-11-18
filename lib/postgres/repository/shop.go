@@ -101,3 +101,11 @@ func (r *Repository) DeleteShop(id int32) (int32, error) {
 	}
 	return int32(result.RowsAffected), nil
 }
+
+func (r *Repository) UpdateOmiseRecipientId(id int32, omiseRecipientId string) error {
+	err := r.pg.Model(&models.Shop{}).Where("id = ?", id).Update("omise_recipient_id", omiseRecipientId).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}

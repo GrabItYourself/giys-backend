@@ -1,8 +1,8 @@
 package server
 
 import (
+	"github.com/GrabItYourself/giys-backend/lib/postgres/repository"
 	"github.com/GrabItYourself/giys-backend/lib/rabbitmq"
-	"github.com/GrabItYourself/giys-backend/payment/internal/repository"
 	"github.com/GrabItYourself/giys-backend/payment/pkg/paymentproto"
 	"github.com/omise/omise-go"
 )

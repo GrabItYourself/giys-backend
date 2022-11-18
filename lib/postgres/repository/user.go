@@ -38,3 +38,19 @@ func (r *Repository) CreateUser(user *models.User) error {
 	}
 	return nil
 }
+
+func (r *Repository) UpdateOmiseCustomerId(id string, omiseCustomerId string) error {
+	err := r.pg.Model(&models.User{}).Where("id = ?", id).Update("omise_customer_id", omiseCustomerId).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *Repository) UpdateDefaultPaymentMethodId(id string, defaultPaymentMethodId int32) error {
+	err := r.pg.Model(&models.User{}).Where("id = ?", id).Update("default_payment_method_id", defaultPaymentMethodId).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
