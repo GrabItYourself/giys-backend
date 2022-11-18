@@ -51,9 +51,9 @@ func main() {
 		logger.Panic(errors.Wrap(err, "Can't initialize payment client").Error())
 	}
 	defer func() {
-		logger.Info("Closing user payment connection...")
+		logger.Info("Closing payment connection...")
 		if err := conn.Close(); err != nil {
-			logger.Panic(errors.Wrap(err, "Can't close user payment connection").Error())
+			logger.Panic(errors.Wrap(err, "Can't close payment connection").Error())
 		}
 	}()
 
