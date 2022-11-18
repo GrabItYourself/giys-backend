@@ -33,15 +33,14 @@ message AuthorizeCardResponse {
 
 message RegisterRecipientRequest {
   int32 shop_id = 1;
-  string name = 2;
-  string type = 3;
-  BankAccount bank_account = 4;
+  BankAccount bank_account = 2;
 }
 
 message BankAccount {
   string name = 1;
   string number = 2;
   string brand = 3;
+  string type = 4;
 }
 
 message RegisterRecipientResponse {

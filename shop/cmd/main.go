@@ -9,11 +9,13 @@ import (
 	"github.com/GrabItYourself/giys-backend/lib/logger"
 	"github.com/GrabItYourself/giys-backend/lib/postgres"
 	"github.com/GrabItYourself/giys-backend/lib/postgres/repository"
+	"github.com/GrabItYourself/giys-backend/payment/pkg/client"
 	"github.com/GrabItYourself/giys-backend/shop/internal/config"
 	"github.com/GrabItYourself/giys-backend/shop/internal/server"
 	"github.com/GrabItYourself/giys-backend/shop/pkg/shopproto"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/reflection"
 )
 
@@ -43,12 +45,24 @@ func main() {
 	}()
 	repo := repository.New(pg)
 
+	// gRPC Clients
+	paymentClient, conn, err := client.NewClient(ctx, conf.Grpc.Payment.Addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		logger.Panic(errors.Wrap(err, "Can't initialize payment client").Error())
+	}
+	defer func() {
+		logger.Info("Closing payment connection...")
+		if err := conn.Close(); err != nil {
+			logger.Panic(errors.Wrap(err, "Can't close payment connection").Error())
+		}
+	}()
+
 	// Initialize gRPC server
 	grpcServer := grpc.NewServer()
 	reflection.Register(grpcServer)
 
 	// Register shop service implementation to the gRPC server
-	shopproto.RegisterShopServiceServer(grpcServer, server.NewServer(repo))
+	shopproto.RegisterShopServiceServer(grpcServer, server.NewServer(repo, paymentClient))
 
 	// Serve
 	lis, err := net.Listen("tcp", ":"+conf.Server.Port)

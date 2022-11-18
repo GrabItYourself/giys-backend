@@ -4,7 +4,6 @@ import (
 	"strconv"
 
 	"github.com/GrabItYourself/giys-backend/apigateway/internal/middlewares"
-	"github.com/GrabItYourself/giys-backend/apigateway/internal/v1router/types"
 	"github.com/GrabItYourself/giys-backend/lib/logger"
 	"github.com/GrabItYourself/giys-backend/shop/pkg/shopproto"
 	"github.com/gofiber/fiber/v2"
@@ -102,26 +101,6 @@ func (r *Router) InitShopRoutes(basePath string) {
 		if err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 		}
-		return c.JSON(res)
-	})
-
-	f.Post("/:shopId/bankAccount", func(c *fiber.Ctx) error {
-		shopIdStr := c.Params("shopId")
-		shopId, err := strconv.Atoi(shopIdStr)
-		if err != nil {
-			return fiber.NewError(fiber.StatusBadRequest, "shopId is not a number")
-		}
-
-		reqBody := new(types.AddBankAccountRequest)
-		if err := c.BodyParser(reqBody); err != nil {
-			return fiber.NewError(fiber.StatusBadRequest, "request is not valid json")
-		}
-
-		res, err := r.Handler.HandleAddBankAccount(c, int32(shopId), reqBody)
-		if err != nil {
-			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
-		}
-
 		return c.JSON(res)
 	})
 }
