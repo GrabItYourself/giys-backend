@@ -14,25 +14,10 @@ import (
 )
 
 func (s *Server) CreateShop(ctx context.Context, input *shopproto.CreateShopRequest) (*shopproto.ShopResponse, error) {
-	owners, err := s.toShopOwners(input.OwnerEmails)
-	if err != nil {
-		return nil, errors.Wrap(err, "can't create shop")
+	if input.BankAccount == nil {
+		return nil, status.Error(codes.InvalidArgument, "bank account is required")
 	}
-	shop := &models.Shop{
-		Name:        input.Name,
-		Image:       input.Image,
-		Description: input.Description,
-		Location:    input.Location,
-		Contact:     input.Contact,
-		Owners:      owners,
-	}
-
-	if err := s.repo.CreateShop(shop); err != nil {
-		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't create shop").Error())
-	}
-
-	_, err = s.paymentClient.RegisterRecipient(ctx, &paymentproto.RegisterRecipientRequest{
-		ShopId: shop.Id,
+	registerRecipientResp, err := s.paymentClient.RegisterRecipient(ctx, &paymentproto.RegisterRecipientRequest{
 		BankAccount: &paymentproto.BankAccount{
 			Name:   input.BankAccount.Name,
 			Number: input.BankAccount.Number,
@@ -42,6 +27,24 @@ func (s *Server) CreateShop(ctx context.Context, input *shopproto.CreateShopRequ
 	})
 	if err != nil {
 		return nil, status.Error(codes.Internal, errors.Wrap(err, "Failed to request GRPC payment: RegisterRecipient").Error())
+	}
+
+	owners, err := s.toShopOwners(input.OwnerEmails)
+	if err != nil {
+		return nil, errors.Wrap(err, "can't create shop")
+	}
+	shop := &models.Shop{
+		Name:             input.Name,
+		Image:            input.Image,
+		Description:      input.Description,
+		Location:         input.Location,
+		Contact:          input.Contact,
+		Owners:           owners,
+		OmiseResipientId: registerRecipientResp.RecipientId,
+	}
+
+	if err := s.repo.CreateShop(shop); err != nil {
+		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't create shop").Error())
 	}
 
 	return &shopproto.ShopResponse{
@@ -112,8 +115,8 @@ func (s *Server) EditShop(ctx context.Context, input *shopproto.EditShopRequest)
 	}
 
 	if input.EditedShop.BankAccount != nil {
-		_, err = s.paymentClient.RegisterRecipient(ctx, &paymentproto.RegisterRecipientRequest{
-			ShopId: shop.Id,
+		_, err = s.paymentClient.UpdateRecipient(ctx, &paymentproto.UpdateRecipientRequest{
+			RecipientId: editedShop.OmiseResipientId,
 			BankAccount: &paymentproto.BankAccount{
 				Name:   input.EditedShop.BankAccount.Name,
 				Number: input.EditedShop.BankAccount.Number,
@@ -122,7 +125,7 @@ func (s *Server) EditShop(ctx context.Context, input *shopproto.EditShopRequest)
 			},
 		})
 		if err != nil {
-			return nil, status.Error(codes.Internal, errors.Wrap(err, "Failed to request GRPC payment: RegisterRecipient").Error())
+			return nil, status.Error(codes.Internal, errors.Wrap(err, "Failed to request GRPC payment: UpdateRecipient").Error())
 		}
 	}
 

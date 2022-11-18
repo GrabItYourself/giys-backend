@@ -3,7 +3,6 @@ package server
 import (
 	"context"
 
-	"github.com/GrabItYourself/giys-backend/lib/postgres"
 	"github.com/GrabItYourself/giys-backend/payment/pkg/paymentproto"
 	"github.com/omise/omise-go"
 	"github.com/omise/omise-go/operations"
@@ -25,9 +24,5 @@ func (s *Server) RegisterRecipient(ctx context.Context, in *paymentproto.Registe
 		return nil, status.Error(InferCodeFromOmiseError(err), errors.Wrap(err, "can't create omise recipient").Error())
 	}
 
-	if err := s.repo.UpdateOmiseRecipientId(in.ShopId, recipient.ID); err != nil {
-		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't update omise recipient id").Error())
-	}
-
-	return &paymentproto.RegisterRecipientResponse{}, nil
+	return &paymentproto.RegisterRecipientResponse{RecipientId: recipient.ID}, nil
 }

@@ -8,6 +8,7 @@ service PaymentService {
   rpc Pay(PayRequest) returns (PayResponse) {}
   rpc AuthorizeCard(AuthorizeCardRequest) returns (AuthorizeCardResponse) {}
   rpc RegisterRecipient(RegisterRecipientRequest) returns (RegisterRecipientResponse) {}
+  rpc UpdateRecipient(UpdateRecipientRequest) returns (UpdateRecipientResponse) {}
   rpc GetMyPaymentMethods(GetMyPaymentMethodsRequest) returns (GetMyPaymentMethodsResponse) {}
   rpc UpdateDefaultPaymentMethod(UpdateDefaultPaymentMethodRequest) returns (UpdateDefaultPaymentMethodResponse) {}
 }
@@ -32,8 +33,7 @@ message AuthorizeCardResponse {
 }
 
 message RegisterRecipientRequest {
-  int32 shop_id = 1;
-  BankAccount bank_account = 2;
+  BankAccount bank_account = 1;
 }
 
 message BankAccount {
@@ -44,6 +44,7 @@ message BankAccount {
 }
 
 message RegisterRecipientResponse {
+  string recipient_id = 1;
 }
 
 message GetMyPaymentMethodsRequest {
@@ -64,4 +65,12 @@ message UpdateDefaultPaymentMethodRequest {
 }
 
 message UpdateDefaultPaymentMethodResponse {
+}
+
+message UpdateRecipientRequest {
+  string recipient_id = 1;
+  BankAccount bank_account = 2;
+}
+
+message UpdateRecipientResponse {
 }

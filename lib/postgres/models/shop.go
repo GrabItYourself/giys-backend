@@ -7,7 +7,7 @@ type Shop struct {
 	Description      *string     `json:"description,omitempty" gorm:"column:description"`
 	Location         *string     `json:"location,omitempty" gorm:"column:location"`
 	Contact          *string     `json:"contact,omitempty" gorm:"column:contact"`
-	OmiseResipientId *string     `json:"omise_recipient_id" gorm:"column:omise_recipient_id"`
+	OmiseResipientId string      `json:"omise_recipient_id" gorm:"column:omise_recipient_id"`
 	Owners           []ShopOwner `json:"owners" gorm:"foreignKey:ShopId;references:Id;"`
 }
 
