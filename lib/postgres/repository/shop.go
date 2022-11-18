@@ -66,13 +66,23 @@ func (r *Repository) EditShopOwners(shopId int32, shopOwners []models.ShopOwner)
 		}
 	}
 
-	if err := r.pg.Debug().Where("shop_id = ?", shopId).Delete(&models.ShopOwner{}).Error; err != nil {
-		return nil, errors.Wrap(err, "failed to delete shop owners")
-	}
+	err := r.pg.Transaction(func(tx *gorm.DB) error {
+		// Delete all shop owners
+		if err := r.pg.Where("shop_id = ?", shopId).Delete(&models.ShopOwner{}).Error; err != nil {
+			return errors.Wrap(err, "failed to delete shop owners")
+		}
+		if len(shopOwners) == 0 {
+			return nil
+		}
+		// Add new shop owners
+		if err := r.pg.Clauses(clause.Returning{}).Create(&shopOwners).Error; err != nil {
+			return errors.Wrap(err, "failed to create shop owner")
+		}
+		return nil
+	})
 
-	// Add new shop owners
-	if err := r.pg.Clauses(clause.Returning{}).Create(&shopOwners).Error; err != nil {
-		return nil, errors.Wrap(err, "failed to create shop owner")
+	if err != nil {
+		return nil, errors.WithStack(err)
 	}
 
 	// Get the updated shop

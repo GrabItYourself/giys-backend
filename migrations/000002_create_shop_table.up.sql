@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS "shop_item" (
     image TEXT,
     price INT NOT NULL,
 
-    FOREIGN KEY (shop_id) REFERENCES "shop" (id),
+    FOREIGN KEY (shop_id) REFERENCES "shop" (id) ON DELETE CASCADE,
     PRIMARY KEY (shop_id, id)
 );
 
