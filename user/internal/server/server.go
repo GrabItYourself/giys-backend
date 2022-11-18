@@ -1,7 +1,7 @@
 package server
 
 import (
-	"github.com/GrabItYourself/giys-backend/user/internal/repository"
+	"github.com/GrabItYourself/giys-backend/lib/postgres/repository"
 	"github.com/GrabItYourself/giys-backend/user/pkg/userproto"
 )
 

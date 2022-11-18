@@ -37,7 +37,7 @@ func (r *Repository) GetShopById(id int32) (*models.Shop, error) {
 
 func (r *Repository) GetOwnedShops(uid string) ([]models.Shop, error) {
 	var shopOwners []models.ShopOwner
-	err := r.pg.Preload("Shop").Where("owner_id = ?", uid).Find(&shopOwners).Error
+	err := r.pg.Preload("Shop").Where("user_id = ?", uid).Find(&shopOwners).Error
 	if err != nil {
 		return nil, err
 	}

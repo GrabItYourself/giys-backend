@@ -20,13 +20,21 @@ func (s *Server) Me(ctx context.Context, in *userproto.MeReq) (*userproto.MeResp
 	if err != nil {
 		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't get user").Error())
 	}
+	shops, err := s.repo.GetOwnedShops(user.Id)
+	if err != nil {
+		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't get owned shops").Error())
+	}
+	userProto := &userproto.User{
+		Id:       user.Id,
+		Role:     string(user.Role),
+		Email:    user.Email,
+		GoogleId: user.GoogleId,
+	}
+	if len(shops) > 0 {
+		userProto.ShopId = &shops[0].Id
+	}
 	resp := &userproto.MeResp{
-		User: &userproto.User{
-			Id:       user.Id,
-			Role:     string(user.Role),
-			Email:    user.Email,
-			GoogleId: user.GoogleId,
-		},
+		User: userProto,
 	}
 	return resp, nil
 }

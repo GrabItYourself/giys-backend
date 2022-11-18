@@ -22,6 +22,15 @@ func (r *Repository) GetUserByEmail(email string) (*models.User, error) {
 	return &user, nil
 }
 
+func (r *Repository) GetUserByGoogleId(googleId string) (*models.User, error) {
+	var user models.User
+	err := r.pg.Where("google_id = ?", googleId).Take(&user).Error
+	if err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
+
 func (r *Repository) CreateUser(user *models.User) error {
 	err := r.pg.Create(user).Error
 	if err != nil {
