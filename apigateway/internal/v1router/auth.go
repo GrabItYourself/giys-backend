@@ -1,6 +1,8 @@
 package v1router
 
 import (
+	"time"
+
 	"github.com/GrabItYourself/giys-backend/apigateway/internal/middlewares"
 	"github.com/GrabItYourself/giys-backend/apigateway/internal/v1router/types"
 	"github.com/GrabItYourself/giys-backend/auth/pkg/authproto"
@@ -49,5 +51,19 @@ func (r *Router) InitAuthRoutes(basePath string) {
 			AccessToken:  resp.AccessToken,
 			RefreshToken: resp.RefreshToken,
 		})
+	})
+
+	f.Post("/signout", func(c *fiber.Ctx) error {
+		c.Cookie(&fiber.Cookie{
+			Name:     middlewares.AccessTokenCookieName,
+			Expires:  time.Now(),
+			HTTPOnly: true,
+		})
+		c.Cookie(&fiber.Cookie{
+			Name:     middlewares.RefreshTokenCookieName,
+			Expires:  time.Now(),
+			HTTPOnly: true,
+		})
+		return c.SendStatus(fiber.StatusOK)
 	})
 }
