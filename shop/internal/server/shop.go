@@ -110,6 +110,22 @@ func (s *Server) EditShop(ctx context.Context, input *shopproto.EditShopRequest)
 	if err != nil {
 		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't edit shop").Error())
 	}
+
+	if input.EditedShop.BankAccount != nil {
+		_, err = s.paymentClient.RegisterRecipient(ctx, &paymentproto.RegisterRecipientRequest{
+			ShopId: shop.Id,
+			BankAccount: &paymentproto.BankAccount{
+				Name:   input.EditedShop.BankAccount.Name,
+				Number: input.EditedShop.BankAccount.Number,
+				Brand:  input.EditedShop.BankAccount.Brand,
+				Type:   input.EditedShop.BankAccount.Type,
+			},
+		})
+		if err != nil {
+			return nil, status.Error(codes.Internal, errors.Wrap(err, "Failed to request GRPC payment: RegisterRecipient").Error())
+		}
+	}
+
 	return &shopproto.ShopResponse{
 		Shop: &shopproto.Shop{
 			Id:          editedShop.Id,
