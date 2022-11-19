@@ -36,3 +36,21 @@ func (s *Server) toShopOwners(emails []string) ([]models.ShopOwner, error) {
 	}
 	return owners, nil
 }
+
+func (s *Server) toBankAccount(bankAccount *shopproto.BankAccount) *models.BankAccount {
+	return &models.BankAccount{
+		Name:   bankAccount.Name,
+		Number: bankAccount.Number,
+		Brand:  bankAccount.Brand,
+		Type:   bankAccount.Type,
+	}
+}
+
+func (s *Server) toProtoBankAccount(bankAccount *models.BankAccount) *shopproto.BankAccount {
+	return &shopproto.BankAccount{
+		Name:   bankAccount.Name,
+		Number: bankAccount.Number,
+		Brand:  bankAccount.Brand,
+		Type:   bankAccount.Type,
+	}
+}

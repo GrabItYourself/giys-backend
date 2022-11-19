@@ -19,7 +19,7 @@ func (r *Repository) CreateShop(shop *models.Shop) error {
 
 func (r *Repository) GetAllShops() (*[]models.Shop, error) {
 	var shops []models.Shop
-	err := r.pg.Preload("Owners.User").Find(&shops).Error
+	err := r.pg.Preload("Owners.User").Preload("BankAccount").Find(&shops).Error
 	if err != nil {
 		return nil, err
 	}
@@ -28,7 +28,7 @@ func (r *Repository) GetAllShops() (*[]models.Shop, error) {
 
 func (r *Repository) GetShopById(id int32) (*models.Shop, error) {
 	var shop models.Shop
-	err := r.pg.Preload("Owners.User").Where("id = ?", id).Take(&shop).Error
+	err := r.pg.Preload("Owners.User").Preload("BankAccount").Where("id = ?", id).Take(&shop).Error
 	if err != nil {
 		return nil, err
 	}
@@ -53,7 +53,14 @@ func (r *Repository) EditShop(shop *models.Shop) (*models.Shop, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to update shop")
 	}
-	return shop, nil
+
+	// Get the updated shop
+	updatedShop, err := r.GetShopById(shop.Id)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to get shop")
+	}
+
+	return updatedShop, nil
 }
 
 func (r *Repository) EditShopOwners(shopId int32, shopOwners []models.ShopOwner) (*models.Shop, error) {

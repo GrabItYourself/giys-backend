@@ -15,7 +15,7 @@ import (
 
 func (s *Server) Pay(ctx context.Context, in *paymentproto.PayRequest) (*paymentproto.PayResponse, error) {
 	var totalAmountTHB int64 = 0
-	order, err := s.repo.GetOrderById(in.OrderId, in.ShopId)
+	order, err := s.repo.GetOrderWithShopItemsById(in.OrderId, in.ShopId)
 	if err != nil {
 		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't get order").Error())
 	}
@@ -45,10 +45,6 @@ func (s *Server) Pay(ctx context.Context, in *paymentproto.PayRequest) (*payment
 		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't get shop").Error())
 	}
 
-	if shop.OmiseResipientId == nil {
-		return nil, status.Error(codes.FailedPrecondition, "shop is unregistered")
-	}
-
 	charge, createCharge := &omise.Charge{}, &operations.CreateCharge{
 		Amount:   totalAmount,
 		Currency: "thb",
@@ -61,7 +57,7 @@ func (s *Server) Pay(ctx context.Context, in *paymentproto.PayRequest) (*payment
 
 	transfer, createTransfer := &omise.Transfer{}, &operations.CreateTransfer{
 		Amount:    totalAmount,
-		Recipient: *shop.OmiseResipientId,
+		Recipient: shop.OmiseResipientId,
 	}
 	if err := s.omiseClient.Do(transfer, createTransfer); err != nil {
 		return nil, status.Error(InferCodeFromOmiseError(err), errors.Wrap(err, "can't transfer to shop").Error())
