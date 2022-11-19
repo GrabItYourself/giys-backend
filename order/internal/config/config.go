@@ -19,10 +19,19 @@ type Config struct {
 	Log      logger.Config   `mapstructure:"log"`
 	Postgres postgres.Config `mapstructure:"postgres"`
 	RabbitMQ rabbitmq.Config `mapstructure:"rabbitmq"`
+	Grpc     GrpcConfig      `mapstructure:"grpc"`
 }
 
 type ServerConfig struct {
 	Port string `mapstructure:"port"`
+}
+
+type GrpcConfig struct {
+	Payment GrpcConnection `mapstructure:"payment"`
+}
+
+type GrpcConnection struct {
+	Addr string `mapstructure:"addr"`
 }
 
 func InitConfig() *Config {
