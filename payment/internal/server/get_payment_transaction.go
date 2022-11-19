@@ -10,7 +10,7 @@ import (
 )
 
 func (s *Server) GetPaymentTransaction(ctx context.Context, in *paymentproto.GetPaymentTransactionRequest) (*paymentproto.GetPaymentTransactionResponse, error) {
-	paymentTransaction, err := s.repo.GetPaymentTransactionById(in.OrderId, in.ShopId)
+	paymentTransaction, err := s.repo.GetPaymentTransactionByOrderIdAndShopId(in.OrderId, in.ShopId)
 	if err != nil {
 		return nil, status.Error(postgres.InferCodeFromError(err), errors.Wrap(err, "can't get payment transaction").Error())
 	}
