@@ -11,6 +11,7 @@ service PaymentService {
   rpc UpdateRecipient(UpdateRecipientRequest) returns (UpdateRecipientResponse) {}
   rpc GetMyPaymentMethods(GetMyPaymentMethodsRequest) returns (GetMyPaymentMethodsResponse) {}
   rpc UpdateDefaultPaymentMethod(UpdateDefaultPaymentMethodRequest) returns (UpdateDefaultPaymentMethodResponse) {}
+  rpc GetPaymentTransaction(GetPaymentTransactionRequest) returns (GetPaymentTransactionResponse) {}
 }
 
 message PayRequest {
@@ -73,4 +74,14 @@ message UpdateRecipientRequest {
 }
 
 message UpdateRecipientResponse {
+}
+
+message GetPaymentTransactionRequest {
+  int32 order_id = 1;
+  int32 shop_id = 2;
+}
+
+message GetPaymentTransactionResponse {
+  int32 amount = 1;
+  int64 created_at = 2;
 }
