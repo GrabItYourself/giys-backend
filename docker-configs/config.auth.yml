@@ -3,12 +3,6 @@ server:
 log:
     level: info
     service: auth
-postgres:
-    host: postgres
-    port: 5432
-    dbname: postgres
-    user: postgres
-    password: postgres
 redis:
     address: redis:6379
     password:

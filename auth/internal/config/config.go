@@ -5,7 +5,6 @@ import (
 	"sync"
 
 	"github.com/GrabItYourself/giys-backend/lib/logger"
-	"github.com/GrabItYourself/giys-backend/lib/postgres"
 	"github.com/GrabItYourself/giys-backend/lib/redis"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
@@ -15,12 +14,11 @@ var configOnce sync.Once
 var config *Config
 
 type Config struct {
-	Server   ServerConfig    `mapstructure:"server"`
-	Log      logger.Config   `mapstructure:"log"`
-	Postgres postgres.Config `mapstructure:"postgres"`
-	Redis    redis.Config    `mapstructure:"redis"`
-	Grpc     GrpcConfig      `mapstructure:"grpc"`
-	OAuth    struct {
+	Server ServerConfig  `mapstructure:"server"`
+	Log    logger.Config `mapstructure:"log"`
+	Redis  redis.Config  `mapstructure:"redis"`
+	Grpc   GrpcConfig    `mapstructure:"grpc"`
+	OAuth  struct {
 		IOS     OAuthConfig `mapstructure:"ios"`
 		Android OAuthConfig `mapstructure:"android"`
 	} `mapstructure:"oauth"`

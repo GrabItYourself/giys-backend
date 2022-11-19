@@ -11,7 +11,6 @@ import (
 	"github.com/GrabItYourself/giys-backend/auth/internal/server"
 	"github.com/GrabItYourself/giys-backend/auth/pkg/authproto"
 	"github.com/GrabItYourself/giys-backend/lib/logger"
-	"github.com/GrabItYourself/giys-backend/lib/postgres"
 	"github.com/GrabItYourself/giys-backend/lib/redis"
 	"github.com/GrabItYourself/giys-backend/user/pkg/client"
 	"github.com/pkg/errors"
@@ -32,18 +31,6 @@ func main() {
 	logger.InitLogger(&conf.Log)
 
 	// Repository
-	pg, err := postgres.New(&conf.Postgres)
-	if err != nil {
-		logger.Panic(errors.Wrap(err, "Can't initialize postgres").Error())
-	}
-	defer func() {
-		logger.Info("Closing database connection...")
-		if db, err := pg.DB(); err != nil {
-			logger.Panic(errors.Wrap(err, "Can't access postgres connection").Error())
-		} else if err := db.Close(); err != nil {
-			logger.Panic(errors.Wrap(err, "Can't close postgres connection").Error())
-		}
-	}()
 	rdb, err := redis.New(ctx, &conf.Redis)
 	if err != nil {
 		logger.Panic(errors.Wrap(err, "Can't initialize redis").Error())
@@ -54,7 +41,7 @@ func main() {
 			logger.Panic(errors.Wrap(err, "error during redis close").Error())
 		}
 	}()
-	repo := repository.New(pg, rdb)
+	repo := repository.New(rdb)
 
 	// gRPC Clients
 	userClient, conn, err := client.NewClient(ctx, conf.Grpc.User.Addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
