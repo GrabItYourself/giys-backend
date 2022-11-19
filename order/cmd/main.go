@@ -13,8 +13,10 @@ import (
 	"github.com/GrabItYourself/giys-backend/order/internal/config"
 	"github.com/GrabItYourself/giys-backend/order/internal/server"
 	"github.com/GrabItYourself/giys-backend/order/pkg/orderproto"
+	"github.com/GrabItYourself/giys-backend/payment/pkg/client"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/reflection"
 )
 
@@ -48,6 +50,18 @@ func main() {
 	// Repository
 	repo := repository.New(pg)
 
+	// gRPC Clients
+	paymentClient, conn, err := client.NewClient(ctx, conf.Grpc.Payment.Addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		logger.Panic(errors.Wrap(err, "Can't initialize payment client").Error())
+	}
+	defer func() {
+		logger.Info("Closing payment connection...")
+		if err := conn.Close(); err != nil {
+			logger.Panic(errors.Wrap(err, "Can't close payment connection").Error())
+		}
+	}()
+
 	// RabbitMQ Sender
 	rabbitSender, err := rabbitmq.NewSender(conf.RabbitMQ.URL)
 	if err != nil {
@@ -60,7 +74,7 @@ func main() {
 	reflection.Register(grpcServer)
 
 	// Register OrderService server
-	orderproto.RegisterOrderServer(grpcServer, server.NewServer(repo, rabbitSender))
+	orderproto.RegisterOrderServer(grpcServer, server.NewServer(repo, rabbitSender, paymentClient))
 
 	// Serve
 	lis, err := net.Listen("tcp", ":"+conf.Server.Port)
