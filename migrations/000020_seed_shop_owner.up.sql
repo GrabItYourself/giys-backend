@@ -1,0 +1,16 @@
+BEGIN;
+
+INSERT INTO "shop_owner" (shop_id, user_id)
+VALUES (1, '11111111-1111-1111-1111-111111111111');
+
+INSERT INTO "shop_owner" (shop_id, user_id)
+VALUES (2, '11111111-1111-1111-1111-111111111111');
+
+INSERT INTO "shop_owner" (shop_id, user_id)
+VALUES (3, '22222222-2222-2222-2222-222222222222');
+
+INSERT INTO "shop_owner" (shop_id, user_id)
+VALUES (4, '11111111-1111-1111-1111-111111111111');
+
+
+COMMIT;
