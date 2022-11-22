@@ -50,7 +50,7 @@ func main() {
 		if err := json.Unmarshal(d.Body, &emailMessage); err != nil {
 			logger.Panic(errors.Wrap(err, "Can't get email message").Error())
 		}
-
+		logger.Debug("Received a message: " + string(d.Body))
 		err := h.HandleEmailMessage(&emailMessage)
 		if err != nil {
 			logger.Panic(errors.Wrap(err, "Can't handle email message").Error())
