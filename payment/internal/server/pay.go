@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 
+	"github.com/GrabItYourself/giys-backend/lib/logger"
 	"github.com/GrabItYourself/giys-backend/lib/postgres"
 	"github.com/GrabItYourself/giys-backend/lib/postgres/models"
 	"github.com/GrabItYourself/giys-backend/payment/pkg/paymentproto"
@@ -73,7 +74,10 @@ func (s *Server) Pay(ctx context.Context, in *paymentproto.PayRequest) (*payment
 	}
 
 	emailMessage := s.createPaymentEmailMessage(user.Email, shop.Name, int(totalAmountTHB), order)
-	s.rabbitSender.SendMessage(ctx, "email", emailMessage)
+	err = s.rabbitSender.SendMessage(ctx, "email", emailMessage)
+	if err != nil {
+		logger.Error(errors.Wrap(err, "Failed to send email message").Error())
+	}
 
 	return &paymentproto.PayResponse{}, nil
 }

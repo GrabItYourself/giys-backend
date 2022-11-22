@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/GrabItYourself/giys-backend/auth/pkg/authutils"
+	"github.com/GrabItYourself/giys-backend/lib/logger"
 	"github.com/GrabItYourself/giys-backend/lib/postgres"
 	"github.com/GrabItYourself/giys-backend/lib/postgres/models"
 	"github.com/GrabItYourself/giys-backend/order/pkg/orderproto"
@@ -50,7 +51,20 @@ func (s *Server) CreateOrder(ctx context.Context, in *orderproto.CreateOrderRequ
 
 	for _, owner := range shop.Owners {
 		emailMessage := s.toOrderEmailMessage(owner.User.Email, shop.Name, &order)
-		s.rabbitSender.SendMessage(ctx, "email", emailMessage)
+		err := s.rabbitSender.SendMessage(ctx, "email", emailMessage)
+		if err != nil {
+			logger.Error(errors.Wrap(err, "Failed to send email message").Error())
+		}
+	}
+
+	user, err := s.repo.GetUserById(identity.UserId)
+	if err != nil {
+		return nil, status.Errorf(postgres.InferCodeFromError(err), errors.Wrap(err, "Failed to get user").Error())
+	}
+	emailMessage := s.toOrderEmailMessage(user.Email, shop.Name, &order)
+	err = s.rabbitSender.SendMessage(ctx, "email", emailMessage)
+	if err != nil {
+		logger.Error(errors.Wrap(err, "Failed to send email message").Error())
 	}
 
 	return s.toProtoOrderResponse(&order), nil

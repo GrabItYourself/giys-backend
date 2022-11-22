@@ -40,7 +40,7 @@ func (s *Server) toOrderEmailMessage(toEmail string, shopName string, order *mod
 	switch order.Status {
 	case models.InQueueStatus:
 		subject = "GIYS: New order has been created"
-		body = fmt.Sprintf("New order(Order ID %d) has been created.", order.Id)
+		body = fmt.Sprintf("New order(Order ID %d) from Shop %s has been created.", order.Id, shopName)
 	case models.ReadyStatus:
 		subject = "GIYS: The order is ready"
 		body = fmt.Sprintf("The order(Order ID %d) from Shop %s is now ready for picking up.", order.Id, shopName)
