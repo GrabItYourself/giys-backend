@@ -12,4 +12,4 @@ postgres:
     sslmode: disable
 grpc:
     payment:
-        addr: localhost:3004
+        addr: payment:3004
