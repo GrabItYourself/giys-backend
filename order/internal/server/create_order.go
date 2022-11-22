@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/GrabItYourself/giys-backend/auth/pkg/authutils"
 	"github.com/GrabItYourself/giys-backend/lib/logger"
@@ -61,11 +62,13 @@ func (s *Server) CreateOrder(ctx context.Context, in *orderproto.CreateOrderRequ
 	if err != nil {
 		return nil, status.Errorf(postgres.InferCodeFromError(err), errors.Wrap(err, "Failed to get user").Error())
 	}
+	logger.Debug(fmt.Sprintf("Sending email to user %s", user.Email))
 	emailMessage := s.toOrderEmailMessage(user.Email, shop.Name, &order)
 	err = s.rabbitSender.SendMessage(ctx, "email", emailMessage)
 	if err != nil {
 		logger.Error(errors.Wrap(err, "Failed to send email message").Error())
 	}
+	logger.Debug(fmt.Sprintf("Email sent to user %s", user.Email))
 
 	return s.toProtoOrderResponse(&order), nil
 }
