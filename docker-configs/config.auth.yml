@@ -1,7 +1,7 @@
 server:
     port: 3003
 log:
-    level: info
+    level: debug
     service: auth
 redis:
     address: redis:6379

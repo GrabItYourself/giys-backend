@@ -1,7 +1,7 @@
 server:
     port: 3002
 log:
-    level: info
+    level: debug
     service: order
 postgres:
     host: postgres
