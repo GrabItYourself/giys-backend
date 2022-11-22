@@ -16,6 +16,7 @@ type Order struct {
 	Status OrderStatus `json:"status" gorm:"column:status;not null;default:IN_QUEUE"`
 
 	Items []OrderItem `json:"items" gorm:"foreignKey:OrderId,ShopId;references:Id,ShopId"`
+	Shop  Shop        `json:"shop" gorm:"foreignKey:ShopId;references:Id"`
 }
 
 func (Order) TableName() string {

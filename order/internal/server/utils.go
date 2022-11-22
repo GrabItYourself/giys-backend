@@ -23,6 +23,14 @@ func (s *Server) toProtoOrderResponse(order *models.Order) *orderproto.OrderResp
 		ShopId:  order.ShopId,
 		Status:  string(order.Status),
 		Items:   orderResponseItems,
+		Shop: &orderproto.Shop{
+			Id:          order.Shop.Id,
+			Name:        order.Shop.Name,
+			Image:       order.Shop.Image,
+			Description: order.Shop.Description,
+			Location:    order.Shop.Location,
+			Contact:     order.Shop.Contact,
+		},
 	}
 }
 

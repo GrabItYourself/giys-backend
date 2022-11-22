@@ -16,7 +16,7 @@ func (r *Repository) GetOrderById(id int32, shopId int32, userId string) (*model
 
 func (r *Repository) GetMyOrders(userId string) ([]models.Order, error) {
 	var order []models.Order
-	if err := r.pg.Where("user_id = ?", userId).Preload("Items").Find(&order).Error; err != nil {
+	if err := r.pg.Where("user_id = ?", userId).Preload("Items").Preload("Shop").Find(&order).Error; err != nil {
 		return nil, err
 	}
 	return order, nil
