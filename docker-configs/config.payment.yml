@@ -14,4 +14,4 @@ postgres:
     password: postgres
     sslmode: disable
 rabbitmq:
-    url: amqp://guest:guest@localhost:5672/
+    url: amqp://guest:guest@rabbitmq:5672/
