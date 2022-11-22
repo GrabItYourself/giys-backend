@@ -13,4 +13,4 @@ grpc:
     auth:
         addr: auth:3003
     payment:
-        addr: payment:3003
+        addr: payment:3004
